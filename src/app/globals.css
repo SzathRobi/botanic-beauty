@@ -31,3 +31,22 @@ body {
     text-wrap: balance;
   }
 }
+
+section {
+  min-height: 70vh;
+  width: 100%;
+  position: relative;
+  margin-bottom: 64px;
+}
+
+.green-glow {
+  box-shadow: 0 0 12px 0 #15803d;
+}
+
+.green-glow:hover {
+  box-shadow: 0 0 24px 4px #15803d;
+}
+
+.green-glow-text {
+  filter: drop-shadow(0 0 1px #15803d);
+}
