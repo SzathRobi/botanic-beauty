@@ -5,12 +5,12 @@ import Link from "next/link";
 
 const Hairdressers = () => {
   return (
-    <section className="mb-48 sm:mb-60">
+    <section className="mb-48 sm:mb-96">
       <Image
         alt=""
         src="/hairdressers-bg.png"
         fill
-        className="object-fit max-h-[80%]"
+        className="object-fit min-h-[110vh]"
       />
       <Title title="Fodrászaink" />
 
@@ -48,7 +48,7 @@ const Hairdressers = () => {
           </div>
         </BackgroundBlur>
 
-        <BackgroundBlur className="relative mx-auto mb-24 flex max-w-5xl flex-col gap-16 sm:flex-row-reverse">
+        {/* <BackgroundBlur className="relative mx-auto mb-24 flex max-w-5xl flex-col gap-16 sm:flex-row-reverse">
           <Image
             alt=""
             src="/timi.png"
@@ -79,7 +79,7 @@ const Hairdressers = () => {
               />
             </Link>
           </div>
-        </BackgroundBlur>
+        </BackgroundBlur> */}
       </div>
     </section>
   );

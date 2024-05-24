@@ -1,0 +1,49 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+enum Hairdresser {
+  Timi 
+  nem_Timi
+}
+
+type OffDay{
+date                DateTime
+displayMonth        DateTime
+person              Hairdresser
+}
+
+model Schedule {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  offDays           OffDay[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+type Service {
+  title             String
+  duration          Int
+}
+
+type ContactInfo {
+  name              String
+  email             String
+  phone             String
+  otherInfo         String?
+}
+
+model Booking {
+  id                String @id @default(uuid()) @map("_id")
+  services          Service[]
+  hairdresser       Hairdresser
+  selectedDate      String
+  selectedTimeSlot  String
+  contactInfo       ContactInfo
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}

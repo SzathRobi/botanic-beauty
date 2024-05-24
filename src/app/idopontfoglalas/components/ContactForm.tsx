@@ -1,5 +1,8 @@
 "use client";
 
+import Button from "@/components/Button";
+import { FormEvent, useState } from "react";
+
 type ContactFormProps = {
   contactInfo: {
     name: string;
@@ -8,15 +11,41 @@ type ContactFormProps = {
     otherInfo: string;
   };
   modifyContactInfo: (key: string, value: string) => void;
+  incrementActiveStep: () => void;
+  decrementActiveStep: () => void;
+  postBookingData: () => Promise<void>;
 };
 
-const ContactForm = ({ contactInfo, modifyContactInfo }: ContactFormProps) => {
+const ContactForm = ({
+  contactInfo,
+  modifyContactInfo,
+  decrementActiveStep,
+  incrementActiveStep,
+  postBookingData,
+}: ContactFormProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      await postBookingData().then(() => {
+        incrementActiveStep();
+      });
+    } catch (error) {
+      setError("Failed to post booking data");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div>
-      <form
-        onClick={(event) => event.preventDefault()}
-        className="flex flex-col gap-2 mb-4"
-      >
+      <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-4">
         <div>
           <label
             htmlFor="name"
@@ -79,6 +108,27 @@ const ContactForm = ({ contactInfo, modifyContactInfo }: ContactFormProps) => {
               modifyContactInfo("otherInfo", event.target.value)
             }
           ></textarea>
+        </div>
+
+        <div className="flex items-center justify-end gap-2">
+          <Button
+            type="button"
+            className="disabled:cursor-not-allowed disabled:opacity-80 rounded text-green-600 px-4 py-2 font-bold hover:text-green-700 border border-green-600 hover:border-green-700"
+            onClick={decrementActiveStep}
+          >
+            Previous
+          </Button>
+          <Button
+            disabled={
+              contactInfo.name === "" ||
+              contactInfo.email === "" ||
+              contactInfo.phone === ""
+            }
+            isLoading={isLoading}
+            className="disabled:cursor-not-allowed disabled:opacity-80 rounded bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-700"
+          >
+            Next
+          </Button>
         </div>
       </form>
     </div>

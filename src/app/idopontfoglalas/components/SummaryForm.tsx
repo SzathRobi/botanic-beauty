@@ -1,6 +1,6 @@
 type SummaryFormProps = {
   choosenServices: any[];
-  choosenHairdresser: "Timi" | "nem Timi" | null;
+  choosenHairdresser: "Timi" | "nem_Timi" | null;
   selectedDate: Date;
   selectedTimeSlot: string | null;
   contactInfo: any;

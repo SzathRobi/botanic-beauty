@@ -50,3 +50,8 @@ section {
 .green-glow-text {
   filter: drop-shadow(0 0 1px #15803d);
 }
+
+.rdp-months {
+  display: flex;
+  flex-wrap: wrap;
+}

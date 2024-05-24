@@ -1,16 +1,24 @@
 "use client";
 
+import Spinner from "./Spinner";
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
+  isLoading?: boolean;
 }
 
-export default function Button({ children, ...props }: ButtonProps) {
+export default function Button({
+  children,
+  isLoading = false,
+  ...props
+}: ButtonProps) {
   return (
     <button
-      className="rounded bg-lime-500 px-4 py-2 font-bold text-white hover:bg-blue-700"
       {...props}
+      className={`flex items-center justify-center gap-2 green-glow rounded-md bg-green-700 px-4 py-2 text-white shadow-green-700 transition ${props.className}`}
     >
       {children}
+      {isLoading && <Spinner />}
     </button>
   );
 }

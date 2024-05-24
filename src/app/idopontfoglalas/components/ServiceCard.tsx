@@ -1,17 +1,14 @@
 "use client";
 
-import { PiPaintBrushHouseholdFill } from "react-icons/pi";
-import { BsScissors } from "react-icons/bs";
+import { format } from "date-fns";
 import { useState } from "react";
+import { BsScissors } from "react-icons/bs";
+import { PiPaintBrushHouseholdFill } from "react-icons/pi";
 
 type ServiceCardProps = {
   service: {
     title: string;
     duration: number;
-    extraServices: {
-      title: string;
-      duration: number;
-    }[];
   };
   index: number;
   addChoosenService: (service: any) => void;
@@ -53,6 +50,21 @@ const ServiceCard = ({
     }
   };
 
+  const formatDuration = (minutes: number) => {
+    const hours = Math.floor(minutes / 60); // Órák számának kiszámítása
+    const remainingMinutes = minutes % 60; // Megmaradt percek számának kiszámítása
+
+    if (hours === 0) {
+      return `${remainingMinutes} perc`; // Ha nincs óra, csak a percek jelennek meg
+    }
+
+    if (remainingMinutes === 0) {
+      return `${hours} óra`; // Ha nincs megmaradt perc, csak az óra jelenik meg
+    }
+
+    return `${hours} óra ${remainingMinutes} perc`; // Minden más esetben az óra és a perc jelenik meg
+  };
+
   return (
     <div className="mb-4">
       <label
@@ -64,7 +76,9 @@ const ServiceCard = ({
         </div>
         <div className="flex-1">
           <h3>{service.title}</h3>
-          <p className="text-sm text-gray-400">{service.duration} perc</p>
+          <p className="text-sm text-gray-400">
+            {formatDuration(service.duration)}
+          </p>
         </div>
         <input
           type="checkbox"

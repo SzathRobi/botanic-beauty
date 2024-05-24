@@ -8,8 +8,11 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import HamburgerMenu from "./HamburgerMenu";
+import { auth } from "@/auth";
 
-const Header = () => {
+const Header = async () => {
+  const session = await auth();
+
   return (
     <header className="fixed top-0 z-50 flex w-full items-center justify-between bg-black/70 p-4 text-white backdrop-blur-md md:px-16">
       <Image src="" alt="Logo" />
@@ -29,6 +32,11 @@ const Header = () => {
           <li className="shadow transition hover:text-green-700 ">
             <Link href={OUR_WORKS_ROUTE}>Munkáink</Link>
           </li>
+          {session?.user && (
+            <li className="shadow transition hover:text-green-700 ">
+              <Link href="/admin">Admin</Link>
+            </li>
+          )}
         </ul>
       </nav>
     </header>

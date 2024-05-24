@@ -1,0 +1,13 @@
+/* .rbc-time-view .rbc-allday-cell {
+  display: none;
+} */
+
+/* .rbc-event {
+  padding: 0px !important;
+  border: none !important;
+  background-color: transparent !important;
+} */
+
+.rbc-event-label {
+  display: none !important;
+}

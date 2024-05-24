@@ -4,18 +4,23 @@ import { useState } from "react";
 import ServicesForm from "./ServicesForm";
 import Stepper from "./Stepper";
 import BackgroundBlur from "@/components/BackgroundBlur";
-import Button from "@/components/Button";
 import HairdresserForm from "./HairdresserForm";
 import AvailableDatesForm from "./AvailableDatesForm";
 import ContactForm from "./ContactForm";
 import SummaryForm from "./SummaryForm";
+import { Booking, Schedule, Service } from "@prisma/client";
 
-const MultiStepForm = () => {
+type MultiStepFormProps = {
+  schedule: Schedule | null;
+  bookings: Booking[];
+};
+
+const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [choosenServices, setchoosenServices] = useState<any[]>([]);
+  const [choosenServices, setchoosenServices] = useState<Service[]>([]);
   const [choosenHairdresser, setChoosenHairdresser] = useState<
-    "Timi" | "nem Timi" | null
-  >(null);
+    "Timi" | "nem_Timi" | null
+  >("Timi");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()));
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [contactInfo, setContactInfo] = useState({
@@ -39,20 +44,45 @@ const MultiStepForm = () => {
     );
   };
 
-  const chooseHairdresser = (hairdresser: "Timi" | "nem Timi") => {
-    setChoosenHairdresser(hairdresser);
+  // TODO: uncomment when there is more than 1 hairdresser in business
+  // const chooseHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
+  //   setChoosenHairdresser(hairdresser);
+  // };
+
+  const incrementActiveStep = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
-  const handleNextStep = () => {
-    setActiveStep((prevActiveStep) =>
-      prevActiveStep < 5 ? prevActiveStep + 1 : prevActiveStep
-    );
+  const decrementActiveStep = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handlePreviousStep = () => {
-    setActiveStep((prevActiveStep) =>
-      prevActiveStep > 0 ? prevActiveStep - 1 : prevActiveStep
-    );
+  const postBookingData = async () => {
+    const response = await fetch("/api/booking", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        services: choosenServices,
+        hairdresser: choosenHairdresser,
+        selectedDate: new Date(
+          selectedDate.getFullYear(),
+          selectedDate.getMonth(),
+          selectedDate.getDate()
+        ),
+        selectedTimeSlot,
+        contactInfo,
+      }),
+    });
+
+    const data = await response.json();
+
+    if (!data.success) {
+      throw new Error("Failed to post booking data");
+    }
+
+    return data;
   };
 
   return (
@@ -64,36 +94,50 @@ const MultiStepForm = () => {
           {activeStep === 0 && (
             <ServicesForm
               addChoosenService={addChoosenService}
+              activeStep={activeStep}
               removeChoosenService={removeChoosenService}
               choosenServices={choosenServices}
+              incrementActiveStep={incrementActiveStep}
+              decrementActiveStep={decrementActiveStep}
             />
           )}
 
-          {activeStep === 1 && (
+          {/* TODO: uncomment when there is more than 1 hairdresser in business */}
+          {/* {activeStep === 1 && (
             <HairdresserForm
               choosenHairdresser={choosenHairdresser}
               chooseHairdresser={chooseHairdresser}
+              incrementActiveStep={incrementActiveStep}
+              decrementActiveStep={decrementActiveStep}
             />
-          )}
+          )} */}
 
-          {activeStep === 2 && (
+          {activeStep === 1 && schedule && (
             <AvailableDatesForm
+              bookings={bookings}
               setSelectedDate={setSelectedDate}
               selectedDate={selectedDate}
               selectedTimeSlot={selectedTimeSlot}
               setSelectedTimeSlot={setSelectedTimeSlot}
               choosenServices={choosenServices}
+              choosenHairdresser={choosenHairdresser!}
+              schedule={schedule}
+              incrementActiveStep={incrementActiveStep}
+              decrementActiveStep={decrementActiveStep}
+            />
+          )}
+
+          {activeStep === 2 && (
+            <ContactForm
+              contactInfo={contactInfo}
+              modifyContactInfo={modifyContactInfo}
+              incrementActiveStep={incrementActiveStep}
+              decrementActiveStep={decrementActiveStep}
+              postBookingData={postBookingData}
             />
           )}
 
           {activeStep === 3 && (
-            <ContactForm
-              contactInfo={contactInfo}
-              modifyContactInfo={modifyContactInfo}
-            />
-          )}
-
-          {activeStep === 4 && (
             <SummaryForm
               choosenServices={choosenServices}
               choosenHairdresser={choosenHairdresser}
@@ -103,34 +147,6 @@ const MultiStepForm = () => {
             />
           )}
         </div>
-
-        {activeStep !== 4 && (
-          <div className="flex items-center justify-end gap-2">
-            <Button
-              className="disabled:cursor-not-allowed disabled:opacity-80 rounded text-green-600 px-4 py-2 font-bold hover:text-green-700 border border-green-600 hover:border-green-700"
-              disabled={activeStep === 0 || activeStep === 4}
-              onClick={handlePreviousStep}
-            >
-              Previous
-            </Button>
-            <Button
-              className="disabled:cursor-not-allowed disabled:opacity-80 rounded bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-700"
-              disabled={
-                (activeStep === 0 && choosenServices.length === 0) ||
-                (activeStep === 1 && choosenHairdresser === null) ||
-                (activeStep === 2 && selectedTimeSlot === null) ||
-                (activeStep === 3 &&
-                  (contactInfo.name === "" ||
-                    contactInfo.email === "" ||
-                    contactInfo.phone === "")) ||
-                activeStep === 4
-              }
-              onClick={handleNextStep}
-            >
-              Next
-            </Button>
-          </div>
-        )}
       </BackgroundBlur>
     </div>
   );

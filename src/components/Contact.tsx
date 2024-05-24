@@ -12,7 +12,7 @@ const Contact = () => {
         alt=""
         src="/contact-bg.png"
         fill
-        className="object-fit h-screen -z-10"
+        className="object-fit min-h-[110vh] -z-10"
       />
       <Title title="Elérhetőség / média" />
       <div className="px-2 sm:px-0">
