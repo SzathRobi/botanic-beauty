@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
+import Image from "next/image";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -23,6 +24,9 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <Header />
         <Toaster />
+        <div className="fixed top-0 left-0 -z-10 object-cover w-screen h-screen">
+          <Image alt="" src="/site-bg.png" fill className="object-cover" />
+        </div>
         {children}
         {/* <Footer /> */}
       </body>

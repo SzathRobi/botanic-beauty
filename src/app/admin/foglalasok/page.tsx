@@ -8,6 +8,7 @@ import BigCalendarContainer from "./components/bigCalendarContainer/BigCalendarC
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { getSchedule } from "@/actions/schedule";
+import BackgroundBlur from "@/components/BackgroundBlur";
 
 const BookingPage = async () => {
   const session = await auth();
@@ -24,14 +25,15 @@ const BookingPage = async () => {
 
   return (
     <div className="w-full min-h-screen pt-16">
-      <h1 className="text-3xl mb-8">Foglalások</h1>
+      <BackgroundBlur className="!max-w-full">
+        <h1 className="text-3xl mb-8">Foglalások</h1>
 
-      <BigCalendarContainer
-        events={calendarEvents}
-        offDays={schedule?.offDays ?? []}
-      />
+        <BigCalendarContainer
+          events={calendarEvents}
+          offDays={schedule?.offDays ?? []}
+        />
 
-      {/* {bookings.length === 0 ? (
+        {/* {bookings.length === 0 ? (
         <div>
           <p>Nincsenek foglalások</p>
         </div>
@@ -40,6 +42,7 @@ const BookingPage = async () => {
           <p>Az adatbaázisban {bookings.length} foglalás van</p>
         </div>
       )} */}
+      </BackgroundBlur>
     </div>
   );
 };

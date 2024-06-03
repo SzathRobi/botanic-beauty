@@ -1,5 +1,11 @@
+import Transition from "@/components/Transition";
+
 const OurWorksPage = () => {
-  return <section>OurWorksPage</section>;
+  return (
+    <Transition>
+      <section>OurWorksPage</section>;
+    </Transition>
+  );
 };
 
 export default OurWorksPage;

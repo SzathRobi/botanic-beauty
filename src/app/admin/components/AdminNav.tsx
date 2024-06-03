@@ -8,8 +8,8 @@ const AdminNav = async () => {
   if (!session?.user) return null;
 
   return (
-    <div className="pt-14">
-      <ul className="pt-4 flex flex-col items-start gap-4 px-2 h-full bg-emerald-800 text-white">
+    <div>
+      <ul className="pt-16 flex flex-col items-start gap-4 px-2 h-full bg-emerald-800 text-white">
         <li>
           <Link
             href="/admin/beosztas"
@@ -25,6 +25,17 @@ const AdminNav = async () => {
           >
             Foglalások
           </Link>
+        </li>
+        {/* <li>
+          <Link
+            href="/admin/szolgaltatasok"
+            className="px-4 py-2 hover:bg-green-500/20"
+          >
+            Szolgaltatasok
+          </Link>
+        </li> */}
+        <li>
+          <Link href="/admin/kepfeltoltes">Képfeltöltés</Link>
         </li>
       </ul>
     </div>

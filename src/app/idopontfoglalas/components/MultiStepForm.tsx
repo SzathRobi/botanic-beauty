@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { motion } from "framer-motion";
+import { ReactNode, useState } from "react";
 import ServicesForm from "./ServicesForm";
 import Stepper from "./Stepper";
 import BackgroundBlur from "@/components/BackgroundBlur";
@@ -8,7 +9,21 @@ import HairdresserForm from "./HairdresserForm";
 import AvailableDatesForm from "./AvailableDatesForm";
 import ContactForm from "./ContactForm";
 import SummaryForm from "./SummaryForm";
-import { Booking, Schedule, Service } from "@prisma/client";
+import { Booking, Schedule, TService } from "@prisma/client";
+
+type FadeInProps = {
+  children: ReactNode;
+};
+
+const FadeIn = ({ children }: FadeInProps) => (
+  <motion.div
+    initial={{ opacity: 0 }}
+    animate={{ opacity: 1 }}
+    transition={{ ease: "easeInOut", duration: 0.75 }}
+  >
+    {children}
+  </motion.div>
+);
 
 type MultiStepFormProps = {
   schedule: Schedule | null;
@@ -17,7 +32,7 @@ type MultiStepFormProps = {
 
 const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [choosenServices, setchoosenServices] = useState<Service[]>([]);
+  const [choosenServices, setchoosenServices] = useState<TService[]>([]);
   const [choosenHairdresser, setChoosenHairdresser] = useState<
     "Timi" | "nem_Timi" | null
   >("Timi");
@@ -34,11 +49,11 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     setContactInfo({ ...contactInfo, [key]: value });
   };
 
-  const addChoosenService = (service: any) => {
+  const addChoosenService = (service: TService) => {
     setchoosenServices([...choosenServices, service]);
   };
 
-  const removeChoosenService = (choosenService: any) => {
+  const removeChoosenService = (choosenService: TService) => {
     setchoosenServices(
       choosenServices.filter((service) => service !== choosenService)
     );
@@ -87,19 +102,21 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
 
   return (
     <div className="w-full sm:w-auto">
-      <BackgroundBlur className="min-h-[75vh] flex flex-col w-full mx-auto">
+      <BackgroundBlur className="min-h-[75vh] min-w-[75vw] flex flex-col w-full mx-auto">
         <Stepper activeStep={activeStep} />
 
-        <div className="flex-1">
+        <div className="flex flex-col flex-1">
           {activeStep === 0 && (
-            <ServicesForm
-              addChoosenService={addChoosenService}
-              activeStep={activeStep}
-              removeChoosenService={removeChoosenService}
-              choosenServices={choosenServices}
-              incrementActiveStep={incrementActiveStep}
-              decrementActiveStep={decrementActiveStep}
-            />
+            <FadeIn>
+              <ServicesForm
+                addChoosenService={addChoosenService}
+                activeStep={activeStep}
+                removeChoosenService={removeChoosenService}
+                choosenServices={choosenServices}
+                incrementActiveStep={incrementActiveStep}
+                decrementActiveStep={decrementActiveStep}
+              />
+            </FadeIn>
           )}
 
           {/* TODO: uncomment when there is more than 1 hairdresser in business */}
@@ -113,38 +130,44 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
           )} */}
 
           {activeStep === 1 && schedule && (
-            <AvailableDatesForm
-              bookings={bookings}
-              setSelectedDate={setSelectedDate}
-              selectedDate={selectedDate}
-              selectedTimeSlot={selectedTimeSlot}
-              setSelectedTimeSlot={setSelectedTimeSlot}
-              choosenServices={choosenServices}
-              choosenHairdresser={choosenHairdresser!}
-              schedule={schedule}
-              incrementActiveStep={incrementActiveStep}
-              decrementActiveStep={decrementActiveStep}
-            />
+            <FadeIn>
+              <AvailableDatesForm
+                bookings={bookings}
+                setSelectedDate={setSelectedDate}
+                selectedDate={selectedDate}
+                selectedTimeSlot={selectedTimeSlot}
+                setSelectedTimeSlot={setSelectedTimeSlot}
+                choosenServices={choosenServices}
+                choosenHairdresser={choosenHairdresser!}
+                schedule={schedule}
+                incrementActiveStep={incrementActiveStep}
+                decrementActiveStep={decrementActiveStep}
+              />
+            </FadeIn>
           )}
 
           {activeStep === 2 && (
-            <ContactForm
-              contactInfo={contactInfo}
-              modifyContactInfo={modifyContactInfo}
-              incrementActiveStep={incrementActiveStep}
-              decrementActiveStep={decrementActiveStep}
-              postBookingData={postBookingData}
-            />
+            <FadeIn>
+              <ContactForm
+                contactInfo={contactInfo}
+                modifyContactInfo={modifyContactInfo}
+                incrementActiveStep={incrementActiveStep}
+                decrementActiveStep={decrementActiveStep}
+                postBookingData={postBookingData}
+              />
+            </FadeIn>
           )}
 
           {activeStep === 3 && (
-            <SummaryForm
-              choosenServices={choosenServices}
-              choosenHairdresser={choosenHairdresser}
-              selectedDate={selectedDate}
-              selectedTimeSlot={selectedTimeSlot}
-              contactInfo={contactInfo}
-            />
+            <FadeIn>
+              <SummaryForm
+                choosenServices={choosenServices}
+                choosenHairdresser={choosenHairdresser}
+                selectedDate={selectedDate}
+                selectedTimeSlot={selectedTimeSlot}
+                contactInfo={contactInfo}
+              />
+            </FadeIn>
           )}
         </div>
       </BackgroundBlur>

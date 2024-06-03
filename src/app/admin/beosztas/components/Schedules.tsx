@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { DayPicker } from "react-day-picker";
 
 import { SelectedDate } from "../types/selectedDate.type";
 import Day from "./Day";
-import Button from "@/components/Button";
-import { addSchedule, modifySchedule } from "@/actions/schedule";
+import { Button } from "@/components/Button";
+import { modifySchedule } from "@/actions/schedule";
 import { Hairdresser, Schedule } from "@prisma/client";
 
 type ScheduleProps = {
@@ -59,8 +59,8 @@ const Schedules = ({ schedule }: ScheduleProps) => {
     }
   };
 
-  const handlePersonChange = (e: any) => {
-    setSelectedPerson(e.target.value);
+  const handlePersonChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setSelectedPerson(event.target.value as Hairdresser);
   };
 
   return (
@@ -107,6 +107,7 @@ const Schedules = ({ schedule }: ScheduleProps) => {
 
       <form
         action={async () => {
+          // TODO: loading állapot kellene de maxi nagyon
           await modifySchedule(selectedDates, schedule?.id ?? "");
         }}
       >

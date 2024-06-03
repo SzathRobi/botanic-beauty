@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import {
+  addDays,
   addHours,
   format,
   isBefore,
@@ -12,13 +13,13 @@ import {
 
 import { DayPicker } from "react-day-picker";
 import TimeSlots from "./TimeSlots";
-import { Booking, Schedule } from "@prisma/client";
+import { Booking, OffDay, Schedule, TService } from "@prisma/client";
 import {
   CLOSING_HOUR,
   LAST_BOOKING_HOUR,
   OPENING_HOUR,
 } from "../constants/openingHours.constants";
-import Button from "@/components/Button";
+import { Button } from "@/components/Button";
 
 type AvailableDatesFormProps = {
   bookings: Booking[];
@@ -26,7 +27,7 @@ type AvailableDatesFormProps = {
   setSelectedDate: (date: Date) => void;
   selectedTimeSlot: string | null;
   setSelectedTimeSlot: (timeSlot: string | null) => void;
-  choosenServices: any[];
+  choosenServices: TService[];
   choosenHairdresser: "Timi" | "nem_Timi";
   schedule: Schedule;
   incrementActiveStep: () => void;
@@ -47,14 +48,12 @@ const AvailableDatesForm = ({
 }: AvailableDatesFormProps) => {
   const tPlus2Hours = Number(format(addHours(new Date(), 2), "H"));
 
-  const hairdresserOffDays = schedule.offDays
-    .filter((offDay: any) => offDay.person === choosenHairdresser)
-    .map((offDay: any) => offDay.date);
+  const hairdresserOffDays: Date[] = schedule.offDays
+    .filter((offDay: OffDay) => offDay.person === choosenHairdresser)
+    .map((offDay: OffDay) => offDay.date);
   const isClosedForToday = selectedDate.getHours() >= LAST_BOOKING_HOUR;
 
   let choosenServicesDuration = 0;
-  // TODO: nem bizti hogy kell, ha kell akkor magyarosítani
-  let footer = <p>Please pick a day.</p>;
 
   // TODO: nem bizti hogy kell
   const [isClosedDay, setIsClosedDay] = useState<boolean>(false);
@@ -69,9 +68,22 @@ const AvailableDatesForm = ({
     }
   };
 
-  if (selectedDate) {
-    footer = <p>You picked {format(selectedDate, "PP")}.</p>;
-  }
+  const getFirstAvailableDate = (): Date => {
+    let firstAvailableDate = new Date(Date.now());
+
+    while (
+      isSunday(firstAvailableDate) ||
+      hairdresserOffDays.some(
+        (offDay) =>
+          isSameDay(offDay, firstAvailableDate) ||
+          (isClosedForToday && isToday(firstAvailableDate))
+      )
+    ) {
+      firstAvailableDate = addDays(firstAvailableDate, 1);
+    }
+
+    return firstAvailableDate;
+  };
 
   useEffect(() => {
     if (isClosedDay) {
@@ -79,9 +91,13 @@ const AvailableDatesForm = ({
     }
   }, [isClosedDay]);
 
+  useEffect(() => {
+    setSelectedDate(getFirstAvailableDate());
+  }, []);
+
   return (
     <div className="mb-8">
-      <div className="flex flex-col md:flex-row justify-between items-start gap-4">
+      <div className="mb-12 flex flex-col md:flex-row justify-between items-start gap-4">
         <DayPicker
           mode="single"
           selected={selectedDate}
@@ -93,11 +109,11 @@ const AvailableDatesForm = ({
             hairdresserOffDays.some(
               // TODO: ha többen lesznek ezt átírni
               (offDay) =>
-                isSameDay(offDay, date) && offDay.person === choosenHairdresser
+                // isSameDay(offDay, date) && offDay.person === choosenHairdresser
+                isSameDay(offDay, date)
             )
           }
           onSelect={handleSelect}
-          footer={footer}
         />
 
         <TimeSlots

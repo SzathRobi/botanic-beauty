@@ -1,6 +1,6 @@
 "use client";
 
-import Button from "@/components/Button";
+import { Button } from "@/components/Button";
 import Image from "next/image";
 
 type HairdresserFormProps = {
@@ -20,7 +20,7 @@ const HairdresserForm = ({
     <div>
       <p>Válassz fodrászt</p>
 
-      <div className="flex items-start justify-center gap-8">
+      <div className="mb-12 flex items-start justify-center gap-8">
         <label
           className={`${
             choosenHairdresser === "Timi" ? "border-2" : ""

@@ -18,7 +18,11 @@ export const modifyBooking = async (booking: Booking) => {
 };
 
 export const getBookings = async () => {
-  return await prisma.booking.findMany();
+  try {
+    return await prisma.booking.findMany();
+  } catch (error) {
+    console.log({ error });
+  }
 };
 
 // export const getBookingsWithoutSensitiveData = async (): Promise<

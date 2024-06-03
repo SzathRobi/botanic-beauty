@@ -5,7 +5,7 @@ import {
   addMinutes,
   isWithinInterval,
   startOfDay,
-  parseISO,
+  isToday,
   setMinutes,
   setHours,
   isSameDay,
@@ -77,7 +77,7 @@ const TimeSlots = ({
     );
   }
 
-  if (isClosedForToday) {
+  if (isToday(selectedDate) && isClosedForToday) {
     return (
       <div>
         <p className="bg-red-600 p-2 rounded text-white mb-2 text-center">

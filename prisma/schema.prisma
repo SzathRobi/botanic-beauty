@@ -25,9 +25,19 @@ model Schedule {
   updatedAt         DateTime @updatedAt
 }
 
-type Service {
-  title             String
+type TService {
+  name             String
   duration          Int
+  price             Int
+  category         String
+}
+
+model Service {
+  id                String @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  duration          Int
+  price             Int
+  category         String
 }
 
 type ContactInfo {
@@ -39,7 +49,7 @@ type ContactInfo {
 
 model Booking {
   id                String @id @default(uuid()) @map("_id")
-  services          Service[]
+  services          TService[]
   hairdresser       Hairdresser
   selectedDate      String
   selectedTimeSlot  String

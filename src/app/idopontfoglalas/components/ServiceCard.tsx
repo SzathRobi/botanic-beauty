@@ -1,19 +1,18 @@
 "use client";
 
+import { formatDuration } from "@/lib/utils";
+import { TService } from "@prisma/client";
 import { format } from "date-fns";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { BsScissors } from "react-icons/bs";
 import { PiPaintBrushHouseholdFill } from "react-icons/pi";
 
 type ServiceCardProps = {
-  service: {
-    title: string;
-    duration: number;
-  };
+  service: TService;
   index: number;
-  addChoosenService: (service: any) => void;
-  removeChoosenService: (service: any) => void;
-  choosenServices: any[];
+  addChoosenService: (service: TService) => void;
+  removeChoosenService: (service: TService) => void;
+  choosenServices: TService[];
 };
 
 const ICON_SIZE = 32;
@@ -27,20 +26,20 @@ const ServiceCard = ({
   // const [isMainServiceChecked, setIsMainServiceChecked] = useState(false);
   const [isMainServiceChecked, setIsMainServiceChecked] = useState(
     choosenServices.some(
-      (choosenService) => choosenService.title === service.title
+      (choosenService) => choosenService.name === service.name
     )
   );
   // const [isSubServiceChecked, setIsSubServiceChecked] = useState(false);
 
-  const getServiceIcon = (title: string) => {
-    if (title === "Hajvágás") {
+  const getServiceIcon = (name: string) => {
+    if (name === "Hajvágás") {
       return <BsScissors size={ICON_SIZE} />;
     }
 
     return <PiPaintBrushHouseholdFill size={ICON_SIZE} />;
   };
 
-  const handleMainCheckboxChange = (event: any) => {
+  const handleMainCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       addChoosenService(service);
       setIsMainServiceChecked(true);
@@ -50,21 +49,6 @@ const ServiceCard = ({
     }
   };
 
-  const formatDuration = (minutes: number) => {
-    const hours = Math.floor(minutes / 60); // Órák számának kiszámítása
-    const remainingMinutes = minutes % 60; // Megmaradt percek számának kiszámítása
-
-    if (hours === 0) {
-      return `${remainingMinutes} perc`; // Ha nincs óra, csak a percek jelennek meg
-    }
-
-    if (remainingMinutes === 0) {
-      return `${hours} óra`; // Ha nincs megmaradt perc, csak az óra jelenik meg
-    }
-
-    return `${hours} óra ${remainingMinutes} perc`; // Minden más esetben az óra és a perc jelenik meg
-  };
-
   return (
     <div className="mb-4">
       <label
@@ -72,10 +56,10 @@ const ServiceCard = ({
         className="cursor-pointer flex bg-black/30 px-4 py-2 rounded-md items-center mb-2 gap-4"
       >
         <div className="p-2 bg-green-600 rounded-full">
-          {getServiceIcon(service.title)}
+          {getServiceIcon(service.name)}
         </div>
         <div className="flex-1">
-          <h3>{service.title}</h3>
+          <h3>{service.name}</h3>
           <p className="text-sm text-gray-400">
             {formatDuration(service.duration)}
           </p>

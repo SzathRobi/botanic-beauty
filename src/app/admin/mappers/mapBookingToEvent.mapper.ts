@@ -33,11 +33,12 @@ export const mapBookingToEvent = ({
 
   return {
     id,
-    title: services.map((service) => service.title).join(", "),
+    title: services.map((service) => service.name).join(", "),
     start: startDateWithTime,
     end: endDateWithTime,
     hairdresser,
     contactInfo,
+    services,
     createdAt,
     updatedAt,
   };

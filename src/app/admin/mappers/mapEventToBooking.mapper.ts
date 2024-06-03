@@ -1,4 +1,4 @@
-import { Booking, Service } from "@prisma/client";
+import { Booking, TService } from "@prisma/client";
 import { format } from "date-fns";
 
 import { CalendarEvent } from "../types/calendarEvent.type";
@@ -10,20 +10,15 @@ const getServiceDuration = (title: string): number => {
   return 240;
 };
 
-const mapTitleToServices = (title: string): Service => ({
-  duration: getServiceDuration(title),
-  title,
-});
-
 export const mapEventToBooking = ({
   contactInfo,
   createdAt,
   hairdresser,
   id,
+  services,
   updatedAt,
   start,
   end,
-  title,
 }: CalendarEvent): Booking => ({
   selectedDate:
     new Date(
@@ -33,7 +28,7 @@ export const mapEventToBooking = ({
     )?.toISOString() ?? "",
   contactInfo: contactInfo,
   hairdresser: hairdresser,
-  services: title!.toString().split(", ").map(mapTitleToServices),
+  services,
   selectedTimeSlot:
     `${format(start!, "HH:mm")} - ${format(end!, "HH:mm")}` ?? "",
   id,

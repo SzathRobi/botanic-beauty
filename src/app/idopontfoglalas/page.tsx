@@ -10,7 +10,7 @@ const BookingPage = async () => {
 
   return (
     <section className="min-h-screen  flex flex-col items-center justify-start pt-24 mb-0!">
-      <MultiStepForm schedule={schedule} bookings={bookings} />
+      <MultiStepForm schedule={schedule} bookings={bookings || []} />
     </section>
   );
 };

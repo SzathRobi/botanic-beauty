@@ -1,9 +1,11 @@
+import { ContactInfo, TService } from "@prisma/client";
+
 type SummaryFormProps = {
-  choosenServices: any[];
+  choosenServices: TService[];
   choosenHairdresser: "Timi" | "nem_Timi" | null;
   selectedDate: Date;
   selectedTimeSlot: string | null;
-  contactInfo: any;
+  contactInfo: ContactInfo;
 };
 
 const SummaryForm = ({
@@ -23,8 +25,8 @@ const SummaryForm = ({
         <p className="font-medium">Szolgáltatások:</p>
         <div>
           {choosenServices.map((service) => (
-            <p key={service.title}>
-              {service.title} ({service.duration} perc)
+            <p key={service.name}>
+              {service.name} ({service.duration} perc)
             </p>
           ))}
         </div>
