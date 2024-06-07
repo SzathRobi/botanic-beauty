@@ -8,12 +8,16 @@ import Day from "./Day";
 import { Button } from "@/components/Button";
 import { modifySchedule } from "@/actions/schedule";
 import { Hairdresser, Schedule } from "@prisma/client";
+import toast from "react-hot-toast";
 
 type ScheduleProps = {
   schedule: Schedule | null;
 };
 
 const Schedules = ({ schedule }: ScheduleProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [requestError, setRequestError] = useState<string | null>(null);
+
   const [selectedDates, setSelectedDates] = useState<SelectedDate[]>(
     (schedule?.offDays as unknown as SelectedDate[]) || []
   );
@@ -56,6 +60,23 @@ const Schedules = ({ schedule }: ScheduleProps) => {
           person: selectedPerson,
         },
       ]);
+    }
+  };
+
+  const onSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    setRequestError(null);
+    setIsLoading(true);
+
+    try {
+      await modifySchedule(selectedDates, schedule?.id ?? "");
+
+      toast.success("A beosztás sikeresen mentve");
+    } catch (error) {
+      setRequestError("Failed to modify schedule");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -105,14 +126,12 @@ const Schedules = ({ schedule }: ScheduleProps) => {
         <label htmlFor="nem_Timi">nem_Timi</label>
       </div>
 
-      <form
-        action={async () => {
-          // TODO: loading állapot kellene de maxi nagyon
-          await modifySchedule(selectedDates, schedule?.id ?? "");
-        }}
-      >
-        <Button type="submit">Mentés</Button>
+      <form onSubmit={onSubmit}>
+        <Button type="submit" isLoading={isLoading}>
+          Mentés
+        </Button>
       </form>
+      {requestError && <p className="mt-4 text-red-500">{requestError}</p>}
     </div>
   );
 };
