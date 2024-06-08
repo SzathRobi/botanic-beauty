@@ -26,6 +26,29 @@ const ContactForm = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const sendVerificationEmail = async () => {
+    try {
+      const response = await fetch("/api/email/verification", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ contactInfo }),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        // throw new Error("Failed to send verification email");
+        return null;
+      }
+
+      return data;
+    } catch (error) {
+      console.error("Failed to send verification email:", error);
+    }
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -33,8 +56,10 @@ const ContactForm = ({
     setError(null);
 
     try {
-      await postBookingData().then(() => {
-        incrementActiveStep();
+      await postBookingData().then(async () => {
+        await sendVerificationEmail().then((data) => {
+          incrementActiveStep();
+        });
       });
     } catch (error) {
       setError("Failed to post booking data");
@@ -121,7 +146,7 @@ const ContactForm = ({
         <div className="flex items-center justify-end gap-2">
           <Button
             type="button"
-            className="disabled:cursor-not-allowed disabled:opacity-80 rounded text-green-600 px-4 py-2 font-bold hover:text-green-700 border border-green-600 hover:border-green-700"
+            variant="secondary"
             onClick={decrementActiveStep}
           >
             Previous
@@ -133,7 +158,6 @@ const ContactForm = ({
               contactInfo.phone === ""
             }
             isLoading={isLoading}
-            className="disabled:cursor-not-allowed disabled:opacity-80 rounded bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-700"
           >
             Next
           </Button>

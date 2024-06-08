@@ -133,16 +133,11 @@ const AvailableDatesForm = ({
       </div>
 
       <div className="flex items-center justify-end gap-2">
-        <Button
-          type="button"
-          className="disabled:cursor-not-allowed disabled:opacity-80 rounded text-green-600 px-4 py-2 font-bold hover:text-green-700 border border-green-600 hover:border-green-700"
-          onClick={decrementActiveStep}
-        >
+        <Button type="button" variant="secondary" onClick={decrementActiveStep}>
           Previous
         </Button>
         <Button
           disabled={selectedTimeSlot === null}
-          className="disabled:cursor-not-allowed disabled:opacity-80 rounded bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-700"
           onClick={incrementActiveStep}
         >
           Next

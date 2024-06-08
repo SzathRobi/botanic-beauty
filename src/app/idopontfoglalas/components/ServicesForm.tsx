@@ -36,7 +36,6 @@ const ServicesForm = ({
       <div className="flex items-center justify-end gap-2">
         <Button
           disabled={choosenServices.length === 0}
-          className="disabled:cursor-not-allowed disabled:opacity-80 rounded bg-green-600 px-4 py-2 font-bold text-white hover:bg-green-700"
           onClick={incrementActiveStep}
         >
           Next
