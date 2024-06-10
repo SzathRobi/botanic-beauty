@@ -17,7 +17,7 @@ const Landing = async () => {
           <h1 className="text-center text-xl md:text-3xl mb-2">
             Lépj be a stílus világába a Botanic Beauty-nál
           </h1>
-          <h2 className="mb-12 text-md md:text-xl opacity-75">
+          <h2 className="text-center mb-12 text-md md:text-xl opacity-75">
             Modern frizurák és professzionális hajápolás Budapesten.
           </h2>
           <Link

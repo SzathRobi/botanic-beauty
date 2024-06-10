@@ -24,7 +24,7 @@ const ExtraServices = () => {
       <FadeInView>
         <Title title="Extra szolgáltatások / Parasztvakítás" />
         <BackgroundBlur className="mx-auto space-y-24">
-          <div className="flex flex-col md:flex-row justify-between">
+          <div className="flex flex-col md:flex-row justify-between gap-10">
             <FadeInView delay={0}>
               <ServiceCard icon={<Crown size={64} />} title="Felszabadítás" />
             </FadeInView>
