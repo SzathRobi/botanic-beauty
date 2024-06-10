@@ -12,16 +12,13 @@ import {
   Row,
   Section,
   Text,
+  Link,
 } from "@react-email/components";
 import * as React from "react";
 
 interface VerificationEmailProps {
   booking: Booking;
 }
-
-const baseUrl = process.env.VERCEL_URL
-  ? `https://${process.env.VERCEL_URL}`
-  : "";
 
 export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
   return (
@@ -32,11 +29,10 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
         <Container>
           <Section style={content}>
             <Row>
-              {/* TODO: img url csere */}
               <Img
                 style={image}
                 width={620}
-                src="https://images.unsplash.com/photo-1498735599329-ed6e3798cdcb?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src="https://github.com/SzathRobi/botanic-beauty/blob/main/emails/verification-email-hero.png?raw=true"
               />
             </Row>
 
@@ -44,40 +40,39 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
               <Column>
                 <Heading
                   style={{
-                    fontSize: 32,
-                    fontWeight: "bold",
-                    textAlign: "center",
+                    fontSize: 24,
+                    fontWeight: "normal",
+                    textAlign: "left",
                   }}
                 >
-                  Hi {booking.contactInfo.name},
+                  Kedves {booking.contactInfo.name},
                 </Heading>
                 <Heading
                   as="h2"
                   style={{
-                    fontSize: 26,
+                    fontSize: 16,
                     fontWeight: "bold",
-                    textAlign: "center",
+                    textAlign: "left",
+                    marginBottom: 48,
                   }}
                 >
-                  We noticed a recent login to your Yelp account.
+                  Köszönjük a foglalásod , sikeresen rögzítetük.
                 </Heading>
 
-                <Text style={paragraph}>
-                  <b>Szolgáltatás</b>
+                <Text style={paragraph}>Foglalás részletei:</Text>
+
+                <Text style={{ fontWeight: "bold", marginBottom: 48 }}>
+                  {booking.selectedDate} {booking.selectedTimeSlot} /{" "}
+                  {booking.services.map((service, index: number) => (
+                    <span key={index}>{service.name} </span>
+                  ))}
                 </Text>
 
-                {booking.services.map((service, index: number) => (
-                  <Text key={index}>{service.name}</Text>
-                ))}
-                <Text style={{ ...paragraph, marginTop: -5 }}>
-                  <b>Időpont: </b>
-                  {booking.selectedDate} {booking.selectedTimeSlot}
+                <Text style={paragraph}>
+                  Ha mégse jó az időpont kérlek jelezd a következő emailen /
+                  telefonon:
                 </Text>
-              </Column>
-            </Row>
-            <Row style={{ ...boxInfos, paddingTop: "0" }}>
-              <Column style={containerButton} colSpan={2}>
-                <Button style={button}>Learn More</Button>
+                <Text>labamkozottnagy@gmail.com / 06304204200</Text>
               </Column>
             </Row>
           </Section>
@@ -89,8 +84,11 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
               color: "rgb(0,0,0, 0.7)",
             }}
           >
-            © 2022 | Yelp Inc., 350 Mission Street, San Francisco, CA 94105,
-            U.S.A. | www.yelp.com
+            © 2024 | Botanic Beauty Hajszalon, 1045, Budapest, Széchenyi tér 4.
+            |{" "}
+            <Link href="https://www.botanic-beauty.hu">
+              www.botanic-beauty.hu
+            </Link>
           </Text>
         </Container>
       </Body>
@@ -105,7 +103,10 @@ VerificationEmail.PreviewProps = {
     },
     services: [
       {
-        name: "Haircut",
+        name: "Tőfestés",
+      },
+      {
+        name: "Hajvágás",
       },
     ],
     selectedDate: "2022-10-10",
@@ -123,22 +124,6 @@ const main = {
 
 const paragraph = {
   fontSize: 16,
-};
-
-const containerButton = {
-  display: "flex",
-  justifyContent: "center",
-  width: "100%",
-};
-
-const button = {
-  backgroundColor: "#e00707",
-  borderRadius: 3,
-  color: "#FFF",
-  fontWeight: "bold",
-  border: "1px solid rgb(0,0,0, 0.1)",
-  cursor: "pointer",
-  padding: "12px 30px",
 };
 
 const content = {

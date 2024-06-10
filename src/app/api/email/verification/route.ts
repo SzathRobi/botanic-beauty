@@ -1,27 +1,33 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { format } from "date-fns";
+import { VerificationEmail } from "@/emails/VerificationEmail";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
-  const { contactInfo } = await request.json();
-  const { email, name, phone, otherInfo } = contactInfo;
+  const { booking } = await request.json();
 
-  if (!email || !name || !phone) {
+  if (!booking.contactInfo.email || booking.services.length === 0) {
     return NextResponse.json({ error: true, message: "Invalid data" });
   }
+
+  const bookingWithFormattedDate = {
+    ...booking,
+    selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+  };
 
   try {
     await resend.emails.send({
       from: "onboarding@resend.dev",
-      to: email,
+      to: booking.contactInfo.email,
       subject: "Visszaigazolás",
-      html: `<p>Kedves ${name}! Az email címed: ${email} </p> <p>Telefonszám: ${phone}</p> <p>Megjegyzés: ${otherInfo}</p>`,
+      react: VerificationEmail({ booking: bookingWithFormattedDate }),
     });
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ error: true, message: error });
+    return NextResponse.json({ error: true, message: error }, { status: 500 });
   }
 }

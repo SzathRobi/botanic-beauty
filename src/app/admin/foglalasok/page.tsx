@@ -21,7 +21,7 @@ const BookingPage = async () => {
 
   const bookings = await getBookings();
 
-  const calendarEvents = bookings.map(mapBookingToEvent);
+  const calendarEvents = bookings?.map(mapBookingToEvent) ?? [];
 
   return (
     <div className="w-full min-h-screen pt-16">

@@ -1,13 +1,13 @@
 import { Button } from "@/components/Button";
 import { services } from "../constants/services.constants";
 import ServiceCard from "./ServiceCard";
-import { TService } from "@prisma/client";
+import { Service } from "@prisma/client";
 
 type ServiceFormProps = {
   activeStep: number;
-  addChoosenService: (service: TService) => void;
-  removeChoosenService: (service: TService) => void;
-  choosenServices: TService[];
+  addChoosenService: (service: Service) => void;
+  removeChoosenService: (service: Service) => void;
+  choosenServices: Service[];
   incrementActiveStep: () => void;
   decrementActiveStep: () => void;
 };

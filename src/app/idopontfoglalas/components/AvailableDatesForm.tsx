@@ -13,7 +13,7 @@ import {
 
 import { DayPicker } from "react-day-picker";
 import TimeSlots from "./TimeSlots";
-import { Booking, OffDay, Schedule, TService } from "@prisma/client";
+import { Booking, OffDay, Schedule, Service } from "@prisma/client";
 import {
   CLOSING_HOUR,
   LAST_BOOKING_HOUR,
@@ -27,7 +27,7 @@ type AvailableDatesFormProps = {
   setSelectedDate: (date: Date) => void;
   selectedTimeSlot: string | null;
   setSelectedTimeSlot: (timeSlot: string | null) => void;
-  choosenServices: TService[];
+  choosenServices: Service[];
   choosenHairdresser: "Timi" | "nem_Timi";
   schedule: Schedule;
   incrementActiveStep: () => void;

@@ -1,18 +1,17 @@
 "use client";
 
 import { formatDuration } from "@/lib/utils";
-import { TService } from "@prisma/client";
-import { format } from "date-fns";
+import { Service } from "@prisma/client";
 import { ChangeEvent, useState } from "react";
 import { BsScissors } from "react-icons/bs";
 import { PiPaintBrushHouseholdFill } from "react-icons/pi";
 
 type ServiceCardProps = {
-  service: TService;
+  service: Service;
   index: number;
-  addChoosenService: (service: TService) => void;
-  removeChoosenService: (service: TService) => void;
-  choosenServices: TService[];
+  addChoosenService: (service: Service) => void;
+  removeChoosenService: (service: Service) => void;
+  choosenServices: Service[];
 };
 
 const ICON_SIZE = 32;
@@ -31,7 +30,7 @@ const ServiceCard = ({
   );
   // const [isSubServiceChecked, setIsSubServiceChecked] = useState(false);
 
-  const getServiceIcon = (name: string) => {
+  const geServiceIcon = (name: string) => {
     if (name === "Hajvágás") {
       return <BsScissors size={ICON_SIZE} />;
     }
@@ -56,7 +55,7 @@ const ServiceCard = ({
         className="cursor-pointer flex bg-black/30 px-4 py-2 rounded-md items-center mb-2 gap-4"
       >
         <div className="p-2 bg-green-600 rounded-full">
-          {getServiceIcon(service.name)}
+          {geServiceIcon(service.name)}
         </div>
         <div className="flex-1">
           <h3>{service.name}</h3>
@@ -79,7 +78,7 @@ const ServiceCard = ({
               className="cursor-pointer flex bg-black/30 px-4 py-2 rounded-md items-center mb-4 gap-4"
             >
               <div className="p-2 bg-green-600 rounded-full">
-                {getServiceIcon(extraService.title)}
+                {geServiceIcon(extraService.title)}
               </div>
               <div className="flex-1">
                 <h3>{extraService.title}</h3>

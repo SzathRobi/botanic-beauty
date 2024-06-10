@@ -26,6 +26,7 @@ model Schedule {
 }
 
 type TService {
+  id               String
   name             String
   duration          Int
   price             Int

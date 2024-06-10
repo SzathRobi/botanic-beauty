@@ -17,8 +17,8 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
     return NextResponse.json({ error: true, message: "Invalid data" });
   }
 
-  prisma.booking
-    .create({
+  try {
+    const booking = await prisma.booking.create({
       data: {
         services,
         hairdresser,
@@ -26,12 +26,12 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
         selectedTimeSlot,
         contactInfo,
       },
-    })
-    .catch((error) => {
-      return NextResponse.json({ error: true, message: error });
     });
-
-  return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true });
+  } catch (error: any) {
+    console.error("Error creating booking:", error);
+    return NextResponse.json({ error: true, message: error.message });
+  }
 }
 
 export async function PATCH(request: NextRequest, nextResponse: NextResponse) {

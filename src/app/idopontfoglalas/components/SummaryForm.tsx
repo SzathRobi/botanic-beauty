@@ -1,7 +1,7 @@
-import { ContactInfo, TService } from "@prisma/client";
+import { ContactInfo, Service } from "@prisma/client";
 
 type SummaryFormProps = {
-  choosenServices: TService[];
+  choosenServices: Service[];
   choosenHairdresser: "Timi" | "nem_Timi" | null;
   selectedDate: Date;
   selectedTimeSlot: string | null;

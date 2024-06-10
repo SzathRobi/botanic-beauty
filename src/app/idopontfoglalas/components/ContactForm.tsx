@@ -1,9 +1,11 @@
 "use client";
 
 import { Button } from "@/components/Button";
+import { Booking } from "@prisma/client";
 import { FormEvent, useState } from "react";
 
 type ContactFormProps = {
+  booking: Omit<Booking, "id" | "createdAt" | "updatedAt">;
   contactInfo: {
     name: string;
     email: string;
@@ -17,6 +19,7 @@ type ContactFormProps = {
 };
 
 const ContactForm = ({
+  booking,
   contactInfo,
   modifyContactInfo,
   decrementActiveStep,
@@ -33,7 +36,7 @@ const ContactForm = ({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ contactInfo }),
+        body: JSON.stringify({ booking }),
       });
 
       const data = await response.json();

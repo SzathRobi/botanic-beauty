@@ -1,14 +1,7 @@
-import { Booking, TService } from "@prisma/client";
+import { Booking } from "@prisma/client";
 import { format } from "date-fns";
 
 import { CalendarEvent } from "../types/calendarEvent.type";
-
-const getServiceDuration = (title: string): number => {
-  if (title === "Hajvágás") {
-    return 45;
-  }
-  return 240;
-};
 
 export const mapEventToBooking = ({
   contactInfo,

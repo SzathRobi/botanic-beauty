@@ -9,7 +9,8 @@ import HairdresserForm from "./HairdresserForm";
 import AvailableDatesForm from "./AvailableDatesForm";
 import ContactForm from "./ContactForm";
 import SummaryForm from "./SummaryForm";
-import { Booking, Schedule, TService } from "@prisma/client";
+import { Booking, Schedule, Service } from "@prisma/client";
+import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";
 
 type FadeInProps = {
   children: ReactNode;
@@ -32,7 +33,8 @@ type MultiStepFormProps = {
 
 const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [choosenServices, setchoosenServices] = useState<TService[]>([]);
+  // TODO: a Service szerintem nem lesz jó, sima Service kell a prisma schemából
+  const [choosenServices, setchoosenServices] = useState<Service[]>([]);
   const [choosenHairdresser, setChoosenHairdresser] = useState<
     "Timi" | "nem_Timi" | null
   >("Timi");
@@ -49,11 +51,11 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     setContactInfo({ ...contactInfo, [key]: value });
   };
 
-  const addChoosenService = (service: TService) => {
+  const addChoosenService = (service: Service) => {
     setchoosenServices([...choosenServices, service]);
   };
 
-  const removeChoosenService = (choosenService: TService) => {
+  const removeChoosenService = (choosenService: Service) => {
     setchoosenServices(
       choosenServices.filter((service) => service !== choosenService)
     );
@@ -73,22 +75,22 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   };
 
   const postBookingData = async () => {
+    if (!choosenHairdresser || !selectedTimeSlot) return;
+
     const response = await fetch("/api/booking", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        services: choosenServices,
-        hairdresser: choosenHairdresser,
-        selectedDate: new Date(
-          selectedDate.getFullYear(),
-          selectedDate.getMonth(),
-          selectedDate.getDate()
-        ),
-        selectedTimeSlot,
-        contactInfo,
-      }),
+      body: JSON.stringify(
+        mapMultistepFormDataToBooking({
+          choosenHairdresser,
+          choosenServices,
+          contactInfo,
+          selectedDate,
+          selectedTimeSlot,
+        })
+      ),
     });
 
     const data = await response.json();
@@ -146,7 +148,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             </FadeIn>
           )}
 
-          {activeStep === 2 && (
+          {activeStep === 2 && choosenHairdresser && selectedTimeSlot && (
             <FadeIn>
               <ContactForm
                 contactInfo={contactInfo}
@@ -154,6 +156,13 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
                 incrementActiveStep={incrementActiveStep}
                 decrementActiveStep={decrementActiveStep}
                 postBookingData={postBookingData}
+                booking={mapMultistepFormDataToBooking({
+                  choosenHairdresser,
+                  choosenServices,
+                  contactInfo,
+                  selectedDate,
+                  selectedTimeSlot,
+                })}
               />
             </FadeIn>
           )}
