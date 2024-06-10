@@ -142,7 +142,7 @@ const TimeSlots = ({
       timeSlots.push(
         <div className="col-span-full">
           <p className="bg-red-600 p-2 rounded text-white mb-2 text-center">
-            Ilyen hosszú szabad időpont mára már nincsen
+            Ilyen hosszú szabad időpont erre a napra már nincsen
           </p>
         </div>
       );

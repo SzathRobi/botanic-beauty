@@ -3,8 +3,9 @@
 import { formatDuration } from "@/lib/utils";
 import { Service } from "@prisma/client";
 import { ChangeEvent, useState } from "react";
-import { BsScissors } from "react-icons/bs";
-import { PiPaintBrushHouseholdFill } from "react-icons/pi";
+import toast from "react-hot-toast";
+import { PiHairDryer, PiScissors } from "react-icons/pi";
+import { IoColorPaletteOutline } from "react-icons/io5";
 
 type ServiceCardProps = {
   service: Service;
@@ -28,18 +29,36 @@ const ServiceCard = ({
       (choosenService) => choosenService.name === service.name
     )
   );
-  // const [isSubServiceChecked, setIsSubServiceChecked] = useState(false);
 
-  const geServiceIcon = (name: string) => {
-    if (name === "Hajvágás") {
-      return <BsScissors size={ICON_SIZE} />;
+  const geServiceIcon = (category: string) => {
+    if (category === "Hajvágás") {
+      return <PiScissors size={ICON_SIZE} />;
     }
 
-    return <PiPaintBrushHouseholdFill size={ICON_SIZE} />;
+    if (category === "Festések") {
+      return <IoColorPaletteOutline size={ICON_SIZE} />;
+    }
+
+    return <PiHairDryer size={ICON_SIZE} />;
   };
 
   const handleMainCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
+      if (choosenServices.length > 1) {
+        const sumOfDurations = choosenServices.reduce(
+          (sum, service) => sum + service.duration,
+          0
+        );
+
+        if (sumOfDurations + service.duration > 480) {
+          toast.error(
+            "A kiválasztott szolgáltatások időtartama nem lehet nagyobb, mint 8 óra"
+          );
+
+          return;
+        }
+      }
+
       addChoosenService(service);
       setIsMainServiceChecked(true);
     } else {
@@ -55,7 +74,7 @@ const ServiceCard = ({
         className="cursor-pointer flex bg-black/30 px-4 py-2 rounded-md items-center mb-2 gap-4"
       >
         <div className="p-2 bg-green-600 rounded-full">
-          {geServiceIcon(service.name)}
+          {geServiceIcon(service.category)}
         </div>
         <div className="flex-1">
           <h3>{service.name}</h3>

@@ -1,6 +1,6 @@
 import BackgroundBlur from "@/components/BackgroundBlur";
-import { PRICING_GROUPS } from "./constants/pricing.constants";
 import Transition from "@/components/Transition";
+import { SERVICE_GROUPS } from "@/constants/services.constants";
 
 const PricinggPage = async () => {
   return (
@@ -10,18 +10,21 @@ const PricinggPage = async () => {
           <h1 className="text-3xl text-center mb-12">Árlista</h1>
 
           <div className="mb-16">
-            {PRICING_GROUPS.map((pricingGroup) => (
-              <div key={pricingGroup.name} className="mb-14">
+            {SERVICE_GROUPS.map((servicegGroup) => (
+              <div key={servicegGroup.name} className="mb-14">
                 <h2 className="text-xl border-b-2 border-b-white/50 pb-6 mb-10">
-                  {pricingGroup.name}
+                  {servicegGroup.name}
                 </h2>
                 <ul className="pl-6 sm:pl-10">
-                  {pricingGroup.items.map((item) => (
-                    <li key={item.name} className="flex justify-between mb-6">
-                      <p className="max-w-md">{item.name}</p>
+                  {servicegGroup.services.map((service) => (
+                    <li
+                      key={service.name}
+                      className="flex justify-between mb-6"
+                    >
+                      <p className="max-w-md">{service.name}</p>
                       <div className="flex gap-4 min-w-fit">
-                        <p>{item.price} Ft</p>
-                        <p>{pricingGroup.pricePostfix}</p>
+                        <p>{service.price} Ft</p>
+                        <p>{servicegGroup.pricePostfix}</p>
                       </div>
                     </li>
                   ))}

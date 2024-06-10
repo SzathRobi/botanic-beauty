@@ -5,7 +5,6 @@ import { ReactNode, useState } from "react";
 import ServicesForm from "./ServicesForm";
 import Stepper from "./Stepper";
 import BackgroundBlur from "@/components/BackgroundBlur";
-import HairdresserForm from "./HairdresserForm";
 import AvailableDatesForm from "./AvailableDatesForm";
 import ContactForm from "./ContactForm";
 import SummaryForm from "./SummaryForm";

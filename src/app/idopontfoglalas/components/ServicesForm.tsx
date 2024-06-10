@@ -1,7 +1,7 @@
 import { Button } from "@/components/Button";
-import { services } from "../constants/services.constants";
 import ServiceCard from "./ServiceCard";
 import { Service } from "@prisma/client";
+import { SERVICES } from "@/constants/services.constants";
 
 type ServiceFormProps = {
   activeStep: number;
@@ -21,7 +21,7 @@ const ServicesForm = ({
   return (
     <div className="flex-1 flex flex-col">
       <div className="mb-12 flex-1">
-        {services.map((service, index) => (
+        {SERVICES.map((service, index) => (
           <ServiceCard
             key={service.name}
             service={service}
