@@ -16,15 +16,15 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface VerificationEmailProps {
+interface ReminderEmailProps {
   booking: Booking;
 }
 
-export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
+export const ReminderEmail = ({ booking }: ReminderEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>Sikeres foglalás</Preview>
+      <Preview>Foglalás</Preview>
       <Body style={main}>
         <Container>
           <Section style={content}>
@@ -47,41 +47,21 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                 >
                   Kedves {booking.contactInfo.name},
                 </Heading>
-                <Heading
-                  as="h2"
-                  style={{
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    textAlign: "left",
-                    marginBottom: 48,
-                  }}
-                >
-                  Köszönjük a foglalásod , sikeresen rögzítetük.
-                </Heading>
-
-                <Text style={paragraph}>Foglalás részletei:</Text>
-
-                <Text>
-                  Időpont:{" "}
-                  <b>
-                    {booking.selectedDate} {booking.selectedTimeSlot}
-                  </b>
-                </Text>
 
                 <Text style={{ marginBottom: 48 }}>
-                  Szolgáltatás:{" "}
+                  Ne feledd, hogy közeleg az időpontod a Botanic Beauty-ban!
+                  Szeretettel várunk téged{" "}
                   <b>
-                    {booking.services.map((service, index: number) => (
-                      <span key={index}>{service.name} </span>
-                    ))}
-                  </b>
+                    {booking.selectedDate} {booking.selectedTimeSlot}
+                  </b>{" "}
+                  -kor.
                 </Text>
 
-                <Text style={paragraph}>
-                  Ha mégse jó az időpont kérlek jelezd a következő emailen /
-                  telefonon:
+                <Text>
+                  Ha bármilyen kérdésed van, vagy változtatnál az időponton,
+                  kérlek, vedd fel velünk a kapcsolatot e-mailben vagy
+                  telefonon!
                 </Text>
-                <Text>labamkozottnagy@gmail.com / 06304204200</Text>
               </Column>
             </Row>
           </Section>
@@ -105,7 +85,7 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
   );
 };
 
-VerificationEmail.PreviewProps = {
+ReminderEmail.PreviewProps = {
   booking: {
     contactInfo: {
       name: "Omamori Himari",
@@ -121,18 +101,14 @@ VerificationEmail.PreviewProps = {
     selectedDate: "2022-10-10",
     selectedTimeSlot: "10:00 - 11:00",
   },
-} as VerificationEmailProps;
+} as ReminderEmailProps;
 
-export default VerificationEmail;
+export default ReminderEmail;
 
 const main = {
   backgroundColor: "#fff",
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-};
-
-const paragraph = {
-  fontSize: 16,
 };
 
 const content = {

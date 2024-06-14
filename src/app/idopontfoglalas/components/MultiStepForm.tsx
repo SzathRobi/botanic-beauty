@@ -1,15 +1,20 @@
 "use client";
 
+import { Booking, Schedule, Service } from "@prisma/client";
 import { motion } from "framer-motion";
+import dynamic from "next/dynamic";
 import { ReactNode, useState } from "react";
+import toast from "react-hot-toast";
+
+import BackgroundBlur from "@/components/BackgroundBlur";
+import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";
 import ServicesForm from "./ServicesForm";
 import Stepper from "./Stepper";
-import BackgroundBlur from "@/components/BackgroundBlur";
-import AvailableDatesForm from "./AvailableDatesForm";
-import ContactForm from "./ContactForm";
-import SummaryForm from "./SummaryForm";
-import { Booking, Schedule, Service } from "@prisma/client";
-import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";
+
+const HairdresserForm = dynamic(() => import("./HairdresserForm"));
+const AvailableDatesForm = dynamic(() => import("./AvailableDatesForm"));
+const ContactForm = dynamic(() => import("./ContactForm"));
+const SummaryForm = dynamic(() => import("./SummaryForm"));
 
 type FadeInProps = {
   children: ReactNode;
@@ -32,7 +37,6 @@ type MultiStepFormProps = {
 
 const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  // TODO: a Service szerintem nem lesz jó, sima Service kell a prisma schemából
   const [choosenServices, setchoosenServices] = useState<Service[]>([]);
   const [choosenHairdresser, setChoosenHairdresser] = useState<
     "Timi" | "nem_Timi" | null
@@ -60,10 +64,9 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     );
   };
 
-  // TODO: uncomment when there is more than 1 hairdresser in business
-  // const chooseHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
-  //   setChoosenHairdresser(hairdresser);
-  // };
+  const chooseHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
+    setChoosenHairdresser(hairdresser);
+  };
 
   const incrementActiveStep = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -95,7 +98,9 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     const data = await response.json();
 
     if (!data.success) {
-      throw new Error("Failed to post booking data");
+      toast.error(
+        "Hiba történt, a foglalás sikertelen. Kérlek Próbáld meg később"
+      );
     }
 
     return data;
@@ -120,17 +125,16 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             </FadeIn>
           )}
 
-          {/* TODO: uncomment when there is more than 1 hairdresser in business */}
-          {/* {activeStep === 1 && (
+          {activeStep === 1 && (
             <HairdresserForm
               choosenHairdresser={choosenHairdresser}
               chooseHairdresser={chooseHairdresser}
               incrementActiveStep={incrementActiveStep}
               decrementActiveStep={decrementActiveStep}
             />
-          )} */}
+          )}
 
-          {activeStep === 1 && schedule && (
+          {activeStep === 2 && schedule && (
             <FadeIn>
               <AvailableDatesForm
                 bookings={bookings}
@@ -147,7 +151,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             </FadeIn>
           )}
 
-          {activeStep === 2 && choosenHairdresser && selectedTimeSlot && (
+          {activeStep === 3 && choosenHairdresser && selectedTimeSlot && (
             <FadeIn>
               <ContactForm
                 contactInfo={contactInfo}
@@ -166,7 +170,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             </FadeIn>
           )}
 
-          {activeStep === 3 && (
+          {activeStep === 4 && (
             <FadeIn>
               <SummaryForm
                 choosenServices={choosenServices}

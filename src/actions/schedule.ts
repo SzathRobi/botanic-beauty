@@ -34,5 +34,10 @@ export const modifySchedule = async (
 };
 
 export const getSchedule = async () => {
-  return await prisma.schedule.findFirst();
+  try {
+    return await prisma.schedule.findFirst();
+  } catch (error: any) {
+    console.log({ error });
+    throw new Error(error.message || error);
+  }
 };

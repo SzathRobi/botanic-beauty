@@ -46,7 +46,9 @@ const AvailableDatesForm = ({
   decrementActiveStep,
   incrementActiveStep,
 }: AvailableDatesFormProps) => {
+  // TODO / medium: itt ez lenullázza a perceket ami nem jó pl: 8:40 -> 10
   const tPlus2Hours = Number(format(addHours(new Date(), 2), "H"));
+  console.log({ tPlus2Hours });
 
   const hairdresserOffDays: Date[] = schedule.offDays
     .filter((offDay: OffDay) => offDay.person === choosenHairdresser)
@@ -55,7 +57,7 @@ const AvailableDatesForm = ({
 
   let choosenServicesDuration = 0;
 
-  // TODO: nem bizti hogy kell
+  // TODO / low: nem bizti hogy kell
   const [isClosedDay, setIsClosedDay] = useState<boolean>(false);
 
   choosenServices.forEach((service) => {
@@ -107,7 +109,7 @@ const AvailableDatesForm = ({
             isClosedDay ||
             isSunday(date) ||
             hairdresserOffDays.some(
-              // TODO: ha többen lesznek ezt átírni
+              // TODO / low: ha többen lesznek ezt átírni
               (offDay) =>
                 // isSameDay(offDay, date) && offDay.person === choosenHairdresser
                 isSameDay(offDay, date)
@@ -115,7 +117,7 @@ const AvailableDatesForm = ({
           }
           onSelect={handleSelect}
         />
-
+        {/* TODO / highest: anomália írtás + csillagállás alapján vannak ütköző foglalások + legelső szabad időpontra ugrás talán nem mindig jó. */}
         <TimeSlots
           bookings={bookings}
           startTime={isToday(selectedDate) ? tPlus2Hours : OPENING_HOUR}

@@ -3,6 +3,7 @@
 import { Button } from "@/components/Button";
 import { Booking } from "@prisma/client";
 import { FormEvent, useState } from "react";
+import { differenceInSeconds, format, parse, subHours } from "date-fns";
 
 type ContactFormProps = {
   booking: Omit<Booking, "id" | "createdAt" | "updatedAt">;
@@ -52,6 +53,61 @@ const ContactForm = ({
     }
   };
 
+  const getSecondsToDate = (
+    booking: Omit<Booking, "id" | "createdAt" | "updatedAt">
+  ): number => {
+    // Kombináljuk a dátumot és az időt egy ISO formátumú dátum stringgé
+    const dateStr =
+      booking.selectedDate.split(" ")[1] +
+      " " +
+      booking.selectedDate.split(" ")[2] +
+      " " +
+      booking.selectedDate.split(" ")[3];
+    const timeStr = booking.selectedTimeSlot.split(" - ")[0];
+    const dateTimeStr = dateStr + " " + timeStr;
+    const targetDate = parse(dateTimeStr, "MMM dd yyyy HH:mm", new Date());
+
+    // Vonjunk le két órát az így kapott dátumból
+    const modifiedTargetDate = subHours(targetDate, 2);
+
+    // Határozzuk meg a jelenlegi időpontot
+    const currentDate = new Date();
+
+    // Számítsuk ki a különbséget másodpercekben
+    const secondsDifference = differenceInSeconds(
+      modifiedTargetDate,
+      currentDate
+    );
+
+    return secondsDifference;
+  };
+
+  const scheduleReminderEmail = async (
+    booking: Omit<Booking, "id" | "createdAt" | "updatedAt">
+  ) => {
+    const emailDelayInMiliseconds = getSecondsToDate(booking) * 1000;
+
+    const emailScheduleResponse = await fetch("/api/email/schedule", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        booking: {
+          ...booking,
+          selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+        },
+        emailDelayInMiliseconds,
+      }),
+    });
+
+    const emailScheduleData = await emailScheduleResponse.json();
+
+    if (!emailScheduleData.success) return null;
+
+    return emailScheduleData;
+  };
+
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -60,7 +116,8 @@ const ContactForm = ({
 
     try {
       await postBookingData().then(async () => {
-        await sendVerificationEmail().then((data) => {
+        await sendVerificationEmail().then(async () => {
+          await scheduleReminderEmail(booking);
           incrementActiveStep();
         });
       });

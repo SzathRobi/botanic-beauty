@@ -70,7 +70,7 @@ const SummaryForm = ({
         <p className="text-center">
           Email címedre kiküldtünk egy visszaigazoló levelet.
         </p>
-        <p className="text-red-500 text-center">
+        <p className="font-medium">
           Ha mégse lenne jó az időpont, kérlek időben jelezd ezen az
           elérhetőségen:
         </p>

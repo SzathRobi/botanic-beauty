@@ -32,7 +32,6 @@ const createService = async (service: z.infer<typeof serviceFormSchema>) => {
 };
 
 const ServiceForm = () => {
-  // TODO: Add error handling + loading
   const [isLoading, setIsLoading] = useState(false);
   const [requestError, setRequestError] = useState<string | null>(null);
 
@@ -53,7 +52,6 @@ const ServiceForm = () => {
     const validatedFiels = serviceFormSchema.safeParse(values);
 
     if (!validatedFiels.success) {
-      // console.log(validatedFiels.error.issues);
       return;
     }
 
@@ -150,7 +148,7 @@ const ServiceForm = () => {
         <div className="flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2">
           <DialogClose asChild>
             <Button type="button" variant="secondary">
-              mégse
+              Mégse
             </Button>
           </DialogClose>
           <Button type="submit" isLoading={isLoading}>

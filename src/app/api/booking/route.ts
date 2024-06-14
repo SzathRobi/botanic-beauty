@@ -18,7 +18,7 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
   }
 
   try {
-    const booking = await prisma.booking.create({
+    await prisma.booking.create({
       data: {
         services,
         hairdresser,
@@ -27,6 +27,7 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
         contactInfo,
       },
     });
+
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("Error creating booking:", error);

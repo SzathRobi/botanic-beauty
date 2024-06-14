@@ -18,13 +18,13 @@ const HairdresserForm = ({
 }: HairdresserFormProps) => {
   return (
     <div>
-      <p>Válassz fodrászt</p>
+      <p className="text-lg mb-8">Elérhető fodrászok</p>
 
-      <div className="mb-12 flex items-start justify-center gap-8">
+      <div className="mb-12 flex items-start justify-center gap-8 w-full">
         <label
           className={`${
             choosenHairdresser === "Timi" ? "border-2" : ""
-          } p-2 cursor-pointer`}
+          } p-2 cursor-pointer w-full`}
         >
           <input
             type="radio"
@@ -34,17 +34,19 @@ const HairdresserForm = ({
             checked={choosenHairdresser === "Timi"}
             onChange={() => chooseHairdresser("Timi")}
           />
-          <p>Timi</p>
-          <Image
-            src="/timi.png"
-            alt="Timi"
-            className="max-h-[240px] object-cover"
-            width={240}
-            height={240}
-          />
+          <div className="flex w-full items-center justify-start gap-8">
+            <Image
+              src="/timi.png"
+              alt="Timi"
+              className="size-[120px] object-cover"
+              width={120}
+              height={120}
+            />
+            <p className="text-xl">Timi</p>
+          </div>
         </label>
 
-        <label
+        {/* <label
           className={`${
             choosenHairdresser === "nem_Timi" ? "border-2" : ""
           } p-2 cursor-pointer`}
@@ -65,7 +67,7 @@ const HairdresserForm = ({
             width={240}
             height={240}
           />
-        </label>
+        </label> */}
       </div>
 
       <div className="flex items-center justify-end gap-2">

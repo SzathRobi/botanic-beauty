@@ -20,8 +20,9 @@ export const modifyBooking = async (booking: Booking) => {
 export const getBookings = async () => {
   try {
     return await prisma.booking.findMany();
-  } catch (error) {
+  } catch (error: any) {
     console.log({ error });
+    throw new Error(error.message || error);
   }
 };
 

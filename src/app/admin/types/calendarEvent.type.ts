@@ -8,7 +8,6 @@ type CalendarEventContactInfo = {
   otherInfo: string | null;
 };
 
-// TODO: Service már máshogy néz ki
 export type CalendarEvent = Event & {
   id: string;
   hairdresser: Hairdresser;

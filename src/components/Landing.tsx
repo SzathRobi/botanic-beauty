@@ -15,10 +15,11 @@ const Landing = async () => {
       <div className="px-2 sm:px-0 flex h-full w-full flex-col items-center justify-center">
         <BackgroundBlur className="mb-24 flex flex-col items-center justify-center gap-4">
           <h1 className="text-center text-xl md:text-3xl mb-2">
-            Lépj be a stílus világába a Botanic Beauty-nál
+            Lépj be a fenntartható és egyéni hajápolás világába a Botanic
+            Beauty-nál!
           </h1>
           <h2 className="text-center mb-12 text-md md:text-xl opacity-75">
-            Modern frizurák és professzionális hajápolás Budapesten.
+            A természet és az egyéniséged ihlette fodrászat Újpesten.
           </h2>
           <Link
             href={BOOKING_ROUTE}

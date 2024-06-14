@@ -26,6 +26,18 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+.rdp-button {
+  transition: background-color 0.2s ease-in-out;
+}
+
+.rdp-day_selected {
+  background-color: #21954c !important;
+}
+
+.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+  background-color: #21954c66 !important;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

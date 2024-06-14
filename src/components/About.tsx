@@ -7,7 +7,7 @@ const About = () => {
   return (
     <section className="px-2 sm:px-0 mb-60">
       <FadeInView>
-        <Title title="Rólunk" />
+        <Title title="Szalonról" />
         <BackgroundBlur className="mx-auto space-y-24">
           <div className="flex gap-8 flex-col md:flex-row">
             <div className="relative min-h-64 min-w-64 md:min-w-96 md:min-h-96">
@@ -19,13 +19,20 @@ const About = () => {
               />
             </div>
             <p className="text-lg mb-8">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at
-              mi commodo, mollis nunc id, facilisis nunc. Donec feugiat gravida
-              porta. Proin viverra lobortis vestibulum. Morbi tincidunt
-              scelerisque massa at ultrices. Sed id hendrerit odio, sit amet
-              ullamcorper turpis. Fusce pulvinar vel ex non fermentum. Integ vel
-              ex non fermentum. Integ semper vitae, feugiat id ex. Suspendisse
-              auctor egestas dui vitae malesuada.
+              Timi vagyok, a szalon tulajdonosa, és nagy szenvedéllyel törekszem
+              arra, hogy együtt alkossuk meg a vendéggel a tökéletes frizurát. A
+              szalon koncepcióját, fenntarthatóság iránti elkötelezettséggel
+              hoztam létre , ezért vegán, állatkísérlet mentes termékekkel
+              dolgozom. Ebben a szalonban minden a te elképzelésedről és a
+              minőségi, de megfizethető és környezetbarát anyagok használatáról
+              szól. Hiszek abban, hogy a legjobb eredményeket a vendég
+              egyéniségéhez és igényeihez igazodó, közös munka és kommunikáció
+              révén érhetjük el. A cél, hogy a frizurád tökéletesen tükrözze a
+              személyiséged és a hétköznapokon, otthon is könnyen kezelni tudd,
+              és megtanuld helyesen ápolni. Amíg a hajad elkészül, zöldövezeti,
+              nyugodt oázisban pihenhetsz Újpesten . Számomra fontos, hogy ne
+              csak gyönyörű frizurával, hanem kívűl-belűl megújulva hagyd el a
+              szalont.
             </p>
           </div>
         </BackgroundBlur>
