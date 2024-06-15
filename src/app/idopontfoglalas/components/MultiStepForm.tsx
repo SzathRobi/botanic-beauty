@@ -97,12 +97,14 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
 
     const data = await response.json();
 
-    if (!data.success) {
-      toast.error(
-        "Hiba történt, a foglalás sikertelen. Kérlek Próbáld meg később"
-      );
-    }
+    return data;
+  };
 
+  const deleteBookingData = async (id: string) => {
+    const response = await fetch(`/api/booking/${id}`, {
+      method: "DELETE",
+    });
+    const data = await response.json();
     return data;
   };
 
@@ -159,6 +161,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
                 incrementActiveStep={incrementActiveStep}
                 decrementActiveStep={decrementActiveStep}
                 postBookingData={postBookingData}
+                deleteBookingData={deleteBookingData}
                 booking={mapMultistepFormDataToBooking({
                   choosenHairdresser,
                   choosenServices,

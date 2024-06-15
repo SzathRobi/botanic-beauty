@@ -18,7 +18,33 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
   }
 
   try {
-    await prisma.booking.create({
+    const allBookings = await prisma.booking.findMany({
+      where: {
+        selectedDate: {
+          equals: selectedDate,
+        },
+      },
+    });
+
+    // Ütközés ellenőrzése JavaScript segítségével
+    const [newStartTime, newEndTime] = selectedTimeSlot.split(" - ");
+    const overlaps = allBookings.some((booking) => {
+      const [existingStartTime, existingEndTime] =
+        booking.selectedTimeSlot.split(" - ");
+      return (
+        (newStartTime < existingEndTime && newEndTime > existingStartTime) ||
+        (newEndTime > existingStartTime && newStartTime < existingEndTime)
+      );
+    });
+
+    if (overlaps) {
+      return NextResponse.json(
+        { error: true, message: "Overlap with existing booking" },
+        { status: 400 }
+      );
+    }
+
+    const booking = await prisma.booking.create({
       data: {
         services,
         hairdresser,
@@ -28,7 +54,7 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
       },
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, data: booking });
   } catch (error: any) {
     console.error("Error creating booking:", error);
     return NextResponse.json({ error: true, message: error.message });

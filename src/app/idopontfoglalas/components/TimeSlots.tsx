@@ -2,10 +2,12 @@
 
 import {
   format,
+  addDays,
   addMinutes,
   isWithinInterval,
   startOfDay,
   isToday,
+  isSunday,
   setMinutes,
   setHours,
   isSameDay,
@@ -15,7 +17,7 @@ import { Booking } from "@prisma/client";
 
 type TimeSlotsProps = {
   bookings: Booking[];
-  startTime: number;
+  startTime: Date;
   endTime: number;
   interval: number;
   isClosedDay: boolean;
@@ -23,6 +25,8 @@ type TimeSlotsProps = {
   selectedTimeSlot: string | null;
   setSelectedTimeSlot: (timeSlot: string) => void;
   selectedDate: Date;
+  setDatesWithNoTimeForSelectedService: (stuff: any) => any;
+  setSelectedDate: (date: Date) => void;
   isSelectedHairdresserOffDay: boolean;
 };
 
@@ -45,6 +49,15 @@ const getBookingStartAndEndDate = (
   return { start, end };
 };
 
+const roundUpToNearestQuarter = (date: Date): Date => {
+  const minutes = date.getMinutes();
+  const remainder = minutes % 15;
+  if (remainder !== 0) {
+    date = addMinutes(date, 15 - remainder);
+  }
+  return date;
+};
+
 const TimeSlots = ({
   startTime,
   endTime,
@@ -54,63 +67,49 @@ const TimeSlots = ({
   selectedTimeSlot,
   setSelectedTimeSlot,
   selectedDate,
+  setDatesWithNoTimeForSelectedService,
+  setSelectedDate,
   bookings,
   isSelectedHairdresserOffDay,
 }: TimeSlotsProps) => {
-  if (isSelectedHairdresserOffDay) {
-    return (
-      <div>
-        <p className="bg-red-600 p-2 rounded text-white mb-2 text-center">
-          A fodrász ezen a napon nem dolgozik.
-        </p>
-      </div>
-    );
+  if (
+    isSunday(selectedDate) ||
+    isSelectedHairdresserOffDay ||
+    isClosedDay ||
+    (isToday(selectedDate) && isClosedForToday)
+  ) {
+    setSelectedDate(addDays(selectedDate, 1));
   }
 
-  if (isClosedDay) {
-    return (
-      <div>
-        <p className="bg-red-600 p-2 rounded text-white mb-2 text-center">
-          Ezen a napon a szalon zárva van.
-        </p>
-      </div>
-    );
-  }
-
-  if (isToday(selectedDate) && isClosedForToday) {
-    return (
-      <div>
-        <p className="bg-red-600 p-2 rounded text-white mb-2 text-center">
-          Mára már nem lehet időpontot foglalni.
-        </p>
-      </div>
-    );
-  }
-
-  const bookingsForToday = bookings.filter((booking) =>
+  const bookingsForSelectedDay = bookings.filter((booking) =>
     isSameDay(booking.selectedDate, selectedDate)
   );
 
-  const isOverlappingDate = (time: Date): boolean => {
-    const dateSlot = setDate(time, selectedDate.getDate());
+  const isOverlappingDate = (time: Date, interval: number): boolean => {
+    const startDate = setDate(time, selectedDate.getDate());
+    const endDate = addMinutes(startDate, interval);
 
-    return bookingsForToday.some((booking) => {
+    return bookingsForSelectedDay.some((booking) => {
       const { start, end } = getBookingStartAndEndDate(
         booking.selectedDate,
         booking.selectedTimeSlot
       );
 
-      return isWithinInterval(dateSlot, {
-        start,
-        end,
-      });
+      return (
+        (startDate >= start && startDate < end) || // Új foglalás kezdete ütközik egy meglévő foglalással
+        (endDate > start && endDate <= end) || // Új foglalás vége ütközik egy meglévő foglalással
+        (startDate <= start && endDate >= end) // Új foglalás lefedi a meglévő foglalást
+      );
     });
   };
 
   const renderTimeSlots = () => {
+    if (isSunday(selectedDate)) {
+      setSelectedDate(addDays(selectedDate, 1));
+    }
+
     const timeSlots = [];
-    let currentTime = startOfDay(new Date());
-    currentTime.setHours(startTime);
+    let currentTime = roundUpToNearestQuarter(startTime);
 
     while (currentTime.getHours() + Math.ceil(interval / 60) < endTime) {
       const endTimeSlot = addMinutes(currentTime, interval);
@@ -119,7 +118,7 @@ const TimeSlots = ({
         "HH:mm"
       )}`;
 
-      !isOverlappingDate(currentTime) &&
+      if (!isOverlappingDate(currentTime, interval)) {
         timeSlots.push(
           <button
             key={timeSlotText}
@@ -134,18 +133,17 @@ const TimeSlots = ({
             {timeSlotText}
           </button>
         );
+      }
 
       currentTime = addMinutes(currentTime, 15);
     }
 
     if (timeSlots.length === 0) {
-      timeSlots.push(
-        <div className="col-span-full">
-          <p className="bg-red-600 p-2 rounded text-white mb-2 text-center">
-            Ilyen hosszú szabad időpont erre a napra már nincsen
-          </p>
-        </div>
-      );
+      setDatesWithNoTimeForSelectedService((prevDates: any) => [
+        ...prevDates,
+        selectedDate,
+      ]);
+      setSelectedDate(addDays(selectedDate, 1));
     }
 
     return timeSlots;

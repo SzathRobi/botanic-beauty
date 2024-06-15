@@ -3,12 +3,14 @@
 import { useEffect, useState } from "react";
 import {
   addDays,
-  addHours,
-  format,
   isBefore,
   isSameDay,
   isSunday,
   isToday,
+  addMinutes,
+  setHours,
+  setMinutes,
+  startOfDay,
 } from "date-fns";
 
 import { DayPicker } from "react-day-picker";
@@ -34,6 +36,15 @@ type AvailableDatesFormProps = {
   decrementActiveStep: () => void;
 };
 
+const roundUpToNearestQuarter = (date: Date): Date => {
+  const minutes = date.getMinutes();
+  const remainder = minutes % 15;
+  if (remainder !== 0) {
+    date = addMinutes(date, 15 - remainder);
+  }
+  return date;
+};
+
 const AvailableDatesForm = ({
   bookings,
   selectedDate,
@@ -46,9 +57,13 @@ const AvailableDatesForm = ({
   decrementActiveStep,
   incrementActiveStep,
 }: AvailableDatesFormProps) => {
-  // TODO / medium: itt ez lenullázza a perceket ami nem jó pl: 8:40 -> 10
-  const tPlus2Hours = Number(format(addHours(new Date(), 2), "H"));
-  console.log({ tPlus2Hours });
+  const now = new Date();
+  const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120));
+
+  const [
+    datesWithNoTimeForSelectedService,
+    setDatesWithNoTimeForSelectedService,
+  ] = useState<Date[]>([]);
 
   const hairdresserOffDays: Date[] = schedule.offDays
     .filter((offDay: OffDay) => offDay.person === choosenHairdresser)
@@ -57,7 +72,6 @@ const AvailableDatesForm = ({
 
   let choosenServicesDuration = 0;
 
-  // TODO / low: nem bizti hogy kell
   const [isClosedDay, setIsClosedDay] = useState<boolean>(false);
 
   choosenServices.forEach((service) => {
@@ -70,6 +84,7 @@ const AvailableDatesForm = ({
     }
   };
 
+  // TODO / medium: ha nincs elérhető időpont akkor is ugorjon napot
   const getFirstAvailableDate = (): Date => {
     let firstAvailableDate = new Date(Date.now());
 
@@ -97,6 +112,11 @@ const AvailableDatesForm = ({
     setSelectedDate(getFirstAvailableDate());
   }, []);
 
+  const getOpeningHour = () => {
+    const date = startOfDay(new Date());
+    return setMinutes(setHours(date, OPENING_HOUR), 0);
+  };
+
   return (
     <div className="mb-8">
       <div className="mb-12 flex flex-col md:flex-row justify-between items-start gap-4">
@@ -108,19 +128,16 @@ const AvailableDatesForm = ({
             isBefore(date, new Date(Date.now())) ||
             isClosedDay ||
             isSunday(date) ||
-            hairdresserOffDays.some(
-              // TODO / low: ha többen lesznek ezt átírni
-              (offDay) =>
-                // isSameDay(offDay, date) && offDay.person === choosenHairdresser
-                isSameDay(offDay, date)
+            hairdresserOffDays.some((offDay) => isSameDay(offDay, date)) ||
+            datesWithNoTimeForSelectedService.some((datesWithNoTime) =>
+              isSameDay(datesWithNoTime, date)
             )
           }
           onSelect={handleSelect}
         />
-        {/* TODO / highest: anomália írtás + csillagállás alapján vannak ütköző foglalások + legelső szabad időpontra ugrás talán nem mindig jó. */}
         <TimeSlots
           bookings={bookings}
-          startTime={isToday(selectedDate) ? tPlus2Hours : OPENING_HOUR}
+          startTime={isToday(selectedDate) ? tPlus2Hours : getOpeningHour()}
           endTime={CLOSING_HOUR}
           interval={choosenServicesDuration}
           isClosedDay={isClosedDay}
@@ -128,6 +145,10 @@ const AvailableDatesForm = ({
           selectedTimeSlot={selectedTimeSlot}
           setSelectedTimeSlot={setSelectedTimeSlot}
           selectedDate={selectedDate}
+          setSelectedDate={setSelectedDate}
+          setDatesWithNoTimeForSelectedService={
+            setDatesWithNoTimeForSelectedService
+          }
           isSelectedHairdresserOffDay={hairdresserOffDays.some((offDay) =>
             isSameDay(offDay, selectedDate)
           )}

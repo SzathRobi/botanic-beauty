@@ -39,13 +39,13 @@ const SummaryForm = ({
           </div>
         </div>
 
-        {/* <div className="flex gap-4">
-          <SlUserFemale size={48} />
+        <div className="flex gap-4">
+          <SlUserFemale size={40} className="pt-4" />
           <div>
             <p>Fordrász:</p>
             <p className="font-medium text-lg">{choosenHairdresser}</p>
           </div>
-        </div> */}
+        </div>
 
         <div className="flex gap-4">
           <RiCalendarScheduleLine size={48} />
@@ -57,14 +57,6 @@ const SummaryForm = ({
           </div>
         </div>
       </div>
-
-      {/* <div>
-        <p className="font-medium text-lg">Elérhetőség:</p>
-        <p>{contactInfo.name}</p>
-        <p>{contactInfo.email}</p>
-        <p>{contactInfo.phone}</p>
-        {contactInfo.otherInfo && <p>{contactInfo.otherInfo}</p>}
-      </div> */}
 
       <div className="flex flex-col gap-4 justify-center items-center">
         <p className="text-center">

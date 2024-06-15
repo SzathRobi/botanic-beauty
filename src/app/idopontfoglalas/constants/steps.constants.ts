@@ -2,9 +2,9 @@ export const steps = [
   {
     title: "Szolgáltatások",
   },
-  // {
-  //   title: "Fodrászok",
-  // },
+  {
+    title: "Fodrászok",
+  },
   {
     title: "Foglalás",
   },

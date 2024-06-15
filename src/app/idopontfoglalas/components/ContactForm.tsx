@@ -4,6 +4,7 @@ import { Button } from "@/components/Button";
 import { Booking } from "@prisma/client";
 import { FormEvent, useState } from "react";
 import { differenceInSeconds, format, parse, subHours } from "date-fns";
+import toast from "react-hot-toast";
 
 type ContactFormProps = {
   booking: Omit<Booking, "id" | "createdAt" | "updatedAt">;
@@ -16,7 +17,8 @@ type ContactFormProps = {
   modifyContactInfo: (key: string, value: string) => void;
   incrementActiveStep: () => void;
   decrementActiveStep: () => void;
-  postBookingData: () => Promise<void>;
+  postBookingData: () => Promise<any>;
+  deleteBookingData: (id: string) => Promise<any>;
 };
 
 const ContactForm = ({
@@ -26,6 +28,7 @@ const ContactForm = ({
   decrementActiveStep,
   incrementActiveStep,
   postBookingData,
+  deleteBookingData,
 }: ContactFormProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -115,14 +118,36 @@ const ContactForm = ({
     setError(null);
 
     try {
-      await postBookingData().then(async () => {
-        await sendVerificationEmail().then(async () => {
-          await scheduleReminderEmail(booking);
-          incrementActiveStep();
-        });
-      });
+      const bookingData = await postBookingData();
+
+      if (bookingData.message === "Overlap with existing booking") {
+        toast.error(
+          "A kiválasztott időpont már nem elérhető. Kérlek válassz másik időpontot."
+        );
+        return;
+      }
+
+      if (bookingData.error) {
+        toast.error(
+          "Hoppá! Valami hiba történt a foglalás során. Kérlek probáld meg később"
+        );
+        return;
+      }
+
+      const verificationResult = await sendVerificationEmail();
+      if (!verificationResult) {
+        deleteBookingData(bookingData.id);
+        return;
+      }
+
+      const scheduleResult = await scheduleReminderEmail(booking);
+      if (!scheduleResult) {
+        throw new Error("Failed to schedule reminder email");
+      }
+
+      incrementActiveStep();
     } catch (error) {
-      setError("Failed to post booking data");
+      setError("Hiba történt a foglalás során");
     } finally {
       setIsLoading(false);
     }
