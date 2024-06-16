@@ -84,7 +84,6 @@ const AvailableDatesForm = ({
     }
   };
 
-  // TODO / medium: ha nincs elérhető időpont akkor is ugorjon napot
   const getFirstAvailableDate = (): Date => {
     let firstAvailableDate = new Date(Date.now());
 
