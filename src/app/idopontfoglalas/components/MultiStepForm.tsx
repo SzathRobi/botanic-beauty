@@ -4,7 +4,6 @@ import { Booking, Schedule, Service } from "@prisma/client";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { ReactNode, useState } from "react";
-import toast from "react-hot-toast";
 
 import BackgroundBlur from "@/components/BackgroundBlur";
 import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";
@@ -128,12 +127,14 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
           )}
 
           {activeStep === 1 && (
-            <HairdresserForm
-              choosenHairdresser={choosenHairdresser}
-              chooseHairdresser={chooseHairdresser}
-              incrementActiveStep={incrementActiveStep}
-              decrementActiveStep={decrementActiveStep}
-            />
+            <FadeIn>
+              <HairdresserForm
+                choosenHairdresser={choosenHairdresser}
+                chooseHairdresser={chooseHairdresser}
+                incrementActiveStep={incrementActiveStep}
+                decrementActiveStep={decrementActiveStep}
+              />
+            </FadeIn>
           )}
 
           {activeStep === 2 && schedule && (

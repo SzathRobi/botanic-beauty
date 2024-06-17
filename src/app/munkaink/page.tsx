@@ -18,7 +18,7 @@ const OurWorksPage = async () => {
 
   return (
     <Transition>
-      <section className="pt-24">
+      <section className="px-2 sm:px-0 pt-24">
         {/* <h1> OurWorksPage {resources.length}</h1> */}
         <BackgroundBlur className="!max-w-6xl mx-auto grid place-items-center">
           <div className="columns-2 md:columns-3 gap-8">

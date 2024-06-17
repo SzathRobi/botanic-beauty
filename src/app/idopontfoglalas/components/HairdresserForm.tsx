@@ -24,7 +24,7 @@ const HairdresserForm = ({
         <label
           className={`${
             choosenHairdresser === "Timi" ? "border-2" : ""
-          } p-2 cursor-pointer w-full`}
+          } p-2 cursor-pointer w-full rounded-lg`}
         >
           <input
             type="radio"
@@ -38,7 +38,7 @@ const HairdresserForm = ({
             <Image
               src="/timi.png"
               alt="Timi"
-              className="size-[120px] object-cover"
+              className="size-[120px] object-cover rounded-lg"
               width={120}
               height={120}
             />

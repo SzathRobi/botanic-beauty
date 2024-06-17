@@ -1,5 +1,4 @@
-import { IoLocationSharp, IoMail } from "react-icons/io5";
-import { FaMobileAlt } from "react-icons/fa";
+import { MapPin, Mail, Smartphone } from "lucide-react";
 
 import BackgroundBlur from "./BackgroundBlur";
 import Title from "./Title";
@@ -8,7 +7,7 @@ import FadeInView from "./FadeInView";
 
 const Contact = () => {
   return (
-    <section className="min-h-screen">
+    <section className="px-2 sm:px-0 min-h-screen mb-60">
       <Image
         alt=""
         src="/contact-bg.png"
@@ -17,28 +16,22 @@ const Contact = () => {
       />
       <FadeInView>
         <Title title="Elérhetőség / média" />
-        <div className="px-2 sm:px-0">
+        <div>
           <BackgroundBlur className="mx-auto flex max-w-5xl flex-col gap-16 ">
             <div className="flex flex-col items-start justify-center gap-12 sm:flex-row">
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
-                <IoLocationSharp
-                  size={80}
-                  className="green-glow-text text-green-700"
-                />
+                <MapPin size={72} />
                 <p className="max-w-sm text-left sm:text-center">
                   1045. Budapest,
                   <br /> Széchenyi tér 4. (Újpest)
                 </p>
               </div>
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
-                <IoMail size={80} className="green-glow-text text-green-700" />
+                <Mail size={72} />
                 <p>email@email.com</p>
               </div>
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
-                <FaMobileAlt
-                  size={80}
-                  className="green-glow-text text-green-700"
-                />
+                <Smartphone size={72} />
                 <p>+36 30 4204200</p>
               </div>
             </div>

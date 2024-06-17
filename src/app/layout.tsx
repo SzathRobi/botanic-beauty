@@ -21,7 +21,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // TODO / medium: design final touches
     // TODO / medium: szövegek átnézése
     // TODO / medium: i18n
     // TODO / high: SEO
@@ -34,7 +33,7 @@ export default function RootLayout({
           <Image alt="" src="/site-bg.png" fill className="object-cover" />
         </div>
         {children}
-        {/* <Footer /> */}
+        <Footer />
       </body>
     </html>
   );

@@ -1,10 +1,5 @@
+import { ServiceGroup } from "@/types/serviceGroup.type";
 import { Service } from "@prisma/client";
-
-type ServiceGroup = {
-  name: string;
-  services: Service[];
-  pricePostfix?: string;
-};
 
 const STYLING_SERVICES: Service[] = [
   {

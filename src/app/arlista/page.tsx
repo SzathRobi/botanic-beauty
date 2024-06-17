@@ -1,20 +1,38 @@
+import { PiHairDryer, PiScissors } from "react-icons/pi";
+import { IoColorPaletteOutline } from "react-icons/io5";
+
 import BackgroundBlur from "@/components/BackgroundBlur";
 import Transition from "@/components/Transition";
 import { SERVICE_GROUPS } from "@/constants/services.constants";
+import { ServiceGroup } from "@/types/serviceGroup.type";
+
+const getServiceIcon = (serviceGroup: ServiceGroup) => {
+  if (serviceGroup.name === "Szárítás - Styling") {
+    return <PiHairDryer size={32} />;
+  }
+
+  if (serviceGroup.name === "Hajvágás") {
+    return <PiScissors size={32} />;
+  }
+
+  return <IoColorPaletteOutline size={32} />;
+};
 
 const PricinggPage = async () => {
   return (
     <Transition>
-      <section className="pt-24 relative flex min-h-screen flex-col items-center justify-center">
+      <section className="px-2 sm:px-0 pt-24 relative flex min-h-screen flex-col items-center justify-center">
         <BackgroundBlur className="py-16">
           <h1 className="text-3xl text-center mb-12">Árlista</h1>
 
           <div className="mb-16">
             {SERVICE_GROUPS.map((servicegGroup) => (
               <div key={servicegGroup.name} className="mb-14">
-                <h2 className="text-xl border-b-2 border-b-white/50 pb-6 mb-10">
-                  {servicegGroup.name}
-                </h2>
+                <div className="flex justify-between items-start border-b-2 border-b-white/50 pb-0 mb-10">
+                  <h2 className="text-xl mb-4">{servicegGroup.name}</h2>
+
+                  {getServiceIcon(servicegGroup)}
+                </div>
                 <ul className="pl-6 sm:pl-10">
                   {servicegGroup.services.map((service) => (
                     <li
@@ -22,7 +40,7 @@ const PricinggPage = async () => {
                       className="flex justify-between mb-6"
                     >
                       <p className="max-w-md">{service.name}</p>
-                      <div className="flex gap-4 min-w-fit">
+                      <div className="flex gap-2 min-w-fit">
                         <p>{service.price} Ft</p>
                         <p>{servicegGroup.pricePostfix}</p>
                       </div>
