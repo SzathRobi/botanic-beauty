@@ -107,6 +107,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     return data;
   };
 
+  // TODO: form gombok átírása magyarra
   return (
     <div className="w-full sm:w-auto">
       <BackgroundBlur className="min-h-[75vh] min-w-[75vw] flex flex-col w-full mx-auto">

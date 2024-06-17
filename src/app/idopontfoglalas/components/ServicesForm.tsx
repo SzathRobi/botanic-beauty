@@ -38,7 +38,7 @@ const ServicesForm = ({
           disabled={choosenServices.length === 0}
           onClick={incrementActiveStep}
         >
-          Next
+          Tovább
         </Button>
       </div>
     </div>

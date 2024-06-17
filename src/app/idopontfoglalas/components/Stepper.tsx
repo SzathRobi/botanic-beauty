@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { steps } from "../constants/steps.constants";
 
 type StepperProps = {
@@ -12,6 +13,10 @@ const Stepper = ({ activeStep }: StepperProps) => {
 
   const activeBorderColor = "border-green-600 dark:border-green-500";
   const inactiveBorderColor = "border-gray-300 dark:border-gray-600";
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeStep]);
 
   return (
     <div className="mb-24">

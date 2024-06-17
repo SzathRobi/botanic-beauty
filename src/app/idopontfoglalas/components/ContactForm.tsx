@@ -234,7 +234,7 @@ const ContactForm = ({
             variant="secondary"
             onClick={decrementActiveStep}
           >
-            Previous
+            Vissza
           </Button>
           <Button
             disabled={
@@ -244,7 +244,7 @@ const ContactForm = ({
             }
             isLoading={isLoading}
           >
-            Next
+            Foglalás
           </Button>
         </div>
       </form>

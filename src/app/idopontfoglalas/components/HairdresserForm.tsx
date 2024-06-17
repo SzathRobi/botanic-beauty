@@ -72,13 +72,13 @@ const HairdresserForm = ({
 
       <div className="flex items-center justify-end gap-2">
         <Button type="button" variant="secondary" onClick={decrementActiveStep}>
-          Previous
+          Vissza
         </Button>
         <Button
           disabled={choosenHairdresser === null}
           onClick={incrementActiveStep}
         >
-          Next
+          Tovább
         </Button>
       </div>
     </div>
