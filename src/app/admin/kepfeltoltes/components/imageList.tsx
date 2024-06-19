@@ -5,6 +5,7 @@ import { Button } from "@/components/Button";
 import FadeInView from "@/components/FadeInView";
 import Image from "next/image";
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 type ImageResource = {
   id: string;
@@ -57,6 +58,7 @@ const ImageList = ({ resources }: ImageListProps) => {
       setSelectedImages([]);
     } catch (error: any) {
       setError(error.message || error);
+      toast.error(error.message || error);
     } finally {
       setIsLoading(false);
     }
@@ -95,13 +97,15 @@ const ImageList = ({ resources }: ImageListProps) => {
       </BackgroundBlur>
       {selectedImages.length > 0 && (
         <div className="flex justify-end gap-4 fixed bottom-10 right-10">
-          <Button
-            variant="destructive"
-            onClick={onBulkDelete}
-            isLoading={isLoading}
-          >
-            Törlés
-          </Button>
+          <div>
+            <Button
+              variant="destructive"
+              onClick={onBulkDelete}
+              isLoading={isLoading}
+            >
+              Törlés
+            </Button>
+          </div>
           {/* <Button variant="secondary">Módosítás</Button> */}
         </div>
       )}

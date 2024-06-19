@@ -1,6 +1,8 @@
 import cloudinary from "cloudinary";
 import ImageUpload from "./components/imageUpload";
 import ImageList from "./components/imageList";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -10,11 +12,19 @@ cloudinary.v2.config({
 });
 
 const ImageUploadPage = async () => {
+  const session = await auth();
+
+  if (!session?.user) {
+    redirect("/admin/bejelentkezes");
+  }
+
   // TODO / high: cloudinary CRUD
   // TODO / low: add tags / folders for separating images (for filtering + searching)
 
-  const { resources } = await cloudinary.v2.api.resources({
+  // TODO / high : add pagintion or increase imagelist (now it give us only 10 images) NEED to use next_cursor
+  const cloudinaryData = await cloudinary.v2.api.resources({
     type: "upload",
+    max_results: 200,
   });
 
   return (
@@ -25,7 +35,7 @@ const ImageUploadPage = async () => {
         <ImageUpload />
       </div>
 
-      <ImageList resources={resources} />
+      <ImageList resources={cloudinaryData.resources} />
     </section>
   );
 };

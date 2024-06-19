@@ -14,6 +14,7 @@ cloudinary.v2.config({
 const OurWorksPage = async () => {
   const { resources } = await cloudinary.v2.api.resources({
     type: "upload",
+    max_results: 200,
   });
 
   return (
