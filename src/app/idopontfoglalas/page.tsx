@@ -8,7 +8,6 @@ const BookingPage = async () => {
 
   const bookings = await getBookings();
 
-  // TODO: néha navigálás / formstep ugrásnál nem az oldal tetején kezdünk
   return (
     <section className="px-2 sm:px-0 min-h-screen  flex flex-col items-center justify-start pt-24 mb-0!">
       <MultiStepForm schedule={schedule} bookings={bookings || []} />
