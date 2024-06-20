@@ -17,6 +17,7 @@ const OurWorksPage = async () => {
     max_results: 200,
   });
 
+  // TODO / low: add infinite scroll pagination
   return (
     <Transition>
       <section className="px-2 sm:px-0 pt-24">

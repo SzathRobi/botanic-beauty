@@ -20,8 +20,8 @@ const ImageUploadPage = async () => {
 
   // TODO / high: cloudinary CRUD
   // TODO / low: add tags / folders for separating images (for filtering + searching)
+  // TODO / low: add infinite scroll pagination
 
-  // TODO / high : add pagintion or increase imagelist (now it give us only 10 images) NEED to use next_cursor
   const cloudinaryData = await cloudinary.v2.api.resources({
     type: "upload",
     max_results: 200,

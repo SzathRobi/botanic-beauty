@@ -15,7 +15,10 @@ const HamburgerMenu = () => {
 
   return (
     <div className="block sm:hidden">
-      <button onClick={() => setIsMenuOpen(!isMenuOpen)}>
+      <button
+        aria-label="Toggle Menu"
+        onClick={() => setIsMenuOpen(!isMenuOpen)}
+      >
         <IoMenu size={24} />
       </button>
 
