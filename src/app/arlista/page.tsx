@@ -5,6 +5,11 @@ import BackgroundBlur from "@/components/BackgroundBlur";
 import Transition from "@/components/Transition";
 import { SERVICE_GROUPS } from "@/constants/services.constants";
 import { ServiceGroup } from "@/types/serviceGroup.type";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Botanic Beauty | Árlista",
+};
 
 const getServiceIcon = (serviceGroup: ServiceGroup) => {
   if (serviceGroup.name === "Szárítás - Styling") {

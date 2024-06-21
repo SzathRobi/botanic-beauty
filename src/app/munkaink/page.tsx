@@ -2,6 +2,7 @@ import BackgroundBlur from "@/components/BackgroundBlur";
 import FadeInView from "@/components/FadeInView";
 import Transition from "@/components/Transition";
 import cloudinary from "cloudinary";
+import { Metadata } from "next";
 import Image from "next/image";
 
 cloudinary.v2.config({
@@ -10,6 +11,10 @@ cloudinary.v2.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
   // secure: true,
 });
+
+export const metadata: Metadata = {
+  title: "Botanic Beauty | Munkaink",
+};
 
 const OurWorksPage = async () => {
   const { resources } = await cloudinary.v2.api.resources({

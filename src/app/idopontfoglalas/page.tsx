@@ -2,6 +2,11 @@ import MultiStepForm from "./components/MultiStepForm";
 import "react-day-picker/dist/style.css";
 import { getSchedule } from "@/actions/schedule";
 import { getBookings } from "@/actions/booking";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Botanic Beauty | Időpontfoglalás",
+};
 
 const BookingPage = async () => {
   const schedule = await getSchedule();
