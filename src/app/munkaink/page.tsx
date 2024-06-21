@@ -13,7 +13,38 @@ cloudinary.v2.config({
 });
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty | Munkaink",
+  title: "Botanic Beauty | Munkáink",
+  description:
+    "Tekintsd meg a Botanic Beauty szalon korábbi munkáit! Inspirálódj kreatív hajfestéseinkből és hajvágásainkból, mind vegán és környezetbarát termékekkel.",
+  keywords: [
+    "fodrász munkák Budapest",
+    "fodrász munkák Újpest",
+    "hajvágás galéria Budapest",
+    "hajvágás galéria Újpest",
+    "hajfestés galéria Budapest",
+    "hajfestés galéria Újpest",
+    "vegán hajfestés képek",
+    "fenntartható hajápolás galéria",
+    "állatbarát fodrász munkák",
+  ],
+  openGraph: {
+    url: "https://botanic-beauty.hu/munkaink",
+    type: "website",
+    title: "Botanic Beauty | Munkáink",
+    description:
+      "Tekintsd meg a Botanic Beauty szalon korábbi munkáit! Inspirálódj kreatív hajfestéseinkből és hajvágásainkból, mind vegán és környezetbarát termékekkel.",
+    images: [
+      {
+        url: "https://botanic-beauty.hu/images/munkaink/thumbnail.png",
+        width: 1200,
+        height: 630,
+        alt: "Botanic Beauty Munkáink",
+      },
+    ],
+  },
+  alternates: {
+    canonical: "https://botanic-beauty.hu/munkaink",
+  },
 };
 
 const OurWorksPage = async () => {

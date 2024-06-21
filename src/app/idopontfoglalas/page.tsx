@@ -6,6 +6,36 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Botanic Beauty | Időpontfoglalás",
+  description:
+    "Foglalj időpontot a Botanic Beauty szalonba online! Gyors és kényelmes időpontfoglalási rendszerünk segítségével egyszerűen választhatsz időpontot.",
+  keywords: [
+    "fodrászat időpontfoglalás Budapest",
+    "fodrászat időpontfoglalás Újpest",
+    "hajvágás időpont Budapest",
+    "hajvágás időpont Újpest",
+    "hajfestés időpontfoglalás",
+    "vegán fodrász időpontfoglalás",
+    "fenntartható hajápolás időpontfoglalás",
+    "állatbarát fodrászat időpont",
+  ],
+  openGraph: {
+    url: "https://botanic-beauty.hu/idopontfoglalas",
+    type: "website",
+    title: "Botanic Beauty | Időpontfoglalás",
+    description:
+      "Foglalj időpontot a Botanic Beauty szalonba online! Gyors és kényelmes időpontfoglalási rendszerünk segítségével egyszerűen választhatsz időpontot.",
+    images: [
+      {
+        url: "https://botanic-beauty.hu/images/idopontfoglalas/thumbnail.png",
+        width: 1200,
+        height: 630,
+        alt: "Botanic Beauty Időpontfoglalás",
+      },
+    ],
+  },
+  alternates: {
+    canonical: "https://botanic-beauty.hu/idopontfoglalas",
+  },
 };
 
 const BookingPage = async () => {

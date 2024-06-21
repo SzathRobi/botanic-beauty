@@ -56,23 +56,7 @@ export const metadata: Metadata = {
       },
     ],
   },
-  // TODO / low: ennek utánanézni, hogy egyáltalán nekünk kell-e twitteres cucc
-  // twitter: {
-  //   card: "summary_large_image",
-  //   title: "Botanic Beauty",
-  //   description:
-  //     "botanic-beauty.hu -  A szalon koncepcióját, fenntarthatóság iránti elkötelezettséggel hoztam létre , ezért vegán, állatkísérlet mentes termékekkel dolgozom. Ebben a szalonban minden a te elképzelésedről és a minőségi, de megfizethető és környezetbarát anyagok használatáról szól.",
-  //   creator: "@dminhvu02",
-  //   site: "@dminhvu02",
-  //   images: [
-  //     {
-  //       url: "https://botanic-beauty.hu/images/home/thumbnail.png",
-  //       width: 1200,
-  //       height: 630,
-  //       alt: "dminhvu",
-  //     },
-  //   ],
-  // },
+  // TODO / low: twitter
   alternates: {
     canonical: "https://botanic-beauty.hu",
   },

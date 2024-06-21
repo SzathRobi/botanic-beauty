@@ -9,6 +9,37 @@ import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Botanic Beauty | Árlista",
+  description:
+    "Fedezd fel a Botanic Beauty árlistáját! Kínálatunkban megtalálod a hajvágás, hajfestés és egyéb szolgáltatások árait, mind vegán és környezetbarát termékekkel.",
+  keywords: [
+    "fodrászat árlista Budapest",
+    "fodrászat árlista Újpest",
+    "hajvágás árak Budapest",
+    "hajvágás árak Újpest",
+    "hajfestés árak Budapest",
+    "hajfestés árak Újpest",
+    "vegán fodrász árlista",
+    "fenntartható hajápolás árak",
+    "állatbarát fodrászat árak",
+  ],
+  openGraph: {
+    url: "https://botanic-beauty.hu/arlista",
+    type: "website",
+    title: "Botanic Beauty | Árlista",
+    description:
+      "Fedezd fel a Botanic Beauty árlistáját! Kínálatunkban megtalálod a hajvágás, hajfestés és egyéb szolgáltatások árait, mind vegán és környezetbarát termékekkel.",
+    images: [
+      {
+        url: "https://botanic-beauty.hu/images/arlista/thumbnail.png",
+        width: 1200,
+        height: 630,
+        alt: "Botanic Beauty Árlista",
+      },
+    ],
+  },
+  alternates: {
+    canonical: "https://botanic-beauty.hu/arlista",
+  },
 };
 
 const getServiceIcon = (serviceGroup: ServiceGroup) => {
