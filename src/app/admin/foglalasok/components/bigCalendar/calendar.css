@@ -11,3 +11,12 @@
 .rbc-event-label {
   display: none !important;
 }
+
+.rbc-today {
+  background-color: #22c55e50 !important;
+  opacity: 1 !important;
+}
+
+.rbc-current-time-indicator {
+  height: 2px;
+}

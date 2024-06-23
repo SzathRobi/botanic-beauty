@@ -103,7 +103,7 @@ const BigCalendarContainer = ({
 
   return (
     <div>
-      <div>
+      <div className="flex gap-4 mb-8">
         <div>
           <input
             type="radio"

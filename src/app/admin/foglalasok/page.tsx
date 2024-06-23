@@ -24,8 +24,8 @@ const BookingPage = async () => {
   const calendarEvents = bookings?.map(mapBookingToEvent) ?? [];
 
   return (
-    <div className="w-full min-h-screen pt-16">
-      <BackgroundBlur className="!max-w-full">
+    <div className="w-full min-h-screen">
+      <BackgroundBlur className="!max-w-full mb-8">
         <h1 className="text-3xl mb-8">Foglalások</h1>
 
         <BigCalendarContainer

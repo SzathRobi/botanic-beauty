@@ -6,6 +6,7 @@ import { useState } from "react";
 import {
   Calendar,
   EventProps,
+  ToolbarProps,
   View,
   Views,
   momentLocalizer,
@@ -22,6 +23,7 @@ import "./calendar.css";
 import { OffDay } from "@prisma/client";
 import { SelectedHairdresser } from "../bigCalendarContainer/BigCalendarContainer";
 import { isOffDayOfNemTimi, isOffDayOfTimi } from "../../utils/offDay";
+import BigCalendarToolbar from "../bigCalendarToolbar/BigCalendarToolbar";
 
 const localizer = momentLocalizer(moment);
 
@@ -118,7 +120,7 @@ const BigCalendar = ({
     if (isOffDayOfTimi(date, offDays) && selectedHairdresser !== "nem_Timi") {
       return {
         style: {
-          backgroundColor: "#ff000090",
+          backgroundColor: "#ff000050",
         },
       };
     }
@@ -146,6 +148,9 @@ const BigCalendar = ({
         components={{
           event: (eventProps: EventProps<CalendarEvent>) => (
             <BigCalendarDay calendarEvent={eventProps} />
+          ),
+          toolbar: (toolbarProps: ToolbarProps<CalendarEvent, object>) => (
+            <BigCalendarToolbar {...toolbarProps} />
           ),
         }}
         views={[Views.MONTH, Views.WEEK, Views.DAY]}
