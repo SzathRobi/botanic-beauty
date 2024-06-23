@@ -8,9 +8,9 @@ type AdminLayoutProps = {
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
-    <div className="flex flex-row pt-20">
+    <div className="flex gap-4 sm:gap-0 flex-col-reverse sm:flex-row pt-10">
       <AdminNav />
-      <div className="flex-1 px-8 pt-4">{children}</div>
+      <div className="flex-1 px-2">{children}</div>
     </div>
   );
 };

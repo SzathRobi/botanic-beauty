@@ -2,13 +2,15 @@
 
 import { ChangeEvent, useState } from "react";
 import { DayPicker } from "react-day-picker";
+import toast from "react-hot-toast";
+import { format } from "date-fns";
+import { hu } from "date-fns/locale";
 
 import { SelectedDate } from "../types/selectedDate.type";
 import Day from "./Day";
 import { Button } from "@/components/Button";
 import { modifySchedule } from "@/actions/schedule";
 import { Hairdresser, Schedule } from "@prisma/client";
-import toast from "react-hot-toast";
 
 type ScheduleProps = {
   schedule: Schedule | null;
@@ -102,6 +104,14 @@ const Schedules = ({ schedule }: ScheduleProps) => {
               datesAppearingTwice={datesAppearingTwice}
             />
           ),
+        }}
+        locale={hu}
+        formatters={{
+          formatCaption: (month, options) =>
+            format(month, "LLLL yyyy", { locale: hu }),
+          formatDay: (day, options) => format(day, "d", { locale: hu }),
+          formatWeekdayName: (weekday, options) =>
+            format(weekday, "EEEEEE", { locale: hu }),
         }}
       />
       <div className="flex gap-2 mb-8">
