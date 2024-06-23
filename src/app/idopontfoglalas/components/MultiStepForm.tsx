@@ -4,11 +4,13 @@ import { Booking, Schedule, Service } from "@prisma/client";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { ReactNode, useState } from "react";
+import { isBefore } from "date-fns";
 
 import BackgroundBlur from "@/components/BackgroundBlur";
 import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";
 import ServicesForm from "./ServicesForm";
 import Stepper from "./Stepper";
+import { isBeforeAug1 } from "../utils/isBeforeAug1";
 
 const HairdresserForm = dynamic(() => import("./HairdresserForm"));
 const AvailableDatesForm = dynamic(() => import("./AvailableDatesForm"));
@@ -40,7 +42,9 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   const [choosenHairdresser, setChoosenHairdresser] = useState<
     "Timi" | "nem_Timi" | null
   >("Timi");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()));
+  const [selectedDate, setSelectedDate] = useState<Date>(
+    new Date("2024-08-01")
+  );
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [contactInfo, setContactInfo] = useState({
     name: "",

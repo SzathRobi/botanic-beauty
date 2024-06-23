@@ -22,6 +22,7 @@ import {
   OPENING_HOUR,
 } from "../constants/openingHours.constants";
 import { Button } from "@/components/Button";
+import { isBeforeAug1 } from "../utils/isBeforeAug1";
 
 type AvailableDatesFormProps = {
   bookings: Booking[];
@@ -85,7 +86,7 @@ const AvailableDatesForm = ({
   };
 
   const getFirstAvailableDate = (): Date => {
-    let firstAvailableDate = new Date(Date.now());
+    let firstAvailableDate = selectedDate;
 
     while (
       isSunday(firstAvailableDate) ||
@@ -122,9 +123,11 @@ const AvailableDatesForm = ({
         <DayPicker
           mode="single"
           selected={selectedDate}
+          defaultMonth={selectedDate}
           weekStartsOn={1}
           disabled={(date) =>
             isBefore(date, new Date(Date.now())) ||
+            isBeforeAug1(date) ||
             isClosedDay ||
             isSunday(date) ||
             hairdresserOffDays.some((offDay) => isSameDay(offDay, date)) ||
