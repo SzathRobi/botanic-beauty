@@ -140,7 +140,8 @@ const BigCalendarContainer = ({
       </div>
 
       <BigCalendar
-        events={calendarEvents}
+        calendarEvents={calendarEvents}
+        setCalendarEvents={setCalendarEvents}
         onEventDrop={onEventDrop}
         offDays={offDays}
         selectedHairdresser={selectedHairdresser}

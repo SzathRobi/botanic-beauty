@@ -2,7 +2,7 @@
 
 import { isSameDay, isSunday } from "date-fns";
 import moment from "moment";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   Calendar,
   EventProps,
@@ -28,19 +28,21 @@ import BigCalendarToolbar from "../bigCalendarToolbar/BigCalendarToolbar";
 const localizer = momentLocalizer(moment);
 
 type BigCalendarProps = {
-  events: CalendarEvent[];
+  calendarEvents: CalendarEvent[];
   onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void;
   offDays: OffDay[];
   selectedHairdresser: SelectedHairdresser;
+  setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
 };
 
 const DndCalendar = withDragAndDrop<CalendarEvent>(Calendar);
 
 const BigCalendar = ({
-  events,
+  calendarEvents,
   onEventDrop,
   offDays,
   selectedHairdresser,
+  setCalendarEvents,
 }: BigCalendarProps) => {
   const [view, setView] = useState<View>(Views.WEEK);
   const [date, setDate] = useState(new Date());
@@ -140,14 +142,17 @@ const BigCalendar = ({
     <div>
       <DndCalendar
         localizer={localizer}
-        events={events}
+        events={calendarEvents}
         min={minCalendarStartTime}
         max={maxCalendarStartTime}
         selectable={true}
         resizable={true}
         components={{
           event: (eventProps: EventProps<CalendarEvent>) => (
-            <BigCalendarDay calendarEvent={eventProps} />
+            <BigCalendarDay
+              calendarEvent={eventProps}
+              setCalendarEvents={setCalendarEvents}
+            />
           ),
           toolbar: (toolbarProps: ToolbarProps<CalendarEvent, object>) => (
             <BigCalendarToolbar {...toolbarProps} />
