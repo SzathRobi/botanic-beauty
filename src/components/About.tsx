@@ -18,7 +18,7 @@ const About = () => {
                 className="object-cover"
               />
             </div> */}
-            <p className="text-lg text-center">
+            <p className="text-lg md:text-center">
               Timi vagyok, a szalon tulajdonosa, és nagy szenvedéllyel törekszem
               arra, hogy együtt alkossuk meg a vendéggel a tökéletes frizurát. A
               szalon koncepcióját, fenntarthatóság iránti elkötelezettséggel
