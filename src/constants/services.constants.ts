@@ -27,8 +27,8 @@ const STYLING_SERVICES: Service[] = [
     id: "4",
     category: "Szárítás - Styling",
     name: "Göndörítés / hajvasalás (mosás nélkül)",
-    price: 6500,
-    duration: 45,
+    price: 4500,
+    duration: 30,
   },
 ];
 
@@ -38,28 +38,28 @@ const CUTTING_SERVICES: Service[] = [
     category: "Hajvágás",
     name: "Női hajvágás + szárítás  (rövid, váll feletti  hossz)",
     price: 8200,
-    duration: 90,
+    duration: 60,
   },
   {
     id: "6",
     category: "Hajvágás",
     name: "Női hajvágás + szárítás (hosszú, váll alatti hossz)",
     price: 9000,
-    duration: 90,
+    duration: 75,
   },
   {
     id: "7",
     category: "Hajvágás",
     name: "Fru-fru vágás / igazítás",
     price: 1800,
-    duration: 30,
+    duration: 15,
   },
   {
     id: "8",
     category: "Hajvágás",
     name: "Férfi hajvágás mosással (géppel és ollóval)",
     price: 5500,
-    duration: 60,
+    duration: 45,
   },
   {
     id: "9",
@@ -80,14 +80,14 @@ const CUTTING_SERVICES: Service[] = [
     category: "Hajvágás",
     name: "Férfi gépi hajvágás, átmenettel",
     price: 4500,
-    duration: 45,
+    duration: 30,
   },
   {
     id: "12",
     category: "Hajvágás",
     name: "Szakáll igazítás (géppel)",
     price: 2100,
-    duration: 30,
+    duration: 20,
   },
 ];
 
@@ -104,20 +104,20 @@ const COLORING_SERVICES: Service[] = [
     category: "Festések",
     name: "Tőszőkítés (árnyalással)",
     price: 18000,
-    duration: 90,
+    duration: 150,
   },
   {
     id: "15",
     category: "Festések",
     name: "Teljes hajhossz festés",
-    price: 19000,
-    duration: 180,
+    price: 18000,
+    duration: 150,
   },
   {
     id: "16",
     category: "Festések",
     name: "Színfelfrissítés, árnyalás, tonizálás",
-    price: 13000,
+    price: 11000,
     duration: 60,
   },
   {
@@ -146,7 +146,7 @@ const COLORING_SERVICES: Service[] = [
     category: "Festések",
     name: "Színkorrekció (elrontott haj javítása, színeltávolítása világosítással)",
     price: 25000,
-    duration: 120,
+    duration: 180,
   },
 ];
 
