@@ -8,6 +8,8 @@ import { CalendarEvent } from "../../../types/calendarEvent.type";
 import { Button } from "@/components/Button";
 import { Dispatch, SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
+import { DialogContent, DialogTrigger } from "@/components/ui/Dialog";
+import BigCalendarEventForm from "../bigCalendarEventForm/BigCalendarEventForm";
 
 type BigCalendarDayProps = {
   calendarEvent: EventProps<CalendarEvent>;
@@ -86,8 +88,17 @@ const BigCalendarDay = ({
           >
             Törlés
           </Button>
+          <DialogTrigger asChild>
+            <Button size="sm" variant="secondary">
+              Módosítás
+            </Button>
+          </DialogTrigger>
         </div>
       </PopoverContent>
+
+      <DialogContent>
+        <BigCalendarEventForm calendarEvent={calendarEvent} />
+      </DialogContent>
     </Popover>
   );
 };

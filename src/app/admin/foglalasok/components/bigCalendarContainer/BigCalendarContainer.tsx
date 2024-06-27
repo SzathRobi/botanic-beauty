@@ -9,6 +9,7 @@ import { mapEventToBooking } from "../../../mappers/mapEventToBooking.mapper";
 import { OffDay } from "@prisma/client";
 import { isOffDayOfNemTimi, isOffDayOfTimi } from "../../utils/offDay";
 import toast from "react-hot-toast";
+import { Dialog } from "@/components/ui/Dialog";
 
 type BigCalendarContainerProps = {
   events: CalendarEvent[];
@@ -102,51 +103,53 @@ const BigCalendarContainer = ({
   };
 
   return (
-    <div>
-      <div className="flex gap-4 mb-8">
-        <div>
-          <input
-            type="radio"
-            name="hairdresser"
-            value="Timi"
-            id="hairdresser-timi"
-            defaultChecked={selectedHairdresser === "Timi"}
-            onChange={handleHairdresserChange}
-          />
-          <label htmlFor="hairdresser-timi">Timi</label>
+    <Dialog>
+      <div>
+        <div className="flex gap-4 mb-8">
+          <div>
+            <input
+              type="radio"
+              name="hairdresser"
+              value="Timi"
+              id="hairdresser-timi"
+              defaultChecked={selectedHairdresser === "Timi"}
+              onChange={handleHairdresserChange}
+            />
+            <label htmlFor="hairdresser-timi">Timi</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="hairdresser"
+              value="nem_Timi"
+              id="hairdresser-nem-timi"
+              defaultChecked={selectedHairdresser === "nem_Timi"}
+              onChange={handleHairdresserChange}
+            />
+            <label htmlFor="hairdresser-nem-timi">nem Timi</label>
+          </div>
+          <div>
+            <input
+              type="radio"
+              name="hairdresser"
+              value="all"
+              id="hairdresser-all"
+              defaultChecked={selectedHairdresser === "all"}
+              onChange={handleHairdresserChange}
+            />
+            <label htmlFor="hairdresser-all">mindenki</label>
+          </div>
         </div>
-        <div>
-          <input
-            type="radio"
-            name="hairdresser"
-            value="nem_Timi"
-            id="hairdresser-nem-timi"
-            defaultChecked={selectedHairdresser === "nem_Timi"}
-            onChange={handleHairdresserChange}
-          />
-          <label htmlFor="hairdresser-nem-timi">nem Timi</label>
-        </div>
-        <div>
-          <input
-            type="radio"
-            name="hairdresser"
-            value="all"
-            id="hairdresser-all"
-            defaultChecked={selectedHairdresser === "all"}
-            onChange={handleHairdresserChange}
-          />
-          <label htmlFor="hairdresser-all">mindenki</label>
-        </div>
-      </div>
 
-      <BigCalendar
-        calendarEvents={calendarEvents}
-        setCalendarEvents={setCalendarEvents}
-        onEventDrop={onEventDrop}
-        offDays={offDays}
-        selectedHairdresser={selectedHairdresser}
-      />
-    </div>
+        <BigCalendar
+          calendarEvents={calendarEvents}
+          setCalendarEvents={setCalendarEvents}
+          onEventDrop={onEventDrop}
+          offDays={offDays}
+          selectedHairdresser={selectedHairdresser}
+        />
+      </div>
+    </Dialog>
   );
 };
 
