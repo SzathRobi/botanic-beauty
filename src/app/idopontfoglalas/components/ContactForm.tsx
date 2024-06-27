@@ -34,13 +34,18 @@ const ContactForm = ({
   const [error, setError] = useState<string | null>(null);
 
   const sendVerificationEmail = async () => {
+    const bookingWithFormattedDate = {
+      ...booking,
+      selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+    };
+
     try {
       const response = await fetch("/api/email/verification", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ booking }),
+        body: JSON.stringify({ booking: bookingWithFormattedDate }),
       });
 
       const data = await response.json();

@@ -15,17 +15,12 @@ export async function POST(request: Request) {
     );
   }
 
-  const bookingWithFormattedDate = {
-    ...booking,
-    selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
-  };
-
   try {
     await resend.emails.send({
       from: "onboarding@resend.dev",
       to: booking.contactInfo.email,
       subject: "Visszaigazolás",
-      react: VerificationEmail({ booking: bookingWithFormattedDate }),
+      react: VerificationEmail({ booking }),
     });
 
     return NextResponse.json({ success: true });
