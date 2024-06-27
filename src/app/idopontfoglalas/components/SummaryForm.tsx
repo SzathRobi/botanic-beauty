@@ -1,21 +1,18 @@
-import { Button } from "@/components/Button";
 import { HOME_ROUTE } from "@/constants/routes.constants";
 import { ContactInfo, Service } from "@prisma/client";
 import { User, Scissors, Calendar } from "lucide-react";
 import Link from "next/link";
 
 type SummaryFormProps = {
-  choosenServices: Service[];
+  selectedService: Service;
   choosenHairdresser: "Timi" | "nem_Timi" | null;
   selectedDate: Date;
   selectedTimeSlot: string | null;
-  contactInfo: ContactInfo;
 };
 
 const SummaryForm = ({
   choosenHairdresser,
-  choosenServices,
-  contactInfo,
+  selectedService,
   selectedDate,
   selectedTimeSlot,
 }: SummaryFormProps) => {
@@ -29,14 +26,10 @@ const SummaryForm = ({
         <div className="flex gap-4">
           <Scissors size={48} className="min-w-10" />
           <div>
-            <p>Szolgáltatások:</p>
-            <div>
-              {choosenServices.map((service) => (
-                <p key={service.name} className="font-medium text-lg max-w-xs">
-                  {service.name} ({service.duration} perc)
-                </p>
-              ))}
-            </div>
+            <p>Szolgáltatás:</p>
+            <p className="font-medium text-lg max-w-xs">
+              {selectedService.name} ({selectedService.duration} perc)
+            </p>
           </div>
         </div>
 

@@ -22,7 +22,6 @@ const BookingPage = async () => {
   const bookings = await getBookings();
 
   const calendarEvents = bookings?.map(mapBookingToEvent) ?? [];
-
   return (
     <div className="w-full min-h-screen">
       <BackgroundBlur className="!max-w-full mb-8">

@@ -12,7 +12,7 @@ export type CalendarEvent = Event & {
   id: string;
   hairdresser: Hairdresser;
   contactInfo: CalendarEventContactInfo;
-  services: Service[];
+  service: Service;
   createdAt: Date;
   updatedAt: Date;
 };

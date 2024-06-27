@@ -21,7 +21,7 @@ const BigCalendarDay = ({
   setCalendarEvents,
 }: BigCalendarDayProps) => {
   const {
-    event: { contactInfo, hairdresser, services, start, end, title, id },
+    event: { contactInfo, hairdresser, service, start, end, title, id },
   } = calendarEvent;
 
   const startTime = format(start!, "HH:mm");
@@ -31,6 +31,8 @@ const BigCalendarDay = ({
     calendarEvent.event.hairdresser === "Timi" ? "bg-green-600" : "bg-blue-600";
 
   const [isLoading, setIsLoading] = useState(false);
+
+  console.log("salalalalalalalalallalalalalalal");
 
   const deleteBooking = async (id: string) => {
     setIsLoading(true);

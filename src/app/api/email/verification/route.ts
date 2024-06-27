@@ -8,8 +8,11 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export async function POST(request: Request) {
   const { booking } = await request.json();
 
-  if (!booking.contactInfo.email || booking.services.length === 0) {
-    return NextResponse.json({ error: true, message: "Invalid data" });
+  if (!booking.contactInfo.email || !booking.service) {
+    return NextResponse.json(
+      { error: true, message: "Invalid data" },
+      { status: 400 }
+    );
   }
 
   const bookingWithFormattedDate = {

@@ -8,7 +8,7 @@ export const mapEventToBooking = ({
   createdAt,
   hairdresser,
   id,
-  services,
+  service,
   updatedAt,
   start,
   end,
@@ -21,7 +21,7 @@ export const mapEventToBooking = ({
     )?.toISOString() ?? "",
   contactInfo: contactInfo,
   hairdresser: hairdresser,
-  services,
+  service,
   selectedTimeSlot:
     `${format(start!, "HH:mm")} - ${format(end!, "HH:mm")}` ?? "",
   id,

@@ -1,7 +1,6 @@
 import { Booking } from "@prisma/client";
 import {
   Body,
-  Button,
   Container,
   Column,
   Head,
@@ -69,12 +68,7 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                 </Text>
 
                 <Text style={{ marginBottom: 48 }}>
-                  Szolgáltatás:{" "}
-                  <b>
-                    {booking.services.map((service, index: number) => (
-                      <span key={index}>{service.name} </span>
-                    ))}
-                  </b>
+                  Szolgáltatás: <b>{booking.service.name}</b>
                 </Text>
 
                 <Text style={paragraph}>
@@ -110,14 +104,9 @@ VerificationEmail.PreviewProps = {
     contactInfo: {
       name: "Omamori Himari",
     },
-    services: [
-      {
-        name: "Tőfestés",
-      },
-      {
-        name: "Hajvágás",
-      },
-    ],
+    service: {
+      name: "Tőfestés",
+    },
     selectedDate: "2022-10-10",
     selectedTimeSlot: "10:00 - 11:00",
   },

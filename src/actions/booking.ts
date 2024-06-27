@@ -25,20 +25,3 @@ export const getBookings = async () => {
     throw new Error(error.message || error);
   }
 };
-
-// export const getBookingsWithoutSensitiveData = async (): Promise<
-//   BookingWithoutSensitiveData[]
-// > => {
-//   return await prisma.booking.findMany({
-//     select: {
-//       id: true,
-//       services: true,
-//       hairdresser: true,
-//       selectedDate: true,
-//       selectedTimeSlot: true,
-//       contactInfo: false,
-//       createdAt: false,
-//       updatedAt: false,
-//     },
-//   });
-// };

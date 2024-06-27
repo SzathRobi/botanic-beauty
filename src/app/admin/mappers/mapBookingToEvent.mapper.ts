@@ -8,7 +8,7 @@ export const mapBookingToEvent = ({
   selectedDate,
   selectedTimeSlot,
   id,
-  services,
+  service,
   createdAt,
   updatedAt,
 }: Booking): CalendarEvent => {
@@ -30,12 +30,12 @@ export const mapBookingToEvent = ({
 
   return {
     id,
-    title: services.map((service) => service.name).join(", "),
+    title: service.name,
     start: startDateWithTime,
     end: endDateWithTime,
     hairdresser,
     contactInfo,
-    services,
+    service,
     createdAt,
     updatedAt,
   };

@@ -22,7 +22,7 @@ import {
   OPENING_HOUR,
 } from "../constants/openingHours.constants";
 import { Button } from "@/components/Button";
-import { isBeforeAug1 } from "../utils/isBeforeAug1";
+import { hu } from "date-fns/locale";
 
 type AvailableDatesFormProps = {
   bookings: Booking[];
@@ -30,7 +30,7 @@ type AvailableDatesFormProps = {
   setSelectedDate: (date: Date) => void;
   selectedTimeSlot: string | null;
   setSelectedTimeSlot: (timeSlot: string | null) => void;
-  choosenServices: Service[];
+  selectedService: Service;
   choosenHairdresser: "Timi" | "nem_Timi";
   schedule: Schedule;
   incrementActiveStep: () => void;
@@ -52,7 +52,7 @@ const AvailableDatesForm = ({
   setSelectedDate,
   selectedTimeSlot,
   setSelectedTimeSlot,
-  choosenServices,
+  selectedService,
   choosenHairdresser,
   schedule,
   decrementActiveStep,
@@ -71,13 +71,7 @@ const AvailableDatesForm = ({
     .map((offDay: OffDay) => offDay.date);
   const isClosedForToday = selectedDate.getHours() >= LAST_BOOKING_HOUR;
 
-  let choosenServicesDuration = 0;
-
   const [isClosedDay, setIsClosedDay] = useState<boolean>(false);
-
-  choosenServices.forEach((service) => {
-    choosenServicesDuration += service.duration;
-  });
 
   const handleSelect = (day: Date | undefined) => {
     if (day) {
@@ -113,7 +107,7 @@ const AvailableDatesForm = ({
   }, []);
 
   const getOpeningHour = () => {
-    const date = startOfDay(new Date());
+    const date = startOfDay(selectedDate);
     return setMinutes(setHours(date, OPENING_HOUR), 0);
   };
 
@@ -125,9 +119,10 @@ const AvailableDatesForm = ({
           selected={selectedDate}
           defaultMonth={selectedDate}
           weekStartsOn={1}
+          locale={hu}
           disabled={(date) =>
             isBefore(date, new Date(Date.now())) ||
-            isBeforeAug1(date) ||
+            // isBeforeAug1(date) ||
             isClosedDay ||
             isSunday(date) ||
             hairdresserOffDays.some((offDay) => isSameDay(offDay, date)) ||
@@ -141,7 +136,7 @@ const AvailableDatesForm = ({
           bookings={bookings}
           startTime={isToday(selectedDate) ? tPlus2Hours : getOpeningHour()}
           endTime={CLOSING_HOUR}
-          interval={choosenServicesDuration}
+          interval={selectedService.duration}
           isClosedDay={isClosedDay}
           isClosedForToday={isClosedForToday}
           selectedTimeSlot={selectedTimeSlot}

@@ -4,18 +4,22 @@ import { Service } from "@prisma/client";
 import { SERVICES } from "@/constants/services.constants";
 
 type ServiceFormProps = {
-  activeStep: number;
-  addChoosenService: (service: Service) => void;
-  removeChoosenService: (service: Service) => void;
-  choosenServices: Service[];
+  selectedDate: Date;
+  setSelectedDate: (date: Date) => void;
+  selectedTimeSlot: string | null;
+  setSelectedTimeSlot: (time: string | null) => void;
+  selectService: (service: Service) => void;
+  selectedService: Service | null;
   incrementActiveStep: () => void;
-  decrementActiveStep: () => void;
 };
 
 const ServicesForm = ({
-  addChoosenService,
-  removeChoosenService,
-  choosenServices,
+  selectedDate,
+  setSelectedDate,
+  selectedTimeSlot,
+  setSelectedTimeSlot,
+  selectService,
+  selectedService,
   incrementActiveStep,
 }: ServiceFormProps) => {
   return (
@@ -24,20 +28,20 @@ const ServicesForm = ({
         {SERVICES.map((service, index) => (
           <ServiceCard
             key={service.name}
+            selectedDate={selectedDate}
+            setSelectedDate={setSelectedDate}
+            selectedTimeSlot={selectedTimeSlot}
+            setSelectedTimeSlot={setSelectedTimeSlot}
             service={service}
             index={index}
-            addChoosenService={addChoosenService}
-            removeChoosenService={removeChoosenService}
-            choosenServices={choosenServices}
+            selectService={selectService}
+            selectedService={selectedService}
           />
         ))}
       </div>
 
       <div className="flex items-center justify-end gap-2">
-        <Button
-          disabled={choosenServices.length === 0}
-          onClick={incrementActiveStep}
-        >
+        <Button disabled={!selectedService} onClick={incrementActiveStep}>
           Tovább
         </Button>
       </div>

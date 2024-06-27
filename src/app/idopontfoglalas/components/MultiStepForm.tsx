@@ -38,13 +38,11 @@ type MultiStepFormProps = {
 
 const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [choosenServices, setchoosenServices] = useState<Service[]>([]);
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
   const [choosenHairdresser, setChoosenHairdresser] = useState<
     "Timi" | "nem_Timi" | null
   >("Timi");
-  const [selectedDate, setSelectedDate] = useState<Date>(
-    new Date("2024-08-01")
-  );
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()));
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [contactInfo, setContactInfo] = useState({
     name: "",
@@ -57,14 +55,8 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     setContactInfo({ ...contactInfo, [key]: value });
   };
 
-  const addChoosenService = (service: Service) => {
-    setchoosenServices([...choosenServices, service]);
-  };
-
-  const removeChoosenService = (choosenService: Service) => {
-    setchoosenServices(
-      choosenServices.filter((service) => service !== choosenService)
-    );
+  const selectService = (service: Service) => {
+    setSelectedService(service);
   };
 
   const chooseHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
@@ -80,7 +72,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   };
 
   const postBookingData = async () => {
-    if (!choosenHairdresser || !selectedTimeSlot) return;
+    if (!choosenHairdresser || !selectedService || !selectedTimeSlot) return;
 
     const response = await fetch("/api/booking", {
       method: "POST",
@@ -90,7 +82,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
       body: JSON.stringify(
         mapMultistepFormDataToBooking({
           choosenHairdresser,
-          choosenServices,
+          selectedService,
           contactInfo,
           selectedDate,
           selectedTimeSlot,
@@ -107,7 +99,9 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     const response = await fetch(`/api/booking/${id}`, {
       method: "DELETE",
     });
+
     const data = await response.json();
+
     return data;
   };
 
@@ -120,12 +114,13 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
           {activeStep === 0 && (
             <FadeIn>
               <ServicesForm
-                addChoosenService={addChoosenService}
-                activeStep={activeStep}
-                removeChoosenService={removeChoosenService}
-                choosenServices={choosenServices}
+                selectedDate={selectedDate}
+                setSelectedDate={setSelectedDate}
+                selectedTimeSlot={selectedTimeSlot}
+                setSelectedTimeSlot={setSelectedTimeSlot}
+                selectService={selectService}
+                selectedService={selectedService}
                 incrementActiveStep={incrementActiveStep}
-                decrementActiveStep={decrementActiveStep}
               />
             </FadeIn>
           )}
@@ -141,7 +136,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             </FadeIn>
           )}
 
-          {activeStep === 2 && schedule && (
+          {activeStep === 2 && schedule && selectedService && (
             <FadeIn>
               <AvailableDatesForm
                 bookings={bookings}
@@ -149,7 +144,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
                 selectedDate={selectedDate}
                 selectedTimeSlot={selectedTimeSlot}
                 setSelectedTimeSlot={setSelectedTimeSlot}
-                choosenServices={choosenServices}
+                selectedService={selectedService}
                 choosenHairdresser={choosenHairdresser!}
                 schedule={schedule}
                 incrementActiveStep={incrementActiveStep}
@@ -158,34 +153,36 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             </FadeIn>
           )}
 
-          {activeStep === 3 && choosenHairdresser && selectedTimeSlot && (
-            <FadeIn>
-              <ContactForm
-                contactInfo={contactInfo}
-                modifyContactInfo={modifyContactInfo}
-                incrementActiveStep={incrementActiveStep}
-                decrementActiveStep={decrementActiveStep}
-                postBookingData={postBookingData}
-                deleteBookingData={deleteBookingData}
-                booking={mapMultistepFormDataToBooking({
-                  choosenHairdresser,
-                  choosenServices,
-                  contactInfo,
-                  selectedDate,
-                  selectedTimeSlot,
-                })}
-              />
-            </FadeIn>
-          )}
+          {activeStep === 3 &&
+            choosenHairdresser &&
+            selectedTimeSlot &&
+            selectedService && (
+              <FadeIn>
+                <ContactForm
+                  contactInfo={contactInfo}
+                  modifyContactInfo={modifyContactInfo}
+                  incrementActiveStep={incrementActiveStep}
+                  decrementActiveStep={decrementActiveStep}
+                  postBookingData={postBookingData}
+                  deleteBookingData={deleteBookingData}
+                  booking={mapMultistepFormDataToBooking({
+                    choosenHairdresser,
+                    selectedService,
+                    contactInfo,
+                    selectedDate,
+                    selectedTimeSlot,
+                  })}
+                />
+              </FadeIn>
+            )}
 
-          {activeStep === 4 && (
+          {activeStep === 4 && selectedService && (
             <FadeIn>
               <SummaryForm
-                choosenServices={choosenServices}
+                selectedService={selectedService}
                 choosenHairdresser={choosenHairdresser}
                 selectedDate={selectedDate}
                 selectedTimeSlot={selectedTimeSlot}
-                contactInfo={contactInfo}
               />
             </FadeIn>
           )}

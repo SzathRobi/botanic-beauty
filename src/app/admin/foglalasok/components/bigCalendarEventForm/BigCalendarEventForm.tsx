@@ -27,7 +27,7 @@ const BigCalendarEventForm = ({ calendarEvent }: BigCalendarEventFormProps) => {
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       hairdresser: calendarEvent.event.hairdresser,
-      services: calendarEvent.event.services,
+      service: calendarEvent.event.service,
       name: calendarEvent.event.contactInfo.name,
       email: calendarEvent.event.contactInfo.email,
       phone: calendarEvent.event.contactInfo.phone,

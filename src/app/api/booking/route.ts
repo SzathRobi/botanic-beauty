@@ -2,11 +2,11 @@ import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest, nextResponse: NextResponse) {
-  const { services, hairdresser, selectedDate, selectedTimeSlot, contactInfo } =
+  const { service, hairdresser, selectedDate, selectedTimeSlot, contactInfo } =
     await request.json();
 
   if (
-    !services ||
+    !service ||
     !hairdresser ||
     !selectedDate ||
     !selectedTimeSlot ||
@@ -26,8 +26,8 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
       },
     });
 
-    // Ütközés ellenőrzése JavaScript segítségével
     const [newStartTime, newEndTime] = selectedTimeSlot.split(" - ");
+
     const overlaps = allBookings.some((booking) => {
       const [existingStartTime, existingEndTime] =
         booking.selectedTimeSlot.split(" - ");
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
 
     const booking = await prisma.booking.create({
       data: {
-        services,
+        service,
         hairdresser,
         selectedDate,
         selectedTimeSlot,
