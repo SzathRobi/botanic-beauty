@@ -27,6 +27,7 @@ const BigCalendarContainer = ({
     useState<CalendarEvent[]>(events);
   const [selectedHairdresser, setSelectedHairdresser] =
     useState<SelectedHairdresser>("all");
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
 
   const handleHairdresserChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -103,7 +104,7 @@ const BigCalendarContainer = ({
   };
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <div className="max-w-[100vw] overflow-scroll md:overflow-hidden">
         <div className="flex gap-4 mb-8">
           <div>
@@ -147,6 +148,7 @@ const BigCalendarContainer = ({
           onEventDrop={onEventDrop}
           offDays={offDays}
           selectedHairdresser={selectedHairdresser}
+          setIsDialogOpen={setIsDialogOpen}
         />
       </div>
     </Dialog>

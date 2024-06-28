@@ -8,7 +8,6 @@ import { CalendarEvent } from "@/app/admin/types/calendarEvent.type";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -17,12 +16,23 @@ import {
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/Button";
 import { EventProps } from "react-big-calendar";
+import { Dispatch, SetStateAction, useState } from "react";
+import toast from "react-hot-toast";
+import { Booking } from "@prisma/client";
 
 type BigCalendarEventFormProps = {
   calendarEvent: EventProps<CalendarEvent>;
+  setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-const BigCalendarEventForm = ({ calendarEvent }: BigCalendarEventFormProps) => {
+const BigCalendarEventForm = ({
+  calendarEvent,
+  setCalendarEvents,
+  setIsDialogOpen,
+}: BigCalendarEventFormProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
@@ -36,11 +46,52 @@ const BigCalendarEventForm = ({ calendarEvent }: BigCalendarEventFormProps) => {
   });
 
   // 2. Define a submit handler.
-  function onSubmit(values: z.infer<typeof eventFormSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-  }
+  const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
+    setIsLoading(true);
+
+    const booking: Partial<Booking> = {
+      contactInfo: {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        otherInfo: values.otherInfo,
+      },
+    };
+
+    const response = await fetch(`/api/booking/${calendarEvent.event.id}`, {
+      method: "PATCH",
+      body: JSON.stringify(booking),
+    });
+
+    if (!response.ok) {
+      toast.error("Hiba történt, a módosítás sikertelen");
+      return;
+    }
+
+    setCalendarEvents((prevCalendarEvents: CalendarEvent[]) => {
+      const updatedCalendarEvents = prevCalendarEvents.map((event) => {
+        if (event.id === calendarEvent.event.id) {
+          return {
+            ...event,
+            contactInfo: {
+              name: values.name,
+              email: values.email,
+              phone: values.phone,
+              otherInfo: values.otherInfo,
+            },
+          };
+        }
+
+        return event;
+      });
+
+      return updatedCalendarEvents;
+    });
+
+    toast.success("Sikeres módosítás");
+    setIsLoading(false);
+    setIsDialogOpen(false);
+  };
 
   return (
     <div>
@@ -109,7 +160,9 @@ const BigCalendarEventForm = ({ calendarEvent }: BigCalendarEventFormProps) => {
             )}
           />
 
-          <Button type="submit">Submit</Button>
+          <Button type="submit" isLoading={isLoading}>
+            Submit
+          </Button>
         </form>
       </Form>
     </div>

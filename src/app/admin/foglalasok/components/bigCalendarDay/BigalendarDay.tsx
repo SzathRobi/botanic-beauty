@@ -14,11 +14,13 @@ import BigCalendarEventForm from "../bigCalendarEventForm/BigCalendarEventForm";
 type BigCalendarDayProps = {
   calendarEvent: EventProps<CalendarEvent>;
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const BigCalendarDay = ({
   calendarEvent,
   setCalendarEvents,
+  setIsDialogOpen,
 }: BigCalendarDayProps) => {
   const {
     event: {
@@ -118,7 +120,11 @@ const BigCalendarDay = ({
       </PopoverContent>
 
       <DialogContent>
-        <BigCalendarEventForm calendarEvent={calendarEvent} />
+        <BigCalendarEventForm
+          calendarEvent={calendarEvent}
+          setCalendarEvents={setCalendarEvents}
+          setIsDialogOpen={setIsDialogOpen}
+        />
       </DialogContent>
     </Popover>
   );

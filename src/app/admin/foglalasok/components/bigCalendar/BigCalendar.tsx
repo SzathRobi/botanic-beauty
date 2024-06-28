@@ -34,6 +34,7 @@ type BigCalendarProps = {
   offDays: TOffDay[];
   selectedHairdresser: SelectedHairdresser;
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const DndCalendar = withDragAndDrop<CalendarEvent>(Calendar);
@@ -44,6 +45,7 @@ const BigCalendar = ({
   offDays,
   selectedHairdresser,
   setCalendarEvents,
+  setIsDialogOpen,
 }: BigCalendarProps) => {
   const [view, setView] = useState<View>(Views.WEEK);
   const [date, setDate] = useState(new Date());
@@ -154,6 +156,7 @@ const BigCalendar = ({
               <BigCalendarDay
                 calendarEvent={eventProps}
                 setCalendarEvents={setCalendarEvents}
+                setIsDialogOpen={setIsDialogOpen}
               />
             ),
             toolbar: (toolbarProps: ToolbarProps<CalendarEvent, object>) => (
