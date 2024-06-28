@@ -104,7 +104,7 @@ const BigCalendarContainer = ({
 
   return (
     <Dialog>
-      <div className="max-w-[100vw] overflow-scroll">
+      <div className="max-w-[100vw] overflow-scroll md:overflow-hidden">
         <div className="flex gap-4 mb-8">
           <div>
             <input
