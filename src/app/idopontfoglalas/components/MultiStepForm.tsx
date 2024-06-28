@@ -1,21 +1,17 @@
 "use client";
 
-import { Booking, Schedule, Service } from "@prisma/client";
+import { Booking, Schedule, TService } from "@prisma/client";
 import { motion } from "framer-motion";
-import dynamic from "next/dynamic";
-import { ReactNode, useState } from "react";
-import { isBefore } from "date-fns";
+import { ReactNode, useEffect, useState } from "react";
 
 import BackgroundBlur from "@/components/BackgroundBlur";
 import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";
 import ServicesForm from "./ServicesForm";
 import Stepper from "./Stepper";
-import { isBeforeAug1 } from "../utils/isBeforeAug1";
-
-const HairdresserForm = dynamic(() => import("./HairdresserForm"));
-const AvailableDatesForm = dynamic(() => import("./AvailableDatesForm"));
-const ContactForm = dynamic(() => import("./ContactForm"));
-const SummaryForm = dynamic(() => import("./SummaryForm"));
+import HairdresserForm from "./HairdresserForm";
+import AvailableDatesForm from "./AvailableDatesForm";
+import ContactForm from "./ContactForm";
+import SummaryForm from "./SummaryForm";
 
 type FadeInProps = {
   children: ReactNode;
@@ -38,8 +34,10 @@ type MultiStepFormProps = {
 
 const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   const [activeStep, setActiveStep] = useState(0);
-  const [selectedService, setSelectedService] = useState<Service | null>(null);
-  const [choosenHairdresser, setChoosenHairdresser] = useState<
+  const [selectedService, setSelectedService] = useState<TService | null>(null);
+  const [selectedExtraService, setSelectedExtraService] =
+    useState<TService | null>(null);
+  const [selectedHairdresser, setSelectedHairdresser] = useState<
     "Timi" | "nem_Timi" | null
   >("Timi");
   const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()));
@@ -55,12 +53,17 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     setContactInfo({ ...contactInfo, [key]: value });
   };
 
-  const selectService = (service: Service) => {
+  const selectService = (service: TService) => {
+    setSelectedExtraService(null);
     setSelectedService(service);
   };
 
-  const chooseHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
-    setChoosenHairdresser(hairdresser);
+  const selectExtraService = (service: TService | null) => {
+    setSelectedExtraService(service);
+  };
+
+  const selectHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
+    setSelectedHairdresser(hairdresser);
   };
 
   const incrementActiveStep = () => {
@@ -72,7 +75,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   };
 
   const postBookingData = async () => {
-    if (!choosenHairdresser || !selectedService || !selectedTimeSlot) return;
+    if (!selectedHairdresser || !selectedService || !selectedTimeSlot) return;
 
     const response = await fetch("/api/booking", {
       method: "POST",
@@ -81,8 +84,9 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
       },
       body: JSON.stringify(
         mapMultistepFormDataToBooking({
-          choosenHairdresser,
+          selectedHairdresser,
           selectedService,
+          selectedExtraService,
           contactInfo,
           selectedDate,
           selectedTimeSlot,
@@ -120,6 +124,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
                 setSelectedTimeSlot={setSelectedTimeSlot}
                 selectService={selectService}
                 selectedService={selectedService}
+                selectExtraService={selectExtraService}
                 incrementActiveStep={incrementActiveStep}
               />
             </FadeIn>
@@ -128,8 +133,8 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
           {activeStep === 1 && (
             <FadeIn>
               <HairdresserForm
-                choosenHairdresser={choosenHairdresser}
-                chooseHairdresser={chooseHairdresser}
+                selectedHairdresser={selectedHairdresser}
+                selectHairdresser={selectHairdresser}
                 incrementActiveStep={incrementActiveStep}
                 decrementActiveStep={decrementActiveStep}
               />
@@ -145,7 +150,8 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
                 selectedTimeSlot={selectedTimeSlot}
                 setSelectedTimeSlot={setSelectedTimeSlot}
                 selectedService={selectedService}
-                choosenHairdresser={choosenHairdresser!}
+                selectedExtraService={selectedExtraService}
+                selectedHairdresser={selectedHairdresser!}
                 schedule={schedule}
                 incrementActiveStep={incrementActiveStep}
                 decrementActiveStep={decrementActiveStep}
@@ -154,7 +160,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
           )}
 
           {activeStep === 3 &&
-            choosenHairdresser &&
+            selectedHairdresser &&
             selectedTimeSlot &&
             selectedService && (
               <FadeIn>
@@ -166,8 +172,9 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
                   postBookingData={postBookingData}
                   deleteBookingData={deleteBookingData}
                   booking={mapMultistepFormDataToBooking({
-                    choosenHairdresser,
+                    selectedHairdresser,
                     selectedService,
+                    selectedExtraService,
                     contactInfo,
                     selectedDate,
                     selectedTimeSlot,
@@ -180,7 +187,8 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             <FadeIn>
               <SummaryForm
                 selectedService={selectedService}
-                choosenHairdresser={choosenHairdresser}
+                selectedExtraService={selectedExtraService}
+                selectedHairdresser={selectedHairdresser}
                 selectedDate={selectedDate}
                 selectedTimeSlot={selectedTimeSlot}
               />

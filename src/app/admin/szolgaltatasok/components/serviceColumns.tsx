@@ -1,6 +1,6 @@
 "use client";
 
-import { Service } from "@prisma/client";
+import { TService } from "@prisma/client";
 import { ColumnDef } from "@tanstack/react-table";
 import { formatDuration } from "@/lib/utils";
 import {
@@ -19,7 +19,6 @@ import {
   Trash2,
 } from "lucide-react";
 import BackgroundBlur from "@/components/BackgroundBlur";
-import { DialogTrigger } from "@/components/ui/Dialog";
 
 const deleteService = async (id: string) => {
   try {
@@ -32,7 +31,7 @@ const deleteService = async (id: string) => {
   }
 };
 
-export const columns: ColumnDef<Service>[] = [
+export const columns: ColumnDef<TService>[] = [
   {
     id: "actions",
     cell: ({ row }) => {

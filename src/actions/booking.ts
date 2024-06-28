@@ -1,4 +1,3 @@
-import { BookingWithoutSensitiveData } from "@/app/idopontfoglalas/types/bookingWithoutSensitiveData.type";
 import prisma from "@/lib/db";
 import { Booking } from "@prisma/client";
 

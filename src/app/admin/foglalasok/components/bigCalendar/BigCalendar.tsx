@@ -20,7 +20,7 @@ import BigCalendarDay from "../bigCalendarDay/BigalendarDay";
 
 import "moment/locale/hu";
 import "./calendar.css";
-import { OffDay } from "@prisma/client";
+import { TOffDay } from "@prisma/client";
 import { SelectedHairdresser } from "../bigCalendarContainer/BigCalendarContainer";
 import { isOffDayOfNemTimi, isOffDayOfTimi } from "../../utils/offDay";
 import BigCalendarToolbar from "../bigCalendarToolbar/BigCalendarToolbar";
@@ -30,7 +30,7 @@ const localizer = momentLocalizer(moment);
 type BigCalendarProps = {
   calendarEvents: CalendarEvent[];
   onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void;
-  offDays: OffDay[];
+  offDays: TOffDay[];
   selectedHairdresser: SelectedHairdresser;
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
 };

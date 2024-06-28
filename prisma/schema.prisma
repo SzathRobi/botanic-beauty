@@ -12,7 +12,7 @@ enum Hairdresser {
   nem_Timi
 }
 
-type OffDay{
+type TOffDay{
 date                DateTime
 displayMonth        DateTime
 person              Hairdresser
@@ -20,7 +20,7 @@ person              Hairdresser
 
 model Schedule {
   id                String    @id @default(auto()) @map("_id") @db.ObjectId
-  offDays           OffDay[]
+  offDays           TOffDay[]
   createdAt         DateTime  @default(now())
   updatedAt         DateTime  @updatedAt
 }
@@ -33,15 +33,7 @@ type TService {
   category          String
 }
 
-model Service {
-  id                String     @id @default(auto()) @map("_id") @db.ObjectId
-  name              String
-  duration          Int
-  price             Int
-  category          String
-}
-
-type ContactInfo {
+type TContactInfo {
   name              String
   email             String
   phone             String
@@ -51,10 +43,11 @@ type ContactInfo {
 model Booking {
   id                String      @id @default(uuid()) @map("_id")
   service           TService
+  extraService      TService?
   hairdresser       Hairdresser
   selectedDate      String
   selectedTimeSlot  String
-  contactInfo       ContactInfo
+  contactInfo       TContactInfo
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
 }

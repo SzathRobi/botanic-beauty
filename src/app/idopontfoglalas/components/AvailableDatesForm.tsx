@@ -15,7 +15,7 @@ import {
 
 import { DayPicker } from "react-day-picker";
 import TimeSlots from "./TimeSlots";
-import { Booking, OffDay, Schedule, Service } from "@prisma/client";
+import { Booking, TOffDay, Schedule, TService } from "@prisma/client";
 import {
   CLOSING_HOUR,
   LAST_BOOKING_HOUR,
@@ -23,6 +23,7 @@ import {
 } from "../constants/openingHours.constants";
 import { Button } from "@/components/Button";
 import { hu } from "date-fns/locale";
+import "./AvailableDatesForm.override.css";
 
 type AvailableDatesFormProps = {
   bookings: Booking[];
@@ -30,8 +31,9 @@ type AvailableDatesFormProps = {
   setSelectedDate: (date: Date) => void;
   selectedTimeSlot: string | null;
   setSelectedTimeSlot: (timeSlot: string | null) => void;
-  selectedService: Service;
-  choosenHairdresser: "Timi" | "nem_Timi";
+  selectedService: TService;
+  selectedExtraService: TService | null;
+  selectedHairdresser: "Timi" | "nem_Timi";
   schedule: Schedule;
   incrementActiveStep: () => void;
   decrementActiveStep: () => void;
@@ -53,13 +55,17 @@ const AvailableDatesForm = ({
   selectedTimeSlot,
   setSelectedTimeSlot,
   selectedService,
-  choosenHairdresser,
+  selectedExtraService,
+  selectedHairdresser,
   schedule,
   decrementActiveStep,
   incrementActiveStep,
 }: AvailableDatesFormProps) => {
   const now = new Date();
   const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120));
+  const serviceDuration = selectedExtraService
+    ? selectedExtraService.duration + selectedService.duration
+    : selectedService.duration;
 
   const [
     datesWithNoTimeForSelectedService,
@@ -67,8 +73,8 @@ const AvailableDatesForm = ({
   ] = useState<Date[]>([]);
 
   const hairdresserOffDays: Date[] = schedule.offDays
-    .filter((offDay: OffDay) => offDay.person === choosenHairdresser)
-    .map((offDay: OffDay) => offDay.date);
+    .filter((offDay: TOffDay) => offDay.person === selectedHairdresser)
+    .map((offDay: TOffDay) => offDay.date);
   const isClosedForToday = selectedDate.getHours() >= LAST_BOOKING_HOUR;
 
   const [isClosedDay, setIsClosedDay] = useState<boolean>(false);
@@ -113,8 +119,9 @@ const AvailableDatesForm = ({
 
   return (
     <div className="mb-8">
-      <div className="mb-12 flex flex-col md:flex-row justify-between items-start gap-4">
+      <div className="mb-12 flex flex-col md:flex-row justify-evenly items-start gap-4">
         <DayPicker
+          className="text-lg dayPicker"
           mode="single"
           selected={selectedDate}
           defaultMonth={selectedDate}
@@ -136,7 +143,7 @@ const AvailableDatesForm = ({
           bookings={bookings}
           startTime={isToday(selectedDate) ? tPlus2Hours : getOpeningHour()}
           endTime={CLOSING_HOUR}
-          interval={selectedService.duration}
+          interval={serviceDuration}
           isClosedDay={isClosedDay}
           isClosedForToday={isClosedForToday}
           selectedTimeSlot={selectedTimeSlot}

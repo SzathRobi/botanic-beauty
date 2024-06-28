@@ -4,15 +4,15 @@ import { Button } from "@/components/Button";
 import Image from "next/image";
 
 type HairdresserFormProps = {
-  choosenHairdresser: "Timi" | "nem_Timi" | null;
-  chooseHairdresser: (hairdresser: "Timi" | "nem_Timi") => void;
+  selectedHairdresser: "Timi" | "nem_Timi" | null;
+  selectHairdresser: (hairdresser: "Timi" | "nem_Timi") => void;
   incrementActiveStep: () => void;
   decrementActiveStep: () => void;
 };
 
 const HairdresserForm = ({
-  chooseHairdresser,
-  choosenHairdresser,
+  selectHairdresser,
+  selectedHairdresser,
   decrementActiveStep,
   incrementActiveStep,
 }: HairdresserFormProps) => {
@@ -23,7 +23,7 @@ const HairdresserForm = ({
       <div className="mb-12 flex items-start justify-center gap-8 w-full">
         <label
           className={`${
-            choosenHairdresser === "Timi" ? "border-2" : ""
+            selectedHairdresser === "Timi" ? "border-2" : ""
           } p-2 cursor-pointer w-full rounded-lg`}
         >
           <input
@@ -31,8 +31,8 @@ const HairdresserForm = ({
             className="hidden"
             name="hairdresser"
             value="Timi"
-            checked={choosenHairdresser === "Timi"}
-            onChange={() => chooseHairdresser("Timi")}
+            checked={selectedHairdresser === "Timi"}
+            onChange={() => selectHairdresser("Timi")}
           />
           <div className="flex w-full items-center justify-start gap-8">
             <Image
@@ -48,7 +48,7 @@ const HairdresserForm = ({
 
         {/* <label
           className={`${
-            choosenHairdresser === "nem_Timi" ? "border-2" : ""
+            selectedHairdresser === "nem_Timi" ? "border-2" : ""
           } p-2 cursor-pointer`}
         >
           <input
@@ -56,8 +56,8 @@ const HairdresserForm = ({
             className="hidden"
             name="hairdresser"
             value="nem_Timi"
-            checked={choosenHairdresser === "nem_Timi"}
-            onChange={() => chooseHairdresser("nem_Timi")}
+            checked={selectedHairdresser === "nem_Timi"}
+            onChange={() => selectHairdresser("nem_Timi")}
           />
           <p>nem_Timi</p>
           <Image
@@ -75,7 +75,7 @@ const HairdresserForm = ({
           Vissza
         </Button>
         <Button
-          disabled={choosenHairdresser === null}
+          disabled={selectedHairdresser === null}
           onClick={incrementActiveStep}
         >
           Tovább

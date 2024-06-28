@@ -10,12 +10,12 @@ import {
 } from "@/components/ui/Dialog";
 import ServiceForm from "./ServiceForm";
 import { DataTable } from "@/components/ui/DataTable";
-import { Service } from "@prisma/client";
+import { TService } from "@prisma/client";
 import { columns } from "./serviceColumns";
 import { useState } from "react";
 
 interface ServiceTableProps {
-  services: Service[];
+  services: TService[];
 }
 
 const ServiceTable = ({ services }: ServiceTableProps) => {

@@ -1,6 +1,5 @@
 "use client";
 
-import { Service } from "@prisma/client";
 import {
   ColumnDef,
   SortingState,

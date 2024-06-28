@@ -1,7 +1,7 @@
 import { ServiceGroup } from "@/types/serviceGroup.type";
-import { Service } from "@prisma/client";
+import { TService } from "@prisma/client";
 
-const STYLING_SERVICES: Service[] = [
+const STYLING_SERVICES: TService[] = [
   {
     id: "1",
     category: "Szárítás - Styling",
@@ -32,7 +32,7 @@ const STYLING_SERVICES: Service[] = [
   },
 ];
 
-const CUTTING_SERVICES: Service[] = [
+const CUTTING_SERVICES: TService[] = [
   {
     id: "5",
     category: "Hajvágás",
@@ -91,7 +91,7 @@ const CUTTING_SERVICES: Service[] = [
   },
 ];
 
-const COLORING_SERVICES: Service[] = [
+const COLORING_SERVICES: TService[] = [
   {
     id: "13",
     category: "Festések",
@@ -150,7 +150,7 @@ const COLORING_SERVICES: Service[] = [
   },
 ];
 
-export const SERVICES: Service[] = [
+export const SERVICES: TService[] = [
   ...STYLING_SERVICES,
   ...CUTTING_SERVICES,
   ...COLORING_SERVICES,
@@ -171,3 +171,11 @@ export const SERVICE_GROUPS: ServiceGroup[] = [
     pricePostfix: "(+anyag)",
   },
 ];
+
+export const EXTRA_SERVICE: TService = {
+  id: "21",
+  category: "extra",
+  name: "Hajvágás festéshez",
+  price: 0,
+  duration: 30,
+};

@@ -1,23 +1,26 @@
 "use client";
 
 import { formatDuration } from "@/lib/utils";
-import { Service } from "@prisma/client";
+import { TService } from "@prisma/client";
 import { ChangeEvent } from "react";
 import { PiHairDryer, PiScissors } from "react-icons/pi";
 import { IoColorPaletteOutline } from "react-icons/io5";
+import ExtraServiceCard from "./ExtraServiceCard";
 
 type ServiceCardProps = {
   selectedDate: Date;
   setSelectedDate: (date: Date) => void;
   selectedTimeSlot: string | null;
   setSelectedTimeSlot: (time: string | null) => void;
-  service: Service;
+  service: TService;
   index: number;
-  selectService: (service: Service) => void;
-  selectedService: Service | null;
+  selectService: (service: TService) => void;
+  selectedService: TService | null;
+  selectExtraService: (service: TService | null) => void;
 };
 
 const ICON_SIZE = 32;
+
 const ServiceCard = ({
   selectedDate,
   setSelectedDate,
@@ -27,9 +30,8 @@ const ServiceCard = ({
   index,
   selectService,
   selectedService,
+  selectExtraService,
 }: ServiceCardProps) => {
-  // const [isMainServiceChecked, setIsMainServiceChecked] = useState(false);
-
   const handleRadioChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       selectService(service);
@@ -53,11 +55,17 @@ const ServiceCard = ({
     return <PiHairDryer size={ICON_SIZE} />;
   };
 
+  const isSelected = selectedService?.name === service.name;
+
   return (
-    <div className="mb-4">
+    <div
+      className={`${
+        isSelected ? "bg-green-600/30" : "bg-black/30"
+      } mb-4 rounded-md transition-colors`}
+    >
       <label
         key={index}
-        className="cursor-pointer flex bg-black/30 px-4 py-2 rounded-md items-center mb-2 gap-4"
+        className="cursor-pointer flex px-4 py-2 rounded-md items-center mb-2 gap-4"
       >
         <div className="p-2 bg-green-600 rounded-full">
           {geServiceIcon(service.category)}
@@ -71,11 +79,15 @@ const ServiceCard = ({
         <input
           type="radio"
           name="service"
-          checked={selectedService?.name === service.name}
+          checked={isSelected}
           onChange={handleRadioChange}
           className="w-4 h-4 accent-green-600"
         />
       </label>
+
+      {isSelected && service.category === "Festések" && (
+        <ExtraServiceCard selectExtraService={selectExtraService} />
+      )}
     </div>
   );
 };

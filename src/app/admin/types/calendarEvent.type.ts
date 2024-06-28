@@ -1,4 +1,4 @@
-import { Hairdresser, Service } from "@prisma/client";
+import { Hairdresser, TService } from "@prisma/client";
 import { Event } from "react-big-calendar";
 
 type CalendarEventContactInfo = {
@@ -12,7 +12,8 @@ export type CalendarEvent = Event & {
   id: string;
   hairdresser: Hairdresser;
   contactInfo: CalendarEventContactInfo;
-  service: Service;
+  service: TService;
+  extraService: TService | null;
   createdAt: Date;
   updatedAt: Date;
 };

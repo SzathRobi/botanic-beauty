@@ -9,6 +9,7 @@ export const mapEventToBooking = ({
   hairdresser,
   id,
   service,
+  extraService,
   updatedAt,
   start,
   end,
@@ -22,6 +23,7 @@ export const mapEventToBooking = ({
   contactInfo: contactInfo,
   hairdresser: hairdresser,
   service,
+  extraService,
   selectedTimeSlot:
     `${format(start!, "HH:mm")} - ${format(end!, "HH:mm")}` ?? "",
   id,

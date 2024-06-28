@@ -21,7 +21,16 @@ const BigCalendarDay = ({
   setCalendarEvents,
 }: BigCalendarDayProps) => {
   const {
-    event: { contactInfo, hairdresser, service, start, end, title, id },
+    event: {
+      contactInfo,
+      extraService,
+      hairdresser,
+      service,
+      start,
+      end,
+      title,
+      id,
+    },
   } = calendarEvent;
 
   const startTime = format(start!, "HH:mm");
@@ -31,8 +40,6 @@ const BigCalendarDay = ({
     calendarEvent.event.hairdresser === "Timi" ? "bg-green-600" : "bg-blue-600";
 
   const [isLoading, setIsLoading] = useState(false);
-
-  console.log("salalalalalalalalallalalalalalal");
 
   const deleteBooking = async (id: string) => {
     setIsLoading(true);
@@ -69,18 +76,29 @@ const BigCalendarDay = ({
       </PopoverTrigger>
       <PopoverContent side="right" className="bg-white">
         <p>Foglalási adatok:</p>
-        <div className={`text-sm h-full p-2 ${eventColor}`}>
+        {/* ${eventColor} */}
+        <div className={`text-sm h-full`}>
           <p className="mb-2">
             {startTime} - {endTime}
           </p>
+
           <p className="mb-2">{title}</p>
-          <p>{contactInfo.name}</p>
+
+          {extraService && (
+            <p className="mb-2 font-medium">Extra hajvágással</p>
+          )}
         </div>
-        <div>
+
+        <div className="text-sm space-y-1 mb-8">
+          <p>{contactInfo.name}</p>
+
           <p>{contactInfo.email}</p>
+
           <p>{contactInfo.phone}</p>
+
           {contactInfo.otherInfo && <p>{contactInfo.otherInfo}</p>}
         </div>
+
         <div>
           <Button
             size="sm"
@@ -90,6 +108,7 @@ const BigCalendarDay = ({
           >
             Törlés
           </Button>
+
           <DialogTrigger asChild>
             <Button size="sm" variant="secondary">
               Módosítás

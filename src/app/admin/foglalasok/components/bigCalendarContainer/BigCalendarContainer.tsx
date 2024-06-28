@@ -6,14 +6,14 @@ import { CalendarEvent } from "../../../types/calendarEvent.type";
 import BigCalendar from "../bigCalendar/BigCalendar";
 import { EventInteractionArgs } from "react-big-calendar/lib/addons/dragAndDrop";
 import { mapEventToBooking } from "../../../mappers/mapEventToBooking.mapper";
-import { OffDay } from "@prisma/client";
+import { TOffDay } from "@prisma/client";
 import { isOffDayOfNemTimi, isOffDayOfTimi } from "../../utils/offDay";
 import toast from "react-hot-toast";
 import { Dialog } from "@/components/ui/Dialog";
 
 type BigCalendarContainerProps = {
   events: CalendarEvent[];
-  offDays: OffDay[];
+  offDays: TOffDay[];
 };
 
 export type SelectedHairdresser = "all" | "Timi" | "nem_Timi";

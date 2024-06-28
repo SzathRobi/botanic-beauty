@@ -1,9 +1,15 @@
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(request: NextRequest, nextResponse: NextResponse) {
-  const { service, hairdresser, selectedDate, selectedTimeSlot, contactInfo } =
-    await request.json();
+export async function POST(request: NextRequest) {
+  const {
+    extraService,
+    service,
+    hairdresser,
+    selectedDate,
+    selectedTimeSlot,
+    contactInfo,
+  } = await request.json();
 
   if (
     !service ||
@@ -47,6 +53,7 @@ export async function POST(request: NextRequest, nextResponse: NextResponse) {
     const booking = await prisma.booking.create({
       data: {
         service,
+        extraService,
         hairdresser,
         selectedDate,
         selectedTimeSlot,

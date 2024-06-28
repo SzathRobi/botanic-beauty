@@ -75,7 +75,7 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                   Ha mégse jó az időpont kérlek jelezd a következő emailen /
                   telefonon:
                 </Text>
-                <Text>labamkozottnagy@gmail.com / 06304204200</Text>
+                <Text>botanic.beauty.salon@gmail.com / +36 30 178 5088</Text>
               </Column>
             </Row>
           </Section>

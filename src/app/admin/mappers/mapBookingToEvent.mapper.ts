@@ -9,6 +9,7 @@ export const mapBookingToEvent = ({
   selectedTimeSlot,
   id,
   service,
+  extraService,
   createdAt,
   updatedAt,
 }: Booking): CalendarEvent => {
@@ -36,6 +37,7 @@ export const mapBookingToEvent = ({
     hairdresser,
     contactInfo,
     service,
+    extraService,
     createdAt,
     updatedAt,
   };

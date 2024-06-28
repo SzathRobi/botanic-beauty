@@ -1,6 +1,8 @@
+"use client";
+
 import { Button } from "@/components/Button";
 import ServiceCard from "./ServiceCard";
-import { Service } from "@prisma/client";
+import { TService } from "@prisma/client";
 import { SERVICES } from "@/constants/services.constants";
 
 type ServiceFormProps = {
@@ -8,9 +10,10 @@ type ServiceFormProps = {
   setSelectedDate: (date: Date) => void;
   selectedTimeSlot: string | null;
   setSelectedTimeSlot: (time: string | null) => void;
-  selectService: (service: Service) => void;
-  selectedService: Service | null;
+  selectService: (service: TService) => void;
+  selectedService: TService | null;
   incrementActiveStep: () => void;
+  selectExtraService: (service: TService | null) => void;
 };
 
 const ServicesForm = ({
@@ -21,6 +24,7 @@ const ServicesForm = ({
   selectService,
   selectedService,
   incrementActiveStep,
+  selectExtraService,
 }: ServiceFormProps) => {
   return (
     <div className="flex-1 flex flex-col">
@@ -36,6 +40,7 @@ const ServicesForm = ({
             index={index}
             selectService={selectService}
             selectedService={selectedService}
+            selectExtraService={selectExtraService}
           />
         ))}
       </div>
