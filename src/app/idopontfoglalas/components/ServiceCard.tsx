@@ -81,7 +81,7 @@ const ServiceCard = ({
           name="service"
           checked={isSelected}
           onChange={handleRadioChange}
-          className="w-4 h-4 accent-green-600"
+          className="hidden"
         />
       </label>
 

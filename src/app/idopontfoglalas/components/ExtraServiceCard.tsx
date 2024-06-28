@@ -44,7 +44,7 @@ const ExtraServiceCard = ({ selectExtraService }: ExtraServiceCardProps) => {
           type="checkbox"
           checked={isExtraServiceSelected}
           onChange={handleCheckboxChange}
-          className="w-4 h-4 accent-green-600"
+          className="hidden"
         />
       </label>
     </div>
