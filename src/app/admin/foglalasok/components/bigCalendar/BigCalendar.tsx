@@ -24,6 +24,7 @@ import { TOffDay } from "@prisma/client";
 import { SelectedHairdresser } from "../bigCalendarContainer/BigCalendarContainer";
 import { isOffDayOfNemTimi, isOffDayOfTimi } from "../../utils/offDay";
 import BigCalendarToolbar from "../bigCalendarToolbar/BigCalendarToolbar";
+import DnDContext from "../../contexts/DnDContext";
 
 const localizer = momentLocalizer(moment);
 
@@ -139,39 +140,42 @@ const BigCalendar = ({
   };
 
   return (
-    <div>
-      <DndCalendar
-        localizer={localizer}
-        events={calendarEvents}
-        min={minCalendarStartTime}
-        max={maxCalendarStartTime}
-        selectable={true}
-        resizable={true}
-        components={{
-          event: (eventProps: EventProps<CalendarEvent>) => (
-            <BigCalendarDay
-              calendarEvent={eventProps}
-              setCalendarEvents={setCalendarEvents}
-            />
-          ),
-          toolbar: (toolbarProps: ToolbarProps<CalendarEvent, object>) => (
-            <BigCalendarToolbar {...toolbarProps} />
-          ),
-        }}
-        views={[Views.MONTH, Views.WEEK, Views.DAY]}
-        defaultView={view}
-        view={view}
-        date={date}
-        className="min-h-[80vh] bg-black/60 w-[200vw] md:w-full"
-        eventPropGetter={eventStyleGetter}
-        dayPropGetter={dayStyleGetter}
-        onEventDrop={onEventDrop}
-        onNavigate={(date) => {
-          setDate(new Date(date));
-        }}
-        onView={(view) => setView(view)}
-      />
-    </div>
+    <DnDContext>
+      <div>
+        <DndCalendar
+          localizer={localizer}
+          events={calendarEvents}
+          min={minCalendarStartTime}
+          max={maxCalendarStartTime}
+          selectable={true}
+          resizable={true}
+          components={{
+            event: (eventProps: EventProps<CalendarEvent>) => (
+              <BigCalendarDay
+                calendarEvent={eventProps}
+                setCalendarEvents={setCalendarEvents}
+              />
+            ),
+            toolbar: (toolbarProps: ToolbarProps<CalendarEvent, object>) => (
+              <BigCalendarToolbar {...toolbarProps} />
+            ),
+          }}
+          views={[Views.MONTH, Views.WEEK, Views.DAY]}
+          defaultView={view}
+          view={view}
+          date={date}
+          className="min-h-[80vh] bg-black/60 w-[200vw] md:w-full"
+          eventPropGetter={eventStyleGetter}
+          dayPropGetter={dayStyleGetter}
+          draggableAccessor={() => true}
+          onEventDrop={onEventDrop}
+          onNavigate={(date) => {
+            setDate(new Date(date));
+          }}
+          onView={(view) => setView(view)}
+        />
+      </div>
+    </DnDContext>
   );
 };
 
