@@ -20,3 +20,7 @@
 .rbc-current-time-indicator {
   height: 2px;
 }
+
+.rbc-timeslot-group {
+  min-height: 80px !important;
+}

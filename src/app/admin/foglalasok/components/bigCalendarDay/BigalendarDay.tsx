@@ -70,11 +70,11 @@ const BigCalendarDay = ({
           <p className="mb-2">
             {startTime} - {endTime}
           </p>
-          <p className="mb-2">{title}</p>
-          <p>{contactInfo.name}</p>
+          <p className="hidden md:block mb-2">{title}</p>
+          <p className="hidden md:block">{contactInfo.name}</p>
         </div>
       </PopoverTrigger>
-      <PopoverContent side="right" className="bg-white">
+      <PopoverContent side="right" className="bg-white max-w-60">
         <p>Foglalási adatok:</p>
         {/* ${eventColor} */}
         <div className={`text-sm h-full`}>
