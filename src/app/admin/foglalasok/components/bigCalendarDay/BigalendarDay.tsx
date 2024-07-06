@@ -10,6 +10,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
 import { DialogContent, DialogTrigger } from "@/components/ui/Dialog";
 import BigCalendarEventForm from "../bigCalendarEventForm/BigCalendarEventForm";
+import { mapEventToBooking } from "@/app/admin/mappers/mapEventToBooking.mapper";
 
 type BigCalendarDayProps = {
   calendarEvent: EventProps<CalendarEvent>;
@@ -46,11 +47,25 @@ const BigCalendarDay = ({
   const deleteBooking = async (id: string) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`/api/booking/${id}`, {
+      const bookingResponse = await fetch(`/api/booking/${id}`, {
         method: "DELETE",
       });
 
-      const data = await response.json();
+      const cancelEamilResponse = await fetch("/api/email/cancel", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          booking: mapEventToBooking(calendarEvent.event),
+        }),
+      });
+
+      if (!cancelEamilResponse.ok) {
+        toast.error("A foglalás törlő email küldése sikertelen!");
+      }
+
+      const data = await bookingResponse.json();
 
       if (!data.success) {
         toast.error("Hiba történt, a módosítás sikertelen");

@@ -91,7 +91,8 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
             |{" "}
             <Link href="https://www.botanic-beauty.hu">
               www.botanic-beauty.hu
-            </Link>
+            </Link>{" "}
+            | +36 30 178 5088
           </Text>
         </Container>
       </Body>

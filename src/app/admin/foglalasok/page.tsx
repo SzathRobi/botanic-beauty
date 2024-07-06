@@ -31,16 +31,6 @@ const BookingPage = async () => {
           events={calendarEvents}
           offDays={schedule?.offDays ?? []}
         />
-
-        {/* {bookings.length === 0 ? (
-        <div>
-          <p>Nincsenek foglalások</p>
-        </div>
-      ) : (
-        <div>
-          <p>Az adatbaázisban {bookings.length} foglalás van</p>
-        </div>
-      )} */}
       </BackgroundBlur>
     </div>
   );

@@ -29,13 +29,13 @@ const ImageUploadPage = async () => {
 
   return (
     <section>
-      <h1>Kepek feltöltése</h1>
+      <div className="max-w-5xl mx-auto">
+        <div className="mb-10">
+          <ImageUpload />
+        </div>
 
-      <div className="mb-10">
-        <ImageUpload />
+        <ImageList resources={cloudinaryData.resources} />
       </div>
-
-      <ImageList resources={cloudinaryData.resources} />
     </section>
   );
 };

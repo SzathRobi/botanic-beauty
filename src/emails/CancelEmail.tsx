@@ -15,15 +15,15 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface ReminderEmailProps {
+interface CancelEmailProps {
   booking: Booking;
 }
 
-export const ReminderEmail = ({ booking }: ReminderEmailProps) => {
+export const CancelEmail = ({ booking }: CancelEmailProps) => {
   return (
     <Html>
       <Head />
-      <Preview>Foglalás emlékeztető</Preview>
+      <Preview>Foglalás törlése</Preview>
       <Body style={main}>
         <Container>
           <Section style={content}>
@@ -48,18 +48,16 @@ export const ReminderEmail = ({ booking }: ReminderEmailProps) => {
                 </Heading>
 
                 <Text style={{ marginBottom: 48 }}>
-                  Ne feledd, hogy közeleg az időpontod a Botanic Beauty-ban!
-                  Szeretettel várunk téged{" "}
+                  A(z){" "}
                   <b>
                     {booking.selectedDate} {booking.selectedTimeSlot}
                   </b>{" "}
-                  -kor.
+                  -kor lévő időpontodat töröltük.
                 </Text>
 
                 <Text>
-                  Ha bármilyen kérdésed van, vagy változtatnál az időponton,
-                  kérlek, vedd fel velünk a kapcsolatot e-mailben vagy
-                  telefonon!
+                  Ha bármilyen kérdésed van, kérlek, vedd fel velünk a
+                  kapcsolatot e-mailben vagy telefonon!
                 </Text>
               </Column>
             </Row>
@@ -85,7 +83,7 @@ export const ReminderEmail = ({ booking }: ReminderEmailProps) => {
   );
 };
 
-ReminderEmail.PreviewProps = {
+CancelEmail.PreviewProps = {
   booking: {
     contactInfo: {
       name: "Omamori Himari",
@@ -97,9 +95,9 @@ ReminderEmail.PreviewProps = {
     selectedDate: "2022-10-10",
     selectedTimeSlot: "10:00 - 11:00",
   },
-} as ReminderEmailProps;
+} as CancelEmailProps;
 
-export default ReminderEmail;
+export default CancelEmail;
 
 const main = {
   backgroundColor: "#fff",
