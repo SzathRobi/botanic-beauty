@@ -9,9 +9,10 @@ const Landing = async () => {
       <Image
         alt=""
         src="/landing-bg.png"
-        fill
+        width={1920}
+        height={1080}
         priority={true}
-        className="relative -z-10 -translate-y-[20%] transform object-cover"
+        className="relative -z-10 -translate-y-[20%] transform object-cover object-top"
       />
       <div className="px-2 sm:px-0 flex h-full w-full flex-col items-center justify-center">
         <BackgroundBlur className="mb-24 flex flex-col items-center justify-center gap-4">
