@@ -7,12 +7,19 @@ const Landing = async () => {
   return (
     <section className="h-screen">
       <Image
-        alt=""
+        alt="Botanic Beauty landing background"
         src="/landing-bg.png"
         width={1920}
         height={1080}
         priority={true}
-        className="relative -z-10 -translate-y-[20%] transform object-cover object-top"
+        className="absolute -z-10 md:-top-24 object-cover"
+      />
+      <Image
+        alt="arrow down"
+        src="/arrow-down.png"
+        width={128}
+        height={128}
+        className="absolute left-1/2 transform -translate-x-1/2 -z-10 bottom-16"
       />
       <div className="px-2 sm:px-0 flex h-full w-full flex-col items-center justify-center">
         <BackgroundBlur className="mb-24 flex flex-col items-center justify-center gap-4">
