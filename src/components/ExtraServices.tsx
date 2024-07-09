@@ -20,9 +20,8 @@ const ServiceCard = ({ icon, title }: ServiceCardProps) => {
 
 const ExtraServices = () => {
   return (
-    <section className="px-2 sm:px-0 mb-60">
+    <section className="px-2 sm:px-0 mb-60 grid place-items-center">
       <FadeInView>
-        <Title title="Extra szolgáltatások" />
         <BackgroundBlur className="mx-auto space-y-24">
           <div className="flex flex-col md:flex-row justify-between gap-10">
             <FadeInView delay={0}>
