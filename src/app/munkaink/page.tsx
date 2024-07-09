@@ -51,6 +51,7 @@ const OurWorksPage = async () => {
   const { resources } = await cloudinary.v2.api.resources({
     type: "upload",
     max_results: 200,
+    direction: "desc",
   });
 
   // TODO / low: add infinite scroll pagination
