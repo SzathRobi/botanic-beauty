@@ -104,15 +104,32 @@ const BigCalendarContainer = ({
     );
 
     if (modifiedEvent) {
+      const loaderEvent = { ...modifiedEvent, isLoaderEvent: true };
+      setCalendarEvents([...modifiedEvents, loaderEvent]);
       // TODO / medium : loading state
-      updateEvent(modifiedEvent).then((response) => {
-        if (!response.success) {
-          return;
-        }
+      updateEvent(modifiedEvent)
+        .then((response) => {
+          if (!response.success) {
+            return;
+          }
 
-        setCalendarEvents(modifiedEvents);
-        setCalendarEventsBackup(modifiedEvents);
-      });
+          const calendarEvents = modifiedEvents.filter(
+            (calendarEvent) => calendarEvent.isLoaderEvent !== true
+          );
+
+          setCalendarEvents(calendarEvents);
+          setCalendarEventsBackup(calendarEvents);
+        })
+        .catch(() => {
+          toast.error("Hiba történt, a módosítás sikertelen");
+
+          const calendarEvents = modifiedEvents.filter(
+            (calendarEvent) => calendarEvent.isLoaderEvent !== true
+          );
+
+          setCalendarEvents(calendarEvents);
+          setCalendarEventsBackup(calendarEvents);
+        });
     }
   };
 

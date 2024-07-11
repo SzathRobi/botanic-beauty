@@ -16,4 +16,5 @@ export type CalendarEvent = Event & {
   extraService: TService | null;
   createdAt: Date;
   updatedAt: Date;
+  isLoaderEvent?: boolean;
 };
