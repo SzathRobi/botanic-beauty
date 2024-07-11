@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import prisma from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -69,6 +70,15 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest, nextResponse: NextResponse) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: true, message: "Unauthenticated" },
+      { status: 401 }
+    );
+  }
+
   const booking = await request.json();
 
   try {

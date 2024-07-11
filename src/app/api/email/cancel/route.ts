@@ -1,11 +1,20 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { VerificationEmail } from "@/emails/VerificationEmail";
 import CancelEmail from "@/emails/CancelEmail";
+import { auth } from "@/auth";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: Request) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: true, message: "Unauthenticated" },
+      { status: 401 }
+    );
+  }
+
   const { booking } = await request.json();
 
   if (!booking.contactInfo.email || !booking.service) {

@@ -1,3 +1,4 @@
+import { auth } from "@/auth";
 import cloudinary from "cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -9,6 +10,15 @@ cloudinary.v2.config({
 });
 
 export async function DELETE(request: NextRequest) {
+  const session = await auth();
+
+  if (!session?.user) {
+    return NextResponse.json(
+      { error: true, message: "Unauthenticated" },
+      { status: 401 }
+    );
+  }
+
   const { selectedImages } = await request.json();
 
   if (!selectedImages || selectedImages.length === 0) {
