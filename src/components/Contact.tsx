@@ -4,6 +4,11 @@ import BackgroundBlur from "./BackgroundBlur";
 import Title from "./Title";
 import Image from "next/image";
 import FadeInView from "./FadeInView";
+import {
+  CONTACT_ADDRESS,
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+} from "@/constants/contact.constants";
 
 const Contact = () => {
   return (
@@ -21,18 +26,17 @@ const Contact = () => {
             <div className="flex flex-col items-start justify-center gap-12 sm:flex-row">
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
                 <MapPin size={72} />
-                <p className="max-w-sm text-left sm:text-center">
-                  1045. Budapest,
-                  <br /> Széchenyi tér 4. (Újpest)
+                <p className="max-w-[20ch] text-left sm:text-center">
+                  {CONTACT_ADDRESS}
                 </p>
               </div>
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
                 <Mail size={72} />
-                <p>email@email.com</p>
+                <p>{CONTACT_EMAIL}</p>
               </div>
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
                 <Smartphone size={72} />
-                <p>+36 30 4204200</p>
+                <p>{CONTACT_PHONE}</p>
               </div>
             </div>
 

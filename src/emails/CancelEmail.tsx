@@ -1,3 +1,4 @@
+import { CONTACT_ADDRESS, CONTACT_PHONE } from "@/constants/contact.constants";
 import { Booking } from "@prisma/client";
 import {
   Body,
@@ -70,12 +71,11 @@ export const CancelEmail = ({ booking }: CancelEmailProps) => {
               color: "rgb(0,0,0, 0.7)",
             }}
           >
-            © 2024 | Botanic Beauty Hajszalon, 1045, Budapest, Széchenyi tér 4.
-            |{" "}
+            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{" "}
             <Link href="https://www.botanic-beauty.hu">
               www.botanic-beauty.hu
             </Link>{" "}
-            | +36 30 178 5088
+            | {CONTACT_PHONE}
           </Text>
         </Container>
       </Body>
