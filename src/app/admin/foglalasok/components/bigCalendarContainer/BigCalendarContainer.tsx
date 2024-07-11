@@ -58,6 +58,18 @@ const BigCalendarContainer = ({
         body: JSON.stringify(mapEventToBooking(event)),
       });
       const data = await response.json();
+
+      const emailResponse = await fetch("/api/email/modifier", {
+        method: "POST",
+        body: JSON.stringify({
+          booking: mapEventToBooking(event),
+        }),
+      });
+
+      if (!emailResponse.ok) {
+        toast.error("A módosító email nem ment ki");
+      }
+
       return { data, success: true };
     } catch (error) {
       toast.error("Hiba történt, a módosítás sikertelen");
@@ -92,6 +104,7 @@ const BigCalendarContainer = ({
     );
 
     if (modifiedEvent) {
+      // TODO / medium : loading state
       updateEvent(modifiedEvent).then((response) => {
         if (!response.success) {
           return;
