@@ -49,10 +49,6 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     otherInfo: "",
   });
 
-  const modifyContactInfo = (key: string, value: string) => {
-    setContactInfo({ ...contactInfo, [key]: value });
-  };
-
   const selectService = (service: TService) => {
     setSelectedExtraService(null);
     setSelectedService(service);
@@ -74,7 +70,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const postBookingData = async () => {
+  const postBookingData = async (contactInfo: any) => {
     if (!selectedHairdresser || !selectedService || !selectedTimeSlot) return;
 
     const response = await fetch("/api/booking", {
@@ -165,8 +161,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
             selectedService && (
               <FadeIn>
                 <ContactForm
-                  contactInfo={contactInfo}
-                  modifyContactInfo={modifyContactInfo}
+                  setContactInfo={setContactInfo}
                   incrementActiveStep={incrementActiveStep}
                   decrementActiveStep={decrementActiveStep}
                   postBookingData={postBookingData}

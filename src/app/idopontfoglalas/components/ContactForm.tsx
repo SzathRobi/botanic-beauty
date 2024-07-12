@@ -2,40 +2,58 @@
 
 import { Button } from "@/components/Button";
 import { Booking } from "@prisma/client";
-import { FormEvent, useState } from "react";
+import { Dispatch, FormEvent, SetStateAction, useState } from "react";
 import { differenceInSeconds, format, parse, subHours } from "date-fns";
 import toast from "react-hot-toast";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/Form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { contactFormSchema } from "../schemas/contactForm.schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Input } from "@/components/ui/Input";
+import { Textarea } from "@/components/ui/TextArea";
 
 type ContactFormProps = {
   booking: Omit<Booking, "id" | "createdAt" | "updatedAt">;
-  contactInfo: {
-    name: string;
-    email: string;
-    phone: string;
-    otherInfo: string;
-  };
-  modifyContactInfo: (key: string, value: string) => void;
+  setContactInfo: Dispatch<SetStateAction<any>>;
   incrementActiveStep: () => void;
   decrementActiveStep: () => void;
-  postBookingData: () => Promise<any>;
+  postBookingData: (contactInfo: any) => Promise<any>;
   deleteBookingData: (id: string) => Promise<any>;
 };
 
 const ContactForm = ({
   booking,
-  contactInfo,
-  modifyContactInfo,
+  setContactInfo,
   decrementActiveStep,
   incrementActiveStep,
   postBookingData,
   deleteBookingData,
 }: ContactFormProps) => {
+  const form = useForm<z.infer<typeof contactFormSchema>>({
+    resolver: zodResolver(contactFormSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      otherInfo: "",
+    },
+  });
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const sendVerificationEmail = async () => {
+  const sendVerificationEmail = async (contactInfo: any) => {
     const bookingWithFormattedDate = {
       ...booking,
+      contactInfo,
       selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
     };
 
@@ -116,14 +134,21 @@ const ContactForm = ({
     return emailScheduleData;
   };
 
-  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
+  const handleSubmit = async (values: z.infer<typeof contactFormSchema>) => {
     setIsLoading(true);
     setError(null);
 
+    const contactInfo = {
+      name: values.name,
+      email: values.email,
+      phone: values.phone,
+      otherInfo: values.otherInfo || null,
+    };
+
+    setContactInfo(contactInfo);
+
     try {
-      const bookingData = await postBookingData();
+      const bookingData = await postBookingData(contactInfo);
 
       if (bookingData.message === "Overlap with existing booking") {
         toast.error(
@@ -139,13 +164,16 @@ const ContactForm = ({
         return;
       }
 
-      const verificationResult = await sendVerificationEmail();
+      const verificationResult = await sendVerificationEmail(contactInfo);
       if (!verificationResult) {
         deleteBookingData(bookingData.id);
         return;
       }
 
-      const scheduleResult = await scheduleReminderEmail(booking);
+      const scheduleResult = await scheduleReminderEmail({
+        ...booking,
+        contactInfo,
+      });
       if (!scheduleResult) {
         throw new Error("Failed to schedule reminder email");
       }
@@ -159,101 +187,92 @@ const ContactForm = ({
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-2 mb-4">
-        <div className="mb-12 flex flex-col gap-2">
-          <div>
-            <label
-              htmlFor="name"
-              className="block mb-2 text-sm font-medium text-white"
-            >
-              Név
-            </label>
-            <input
-              type="text"
-              id="name"
-              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-              value={contactInfo.name}
-              onChange={(event) =>
-                modifyContactInfo("name", event.target.value)
-              }
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="email"
-              className="block mb-2 text-sm font-medium text-white"
-            >
-              Email
-            </label>
-            <input
-              type="text"
-              id="email"
-              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-              value={contactInfo.email}
-              onChange={(event) =>
-                modifyContactInfo("email", event.target.value)
-              }
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="phone"
-              className="block mb-2 text-sm font-medium text-white"
-            >
-              Telefon
-            </label>
-            <input
-              type="tel"
-              id="phone"
-              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-              value={contactInfo.phone}
-              onChange={(event) =>
-                modifyContactInfo("phone", event.target.value)
-              }
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="other-info"
-              className="block mb-2 text-sm font-medium text-white"
-            >
-              Megjegyzés
-            </label>
-            <textarea
-              id="other-info"
-              className="border text-sm rounded-lg block w-full p-2.5 bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500"
-              cols={30}
-              rows={3}
-              value={contactInfo.otherInfo}
-              onChange={(event) =>
-                modifyContactInfo("otherInfo", event.target.value)
-              }
-            ></textarea>
-          </div>
-        </div>
+    <Form {...form}>
+      <div>
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="flex flex-col gap-2 mb-4"
+        >
+          <div className="mb-12 flex flex-col gap-2">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Név*</FormLabel>
 
-        <div className="flex items-center justify-end gap-2">
-          <Button
-            type="button"
-            variant="secondary"
-            onClick={decrementActiveStep}
-          >
-            Vissza
-          </Button>
-          <Button
-            disabled={
-              contactInfo.name === "" ||
-              contactInfo.email === "" ||
-              contactInfo.phone === ""
-            }
-            isLoading={isLoading}
-          >
-            Foglalás
-          </Button>
-        </div>
-      </form>
-    </div>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email*</FormLabel>
+
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Telefon*</FormLabel>
+
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="otherInfo"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Megjegyzés</FormLabel>
+
+                  <FormControl>
+                    <Textarea {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-2">
+            <Button
+              type="button"
+              variant="secondary"
+              onClick={decrementActiveStep}
+            >
+              Vissza
+            </Button>
+
+            <Button isLoading={isLoading}>Foglalás</Button>
+          </div>
+        </form>
+      </div>
+    </Form>
   );
 };
 

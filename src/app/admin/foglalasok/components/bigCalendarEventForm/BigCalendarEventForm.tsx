@@ -45,7 +45,6 @@ const BigCalendarEventForm = ({
     },
   });
 
-  // 2. Define a submit handler.
   const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
     setIsLoading(true);
 
