@@ -1,6 +1,6 @@
 "use client";
 
-import { isSunday } from "date-fns";
+import { isSunday, format } from "date-fns";
 import { useState } from "react";
 import { CalendarEvent } from "../../../types/calendarEvent.type";
 import BigCalendar from "../bigCalendar/BigCalendar";
@@ -10,6 +10,7 @@ import { TOffDay } from "@prisma/client";
 import { isOffDayOfNemTimi, isOffDayOfTimi } from "../../utils/offDay";
 import toast from "react-hot-toast";
 import { Dialog } from "@/components/ui/Dialog";
+import { getSecondsToDate } from "@/app/idopontfoglalas/utils/getSecondsToDate";
 
 type BigCalendarContainerProps = {
   events: CalendarEvent[];
@@ -52,17 +53,35 @@ const BigCalendarContainer = ({
   };
 
   const updateEvent = async (event: CalendarEvent) => {
+    const booking = mapEventToBooking(event);
+
     try {
       const response = await fetch("/api/booking", {
         method: "PATCH",
-        body: JSON.stringify(mapEventToBooking(event)),
+        body: JSON.stringify(booking),
       });
       const data = await response.json();
 
       const emailResponse = await fetch("/api/email/modifier", {
         method: "POST",
         body: JSON.stringify({
-          booking: mapEventToBooking(event),
+          booking: booking,
+        }),
+      });
+
+      const emailDelayInMiliseconds = getSecondsToDate(booking) * 1000;
+
+      const emailScheduleResponse = await fetch("/api/email/schedule", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          booking: {
+            ...booking,
+            selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+          },
+          emailDelayInMiliseconds,
         }),
       });
 
@@ -106,7 +125,6 @@ const BigCalendarContainer = ({
     if (modifiedEvent) {
       const loaderEvent = { ...modifiedEvent, isLoaderEvent: true };
       setCalendarEvents([...modifiedEvents, loaderEvent]);
-      // TODO / medium : loading state
       updateEvent(modifiedEvent)
         .then((response) => {
           if (!response.success) {
