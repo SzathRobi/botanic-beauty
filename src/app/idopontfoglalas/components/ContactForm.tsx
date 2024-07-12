@@ -49,7 +49,6 @@ const ContactForm = ({
   });
 
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   const sendVerificationEmail = async (contactInfo: any) => {
     const bookingWithFormattedDate = {
@@ -70,13 +69,13 @@ const ContactForm = ({
       const data = await response.json();
 
       if (!data.success) {
-        // throw new Error("Failed to send verification email");
         return null;
       }
 
       return data;
     } catch (error) {
-      console.error("Failed to send verification email:", error);
+      toast.error("A visszaigazoló email elküldése sikertelen volt.");
+      return null;
     }
   };
 
@@ -85,30 +84,34 @@ const ContactForm = ({
   ) => {
     const emailDelayInMiliseconds = getSecondsToDate(booking) * 1000;
 
-    const emailScheduleResponse = await fetch("/api/email/schedule", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        booking: {
-          ...booking,
-          selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+    try {
+      const response = await fetch("/api/email/schedule", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        emailDelayInMiliseconds,
-      }),
-    });
+        body: JSON.stringify({
+          booking: {
+            ...booking,
+            selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+          },
+          emailDelayInMiliseconds,
+        }),
+      });
 
-    const emailScheduleData = await emailScheduleResponse.json();
+      const data = await response.json();
 
-    if (!emailScheduleData.success) return null;
+      if (!data.success) return null;
 
-    return emailScheduleData;
+      return data;
+    } catch (error) {
+      toast.error("Az emlékeztető email beütemezése sikertelen volt.");
+      return null;
+    }
   };
 
   const handleSubmit = async (values: z.infer<typeof contactFormSchema>) => {
     setIsLoading(true);
-    setError(null);
 
     const contactInfo = {
       name: values.name,
@@ -120,7 +123,12 @@ const ContactForm = ({
     setContactInfo(contactInfo);
 
     try {
-      const bookingData = await postBookingData(contactInfo);
+      const [bookingData, verificationResult, scheduleResult] =
+        await Promise.all([
+          sendVerificationEmail(contactInfo),
+          scheduleReminderEmail({ ...booking, contactInfo }),
+          postBookingData(contactInfo),
+        ]);
 
       if (bookingData.message === "Overlap with existing booking") {
         toast.error(
@@ -131,28 +139,23 @@ const ContactForm = ({
 
       if (bookingData.error) {
         toast.error(
-          "Hoppá! Valami hiba történt a foglalás során. Kérlek probáld meg később"
+          "Hoppá! Valami hiba történt a foglalás során. Kérlek próbáld meg később."
         );
         return;
       }
 
-      const verificationResult = await sendVerificationEmail(contactInfo);
       if (!verificationResult) {
         deleteBookingData(bookingData.id);
         return;
       }
 
-      const scheduleResult = await scheduleReminderEmail({
-        ...booking,
-        contactInfo,
-      });
       if (!scheduleResult) {
         throw new Error("Failed to schedule reminder email");
       }
 
       incrementActiveStep();
     } catch (error) {
-      setError("Hiba történt a foglalás során");
+      toast.error("Hiba történt a foglalás során");
     } finally {
       setIsLoading(false);
     }
