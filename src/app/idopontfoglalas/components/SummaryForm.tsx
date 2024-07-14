@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { HOME_ROUTE } from "@/constants/routes.constants";
 import { TService } from "@prisma/client";
 import { User, Scissors, Calendar } from "lucide-react";
@@ -11,6 +12,7 @@ type SummaryFormProps = {
   selectedHairdresser: "Timi" | "nem_Timi" | null;
   selectedDate: Date;
   selectedTimeSlot: string | null;
+  resetForm: () => void;
 };
 
 const ICON_SIZE = 48;
@@ -21,6 +23,7 @@ const SummaryForm = ({
   selectedExtraService,
   selectedDate,
   selectedTimeSlot,
+  resetForm,
 }: SummaryFormProps) => {
   const geServiceIconByCategory = (category: string) => {
     if (category === "Hajvágás" || category === "extra") {
@@ -97,7 +100,12 @@ const SummaryForm = ({
       </div>
 
       <div className="flex items-center justify-center gap-2">
-        <Link href={HOME_ROUTE}>Vissza a főoldalra</Link>
+        <Button variant="secondary" onClick={resetForm}>
+          Új időpont
+        </Button>
+        <Button asChild>
+          <Link href={HOME_ROUTE}>Vissza a főoldalra</Link>
+        </Button>
       </div>
     </div>
   );

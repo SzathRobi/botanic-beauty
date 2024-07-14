@@ -59,7 +59,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
   };
 
   const selectHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
-    setSelectedHairdresser(hairdresser);
+    setSelectedHairdresser("Timi");
   };
 
   const incrementActiveStep = () => {
@@ -103,6 +103,21 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
     const data = await response.json();
 
     return data;
+  };
+
+  const resetForm = () => {
+    setActiveStep(0);
+    setSelectedService(null);
+    setSelectedExtraService(null);
+    setSelectedHairdresser("Timi");
+    setSelectedDate(new Date(Date.now()));
+    setSelectedTimeSlot(null);
+    setContactInfo({
+      name: "",
+      email: "",
+      phone: "",
+      otherInfo: "",
+    });
   };
 
   return (
@@ -186,6 +201,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
                 selectedHairdresser={selectedHairdresser}
                 selectedDate={selectedDate}
                 selectedTimeSlot={selectedTimeSlot}
+                resetForm={resetForm}
               />
             </FadeIn>
           )}
