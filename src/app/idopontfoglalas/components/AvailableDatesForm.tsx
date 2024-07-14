@@ -121,7 +121,7 @@ const AvailableDatesForm = ({
     <div className="mb-8">
       <div className="mb-12 flex flex-col md:flex-row justify-evenly items-start gap-4">
         <DayPicker
-          className="text-lg dayPicker"
+          className="text-sm sm:text-base md:text-lg dayPicker"
           mode="single"
           selected={selectedDate}
           // TODO / high: change to selectedDate

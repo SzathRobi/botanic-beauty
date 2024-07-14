@@ -165,10 +165,10 @@ const BigCalendarEventForm = ({
 
           <div className="flex justify-end gap-2">
             <Button variant="secondary" type="button" onClick={onCancel}>
-              Cancel
+              Mégse
             </Button>
             <Button type="submit" isLoading={isLoading}>
-              Submit
+              Módosítás
             </Button>
           </div>
         </form>
