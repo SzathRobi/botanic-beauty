@@ -1,7 +1,8 @@
 import { Button } from "@/components/Button";
+import { CONTACT_PHONE } from "@/constants/contact.constants";
 import { HOME_ROUTE } from "@/constants/routes.constants";
 import { TService } from "@prisma/client";
-import { User, Scissors, Calendar } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 import Link from "next/link";
 import { IoColorPaletteOutline } from "react-icons/io5";
 import { PiHairDryer, PiScissors } from "react-icons/pi";
@@ -96,7 +97,7 @@ const SummaryForm = ({
           Ha mégse lenne jó az időpont, kérlek időben jelezd ezen az
           elérhetőségen:
         </p>
-        <p>+364206869</p>
+        <p>{CONTACT_PHONE}</p>
       </div>
 
       <div className="flex items-center justify-center gap-2">
