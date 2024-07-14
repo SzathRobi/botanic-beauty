@@ -11,19 +11,19 @@ type ServiceCardProps = {
 
 const ServiceCard = ({ icon, title }: ServiceCardProps) => {
   return (
-    <div className="flex flex-col items-center justify-center gap-4">
+    <div className="min-w-max flex flex-col items-center justify-center gap-4">
       <div>{icon}</div>
-      <h3>{title}</h3>
+      <h3 className="min-w-max">{title}</h3>
     </div>
   );
 };
 
 const ExtraServices = () => {
   return (
-    <section className="px-2 sm:px-0 mb-60 grid place-items-center">
+    <section className="px-2 sm:px-0 min-h-fit mb-60 grid place-items-center">
       <FadeInView>
-        <BackgroundBlur className="mx-auto space-y-24">
-          <div className="flex flex-col md:flex-row justify-between gap-10">
+        <BackgroundBlur className="min-w-[300px] mx-auto space-y-24">
+          <div className="flex flex-col md:flex-row justify-between gap-10 lg:gap-28">
             <FadeInView delay={0}>
               <ServiceCard
                 icon={<CalendarCheck size={64} />}

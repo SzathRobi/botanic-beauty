@@ -25,24 +25,26 @@ const Contact = () => {
           <BackgroundBlur className="mx-auto flex max-w-5xl flex-col gap-16 ">
             <div className="flex flex-col items-start justify-center gap-12 sm:flex-row">
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
-                <MapPin size={72} />
-                <p className="max-w-[20ch] text-left sm:text-center">
+                <MapPin size={72} className="size-12 md:size-16" />
+                <p className="max-w-[20ch] text-sm md:text-base text-left sm:text-center">
                   {CONTACT_ADDRESS}
                 </p>
               </div>
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
-                <Mail size={72} />
-                <p>{CONTACT_EMAIL}</p>
+                <Mail size={72} className="size-12 md:size-16" />
+                <p className="text-sm md:text-base max-w-20 md:max-w-auto">
+                  {CONTACT_EMAIL}
+                </p>
               </div>
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
-                <Smartphone size={72} />
-                <p>{CONTACT_PHONE}</p>
+                <Smartphone size={72} className="size-12 md:size-16" />
+                <p className="text-sm md:text-base">{CONTACT_PHONE}</p>
               </div>
             </div>
 
             <div className="pl-2 sm:pl-0 flex flex-col items-start justify-center gap-12 sm:flex-row">
               <div className="relative flex flex-row sm:flex-col items-center sm:items-start justify-center gap-4 sm:gap-2">
-                <div className="relative mx-auto size-16">
+                <div className="relative mx-auto size-12 md:size-16">
                   <Image
                     alt=""
                     src="/instagram-80x80.png"
@@ -50,10 +52,10 @@ const Contact = () => {
                     className="object-cover"
                   />
                 </div>
-                <p>instagramm/bbh</p>
+                <p className="text-sm md:text-base">instagramm/bbh</p>
               </div>
               <div className="relative flex flex-row sm:flex-col items-center sm:items-start justify-center gap-4 sm:gap-2">
-                <div className="relative mx-auto size-16">
+                <div className="relative mx-auto size-12 md:size-16">
                   <Image
                     alt=""
                     src="/facebook-80x80.png"
@@ -61,7 +63,7 @@ const Contact = () => {
                     className="object-cover"
                   />
                 </div>
-                <p>facebook/bbh</p>
+                <p className="text-sm md:text-base">facebook/bbh</p>
               </div>
             </div>
           </BackgroundBlur>
