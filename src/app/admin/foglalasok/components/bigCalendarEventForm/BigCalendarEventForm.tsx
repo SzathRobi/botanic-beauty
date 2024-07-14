@@ -92,6 +92,10 @@ const BigCalendarEventForm = ({
     setIsDialogOpen(false);
   };
 
+  const onCancel = () => {
+    setIsDialogOpen(false);
+  };
+
   return (
     <div>
       <Form {...form}>
@@ -159,9 +163,14 @@ const BigCalendarEventForm = ({
             )}
           />
 
-          <Button type="submit" isLoading={isLoading}>
-            Submit
-          </Button>
+          <div className="flex justify-end gap-2">
+            <Button variant="outline" type="button" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button type="submit" isLoading={isLoading}>
+              Submit
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
