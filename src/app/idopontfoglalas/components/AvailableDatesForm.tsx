@@ -124,7 +124,8 @@ const AvailableDatesForm = ({
           className="text-lg dayPicker"
           mode="single"
           selected={selectedDate}
-          defaultMonth={selectedDate}
+          // TODO / high: change to selectedDate
+          defaultMonth={new Date("2024-08-01")}
           weekStartsOn={1}
           locale={hu}
           disabled={(date) =>
