@@ -1,6 +1,6 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { DayPicker } from "react-day-picker";
 import toast from "react-hot-toast";
 import { format } from "date-fns";
@@ -20,9 +20,7 @@ const Schedules = ({ schedule }: ScheduleProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [requestError, setRequestError] = useState<string | null>(null);
 
-  const [selectedDates, setSelectedDates] = useState<SelectedDate[]>(
-    (schedule?.offDays as unknown as SelectedDate[]) || []
-  );
+  const [selectedDates, setSelectedDates] = useState<SelectedDate[]>([]);
   const [selectedPerson, setSelectedPerson] = useState<Hairdresser>("Timi");
 
   const dateCounts = selectedDates.reduce((acc, curr) => {
@@ -64,6 +62,10 @@ const Schedules = ({ schedule }: ScheduleProps) => {
       ]);
     }
   };
+
+  useEffect(() => {
+    setSelectedDates(schedule?.offDays ?? []);
+  }, [schedule]);
 
   const onSubmit = async (event: ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
