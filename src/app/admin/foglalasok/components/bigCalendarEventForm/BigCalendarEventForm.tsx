@@ -164,7 +164,7 @@ const BigCalendarEventForm = ({
           />
 
           <div className="flex justify-end gap-2">
-            <Button variant="outline" type="button" onClick={onCancel}>
+            <Button variant="secondary" type="button" onClick={onCancel}>
               Cancel
             </Button>
             <Button type="submit" isLoading={isLoading}>
