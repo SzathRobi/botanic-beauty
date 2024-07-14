@@ -101,7 +101,7 @@ const BigCalendarEventForm = ({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Név</FormLabel>
+                <FormLabel className="text-black">Név</FormLabel>
 
                 <FormControl>
                   <Input {...field} />
@@ -117,7 +117,7 @@ const BigCalendarEventForm = ({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Email</FormLabel>
+                <FormLabel className="text-black">Email</FormLabel>
 
                 <FormControl>
                   <Input {...field} />
@@ -133,7 +133,7 @@ const BigCalendarEventForm = ({
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Telefonszám</FormLabel>
+                <FormLabel className="text-black">Telefonszám</FormLabel>
 
                 <FormControl>
                   <Input {...field} />
@@ -149,7 +149,7 @@ const BigCalendarEventForm = ({
             name="otherInfo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Egyéb infó</FormLabel>
+                <FormLabel className="text-black">Egyéb infó</FormLabel>
                 <FormControl>
                   <Input {...field} value={field.value || ""} />
                 </FormControl>
