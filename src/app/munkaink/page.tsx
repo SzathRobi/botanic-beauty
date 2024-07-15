@@ -59,7 +59,7 @@ const OurWorksPage = async () => {
     <Transition>
       <section className="px-2 sm:px-0 pt-24">
         <BackgroundBlur className="!max-w-6xl mx-auto grid place-items-center">
-          <div className="columns-2 md:columns-3 gap-8">
+          <div className="columns-1 md:columns-2 lg:md:columns-3 gap-8">
             {resources.length &&
               resources.map((image: any, index: number) => (
                 <FadeInView key={image.public_id}>
