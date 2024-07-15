@@ -5,7 +5,7 @@ import FadeInView from "./FadeInView";
 
 const About = () => {
   return (
-    <section className="px-2 sm:px-0 mb-60">
+    <section className="px-2 sm:px-0 mb-40">
       <FadeInView>
         <Title title="Szalonról" />
 

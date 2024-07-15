@@ -12,7 +12,7 @@ import {
 
 const Contact = () => {
   return (
-    <section className="px-2 sm:px-0 min-h-screen mb-60">
+    <section className="px-2 sm:px-0 min-h-screen mb-40">
       <Image
         alt=""
         src="/contact-bg.png"
