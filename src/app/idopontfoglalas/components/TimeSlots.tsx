@@ -109,13 +109,18 @@ const TimeSlots = ({
 
     const timeSlots = [];
     let currentTime = roundUpToNearestQuarter(startTime);
+    const endOfDay = setHours(startOfDay(selectedDate), endTime);
 
-    while (currentTime.getHours() + Math.ceil(interval / 60) < endTime) {
+    while (currentTime < endOfDay) {
       const endTimeSlot = addMinutes(currentTime, interval);
       const timeSlotText = `${format(currentTime, "HH:mm")} - ${format(
         endTimeSlot,
         "HH:mm"
       )}`;
+
+      if (endTimeSlot > endOfDay) {
+        break;
+      }
 
       if (!isOverlappingDate(currentTime, interval)) {
         timeSlots.push(
