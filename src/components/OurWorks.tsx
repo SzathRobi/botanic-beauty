@@ -16,12 +16,69 @@ const OurWorks = () => {
         <div className="px-2 sm:px-0">
           <BackgroundBlur className="mx-auto pb-16">
             <div className="mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 place-items-center">
-              <Image width={300} height={424} alt="" src="/our-works-1.png" />
-              <Image width={300} height={424} alt="" src="/our-works-2.png" />
-              <Image width={300} height={424} alt="" src="/our-works-3.png" />
-              <Image width={300} height={424} alt="" src="/our-works-4.png" />
-              <Image width={300} height={424} alt="" src="/our-works-5.png" />
-              <Image width={300} height={424} alt="" src="/our-works-6.png" />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-1.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-2.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-3.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-4.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-5.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-6.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-7.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-8.png"
+                className="max-h-[354px] object-cover rounded"
+              />
+              <Image
+                width={300}
+                height={424}
+                alt=""
+                src="/our-works-9.png"
+                className="max-h-[354px] object-cover rounded"
+              />
             </div>
             <Link
               href={OUR_WORKS_ROUTE}
