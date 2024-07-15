@@ -47,7 +47,7 @@ const PrivacyPolicyPage = async () => {
 
             <li>Értesítések küldése a foglalás állapotáról</li>
 
-            <li>apcsolattartás szükség esetén</li>
+            <li>Kapcsolattartás szükség esetén</li>
           </ul>
         </div>
 
