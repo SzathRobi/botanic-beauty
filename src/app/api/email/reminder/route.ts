@@ -1,3 +1,4 @@
+import { CONTACT_EMAIL, EMAIL_SENDER } from "@/constants/contact.constants";
 import ReminderEmail from "@/emails/ReminderEmail";
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
@@ -13,10 +14,11 @@ export async function POST(request: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: "onboarding@resend.dev",
+      from: EMAIL_SENDER,
       to: booking.contactInfo.email,
       subject: "Emlékeztető",
       react: ReminderEmail({ booking }),
+      reply_to: CONTACT_EMAIL,
     });
 
     return NextResponse.json({ success: true });

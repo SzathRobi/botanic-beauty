@@ -65,7 +65,10 @@ const BigCalendarContainer = ({
       const emailResponse = await fetch("/api/email/modifier", {
         method: "POST",
         body: JSON.stringify({
-          booking: booking,
+          booking: {
+            ...booking,
+            selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+          },
         }),
       });
 

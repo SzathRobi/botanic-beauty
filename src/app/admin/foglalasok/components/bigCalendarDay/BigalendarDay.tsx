@@ -53,13 +53,18 @@ const BigCalendarDay = ({
         method: "DELETE",
       });
 
+      const booking = mapEventToBooking(calendarEvent.event);
+
       const cancelEamilResponse = await fetch("/api/email/cancel", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          booking: mapEventToBooking(calendarEvent.event),
+          booking: {
+            ...booking,
+            selectedDate: format(booking.selectedDate, "yyyy-MM-dd"),
+          },
         }),
       });
 
