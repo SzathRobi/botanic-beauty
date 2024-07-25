@@ -1,8 +1,8 @@
 "use client";
 
-import { isSunday } from "date-fns";
+import { isSaturday, isSunday } from "date-fns";
 import moment from "moment";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
   Calendar,
   EventProps,
@@ -34,7 +34,6 @@ type BigCalendarProps = {
   offDays: TOffDay[];
   selectedHairdresser: SelectedHairdresser;
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
-  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const DndCalendar = withDragAndDrop<CalendarEvent>(Calendar);
@@ -45,7 +44,6 @@ const BigCalendar = ({
   offDays,
   selectedHairdresser,
   setCalendarEvents,
-  setIsDialogOpen,
 }: BigCalendarProps) => {
   const [view, setView] = useState<View>(Views.WEEK);
   const [date, setDate] = useState(new Date());
@@ -65,7 +63,10 @@ const BigCalendar = ({
   );
 
   const eventStyleGetter = (calendarEvent: CalendarEvent) => {
-    if (calendarEvent.start && isSunday(calendarEvent.start)) {
+    if (
+      calendarEvent.start &&
+      (isSunday(calendarEvent.start) || isSaturday(calendarEvent.start))
+    ) {
       return {
         style: {
           backgroundColor: "lightgray",
@@ -101,7 +102,7 @@ const BigCalendar = ({
   };
 
   const dayStyleGetter = (date: Date) => {
-    if (isSunday(date)) {
+    if (isSunday(date) || isSaturday(date)) {
       return {
         style: {
           backgroundColor: "lightgray",
@@ -156,7 +157,6 @@ const BigCalendar = ({
               <BigCalendarDay
                 calendarEvent={eventProps}
                 setCalendarEvents={setCalendarEvents}
-                setIsDialogOpen={setIsDialogOpen}
               />
             ),
             toolbar: (toolbarProps: ToolbarProps<CalendarEvent, object>) => (

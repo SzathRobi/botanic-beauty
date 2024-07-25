@@ -15,7 +15,14 @@ export async function PATCH(request: NextRequest, { params }: any) {
 
   const id = await params.id;
 
-  const data = await request.json();
+  const { contactInfo, selectedDate } = await request.json();
+
+  if (!contactInfo || !selectedDate) {
+    return NextResponse.json(
+      { error: true, message: "Invalid data" },
+      { status: 400 }
+    );
+  }
 
   try {
     const response = await prisma.booking.update({
@@ -23,7 +30,8 @@ export async function PATCH(request: NextRequest, { params }: any) {
         id,
       },
       data: {
-        contactInfo: data.contactInfo,
+        contactInfo,
+        selectedDate,
       },
     });
 

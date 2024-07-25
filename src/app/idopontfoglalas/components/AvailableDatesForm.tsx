@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import {
   addDays,
   isBefore,
+  isSaturday,
   isSameDay,
   isSunday,
   isToday,
@@ -133,6 +134,7 @@ const AvailableDatesForm = ({
             // isBeforeAug1(date) ||
             isClosedDay ||
             isSunday(date) ||
+            isSaturday(date) ||
             hairdresserOffDays.some((offDay) => isSameDay(offDay, date)) ||
             datesWithNoTimeForSelectedService.some((datesWithNoTime) =>
               isSameDay(datesWithNoTime, date)

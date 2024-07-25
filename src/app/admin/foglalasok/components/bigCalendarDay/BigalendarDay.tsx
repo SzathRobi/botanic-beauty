@@ -8,7 +8,7 @@ import { CalendarEvent } from "../../../types/calendarEvent.type";
 import { Button } from "@/components/Button";
 import { Dispatch, SetStateAction, useState } from "react";
 import toast from "react-hot-toast";
-import { DialogContent, DialogTrigger } from "@/components/ui/Dialog";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/Dialog";
 import BigCalendarEventForm from "../bigCalendarEventForm/BigCalendarEventForm";
 import { mapEventToBooking } from "@/app/admin/mappers/mapEventToBooking.mapper";
 import { Loader2 } from "lucide-react";
@@ -16,14 +16,14 @@ import { Loader2 } from "lucide-react";
 type BigCalendarDayProps = {
   calendarEvent: EventProps<CalendarEvent>;
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
-  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
 };
 
 const BigCalendarDay = ({
   calendarEvent,
   setCalendarEvents,
-  setIsDialogOpen,
 }: BigCalendarDayProps) => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
   const {
     event: {
       contactInfo,
@@ -88,75 +88,77 @@ const BigCalendarDay = ({
   };
 
   return (
-    <div className={`${isLoaderEvent && "opacity-60"}`}>
-      {isLoaderEvent ? (
-        <div>
-          <Loader2 className="h-4 w-4 animate-spin" />{" "}
-        </div>
-      ) : (
-        <Popover>
-          <PopoverTrigger asChild>
-            <div className={`text-sm h-full p-2 ${eventColor}`}>
-              <p className="mb-2">
-                {startTime} - {endTime}
-              </p>
-              <p className="hidden md:block mb-2">{title}</p>
-              <p className="hidden md:block">{contactInfo.name}</p>
-            </div>
-          </PopoverTrigger>
-          <PopoverContent side="right" className="bg-white max-w-60">
-            <p>Foglalási adatok:</p>
-            {/* ${eventColor} */}
-            <div className={`text-sm h-full`}>
-              <p className="mb-2">
-                {startTime} - {endTime}
-              </p>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+      <div className={`${isLoaderEvent && "opacity-60"}`}>
+        {isLoaderEvent ? (
+          <div>
+            <Loader2 className="h-4 w-4 animate-spin" />{" "}
+          </div>
+        ) : (
+          <Popover>
+            <PopoverTrigger asChild>
+              <div className={`text-sm h-full p-2 ${eventColor}`}>
+                <p className="mb-2">
+                  {startTime} - {endTime}
+                </p>
+                <p className="hidden md:block mb-2">{title}</p>
+                <p className="hidden md:block">{contactInfo.name}</p>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent side="right" className="bg-white max-w-60">
+              <p>Foglalási adatok:</p>
+              {/* ${eventColor} */}
+              <div className={`text-sm h-full`}>
+                <p className="mb-2">
+                  {startTime} - {endTime}
+                </p>
 
-              <p className="mb-2">{title}</p>
+                <p className="mb-2">{title}</p>
 
-              {extraService && (
-                <p className="mb-2 font-medium">Extra hajvágással</p>
-              )}
-            </div>
+                {extraService && (
+                  <p className="mb-2 font-medium">Extra hajvágással</p>
+                )}
+              </div>
 
-            <div className="text-sm space-y-1 mb-8">
-              <p>{contactInfo.name}</p>
+              <div className="text-sm space-y-1 mb-8">
+                <p>{contactInfo.name}</p>
 
-              <p>{contactInfo.email}</p>
+                <p>{contactInfo.email}</p>
 
-              <p>{contactInfo.phone}</p>
+                <p>{contactInfo.phone}</p>
 
-              {contactInfo.otherInfo && <p>{contactInfo.otherInfo}</p>}
-            </div>
+                {contactInfo.otherInfo && <p>{contactInfo.otherInfo}</p>}
+              </div>
 
-            <div>
-              <Button
-                size="sm"
-                variant="destructive"
-                isLoading={isLoading}
-                onClick={() => deleteBooking(id)}
-              >
-                Törlés
-              </Button>
-
-              <DialogTrigger asChild>
-                <Button size="sm" variant="secondary">
-                  Módosítás
+              <div>
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  isLoading={isLoading}
+                  onClick={() => deleteBooking(id)}
+                >
+                  Törlés
                 </Button>
-              </DialogTrigger>
-            </div>
-          </PopoverContent>
 
-          <DialogContent>
-            <BigCalendarEventForm
-              calendarEvent={calendarEvent}
-              setCalendarEvents={setCalendarEvents}
-              setIsDialogOpen={setIsDialogOpen}
-            />
-          </DialogContent>
-        </Popover>
-      )}
-    </div>
+                <DialogTrigger asChild>
+                  <Button size="sm" variant="secondary">
+                    Módosítás
+                  </Button>
+                </DialogTrigger>
+              </div>
+            </PopoverContent>
+
+            <DialogContent>
+              <BigCalendarEventForm
+                calendarEvent={calendarEvent}
+                setCalendarEvents={setCalendarEvents}
+                setIsDialogOpen={setIsDialogOpen}
+              />
+            </DialogContent>
+          </Popover>
+        )}
+      </div>
+    </Dialog>
   );
 };
 
