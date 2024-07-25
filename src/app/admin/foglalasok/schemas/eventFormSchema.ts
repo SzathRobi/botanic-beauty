@@ -7,8 +7,9 @@ export const eventFormSchema = z.object({
   service: z.object({
     name: z.string(),
     duration: z.number(),
-    price: z.number(),
   }),
+  startTime: z.string().min(1, { message: "A mező kitöltése kötelező" }),
+  endTime: z.string().min(1, { message: "A mező kitöltése kötelező" }),
   name: z.string().min(1, { message: "A mező kitöltése kötelező" }),
   email: z.string().min(1, { message: "A mező kitöltése kötelező" }),
   phone: z.string().min(1, { message: "A mező kitöltése kötelező" }),

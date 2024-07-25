@@ -2,7 +2,7 @@
 
 import { Booking, Schedule, TService } from "@prisma/client";
 import { motion } from "framer-motion";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useState } from "react";
 
 import BackgroundBlur from "@/components/BackgroundBlur";
 import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";

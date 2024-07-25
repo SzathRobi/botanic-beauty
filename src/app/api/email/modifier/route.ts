@@ -18,7 +18,11 @@ export async function POST(request: Request) {
 
   const { booking } = await request.json();
 
-  if (!booking.contactInfo.email || !booking.service) {
+  if (
+    !booking.contactInfo.email ||
+    !booking.selectedDate ||
+    !booking.selectedTimeSlot
+  ) {
     return NextResponse.json(
       { error: true, message: "Invalid data" },
       { status: 400 }

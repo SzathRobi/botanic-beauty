@@ -90,10 +90,6 @@ ReminderEmail.PreviewProps = {
     contactInfo: {
       name: "Omamori Himari",
     },
-    service: {
-      name: "Tőfestés",
-    },
-
     selectedDate: "2022-10-10",
     selectedTimeSlot: "10:00 - 11:00",
   },

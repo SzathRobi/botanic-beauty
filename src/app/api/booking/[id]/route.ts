@@ -15,9 +15,9 @@ export async function PATCH(request: NextRequest, { params }: any) {
 
   const id = await params.id;
 
-  const { contactInfo, selectedDate } = await request.json();
+  const { contactInfo, selectedDate, selectedTimeSlot } = await request.json();
 
-  if (!contactInfo || !selectedDate) {
+  if (!contactInfo || !selectedDate || !selectedTimeSlot) {
     return NextResponse.json(
       { error: true, message: "Invalid data" },
       { status: 400 }
@@ -25,6 +25,32 @@ export async function PATCH(request: NextRequest, { params }: any) {
   }
 
   try {
+    const allBookings = await prisma.booking.findMany({
+      where: {
+        selectedDate: {
+          equals: selectedDate,
+        },
+      },
+    });
+
+    const [newStartTime, newEndTime] = selectedTimeSlot.split(" - ");
+
+    const overlaps = allBookings.some((booking) => {
+      const [existingStartTime, existingEndTime] =
+        booking.selectedTimeSlot.split(" - ");
+      return (
+        (newStartTime < existingEndTime && newEndTime > existingStartTime) ||
+        (newEndTime > existingStartTime && newStartTime < existingEndTime)
+      );
+    });
+
+    if (overlaps) {
+      return NextResponse.json(
+        { error: true, message: "Overlap with existing booking" },
+        { status: 400 }
+      );
+    }
+
     const response = await prisma.booking.update({
       where: {
         id,
@@ -32,6 +58,7 @@ export async function PATCH(request: NextRequest, { params }: any) {
       data: {
         contactInfo,
         selectedDate,
+        selectedTimeSlot,
       },
     });
 

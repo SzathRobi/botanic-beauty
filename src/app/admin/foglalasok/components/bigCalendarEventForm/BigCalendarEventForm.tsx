@@ -22,8 +22,17 @@ import { DayPicker } from "react-day-picker";
 import { Booking } from "@prisma/client";
 import { mapEventToBooking } from "@/app/admin/mappers/mapEventToBooking.mapper";
 import { hu } from "date-fns/locale";
-import { isBefore, isSunday, isSaturday, parse, set } from "date-fns";
+import {
+  format,
+  isBefore,
+  isSunday,
+  isSaturday,
+  set,
+  parse,
+  addMinutes,
+} from "date-fns";
 import "./BigCalendarEventForm.override.css";
+import { getSecondsToDate } from "@/app/idopontfoglalas/utils/getSecondsToDate";
 
 type BigCalendarEventFormProps = {
   calendarEvent: EventProps<CalendarEvent>;
@@ -47,6 +56,8 @@ const BigCalendarEventForm = ({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       hairdresser: calendarEvent.event.hairdresser,
+      startTime: booking.selectedTimeSlot.split(" - ")[0],
+      endTime: booking.selectedTimeSlot.split(" - ")[1],
       service: calendarEvent.event.service,
       name: calendarEvent.event.contactInfo.name,
       email: calendarEvent.event.contactInfo.email,
@@ -55,25 +66,26 @@ const BigCalendarEventForm = ({
     },
   });
 
+  const onStartTimeChange = (event: any, fieldOnchange: any) => {
+    fieldOnchange(event);
+
+    const startTime = form.getValues("startTime");
+    const service = form.getValues("service");
+
+    const startDateTime = parse(startTime, "HH:mm", new Date());
+
+    const endDateTime = addMinutes(startDateTime, service?.duration ?? 0);
+
+    form.setValue("endTime", format(endDateTime, "HH:mm"));
+  };
+
   const handleSelect = (day: Date | undefined) => {
     if (day) {
       setSelectedDate(day);
     }
   };
 
-  const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
-    setIsLoading(true);
-
-    const booking: Partial<Booking> = {
-      contactInfo: {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        otherInfo: values.otherInfo,
-      },
-      selectedDate: selectedDate.toISOString(),
-    };
-
+  const updateBooking = async (booking: Partial<Booking>) => {
     const response = await fetch(`/api/booking/${calendarEvent.event.id}`, {
       method: "PATCH",
       body: JSON.stringify(booking),
@@ -84,6 +96,117 @@ const BigCalendarEventForm = ({
       return;
     }
 
+    return await response.json();
+  };
+
+  const sendModifierEmail = async (booking: Partial<Booking>) => {
+    const emailResponse = await fetch("/api/email/modifier", {
+      method: "POST",
+      body: JSON.stringify({
+        booking,
+      }),
+    });
+
+    if (!emailResponse.ok) {
+      toast.error("A módosító email nem ment ki");
+
+      return;
+    }
+
+    return await emailResponse.json();
+  };
+
+  const scheduleReminderEmail = async (booking: Partial<Booking>) => {
+    const emailDelayInMiliseconds = getSecondsToDate(booking as Booking) * 1000;
+
+    const emailScheduleResponse = await fetch("/api/email/schedule", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        booking,
+        emailDelayInMiliseconds,
+      }),
+    });
+
+    if (!emailScheduleResponse.ok) {
+      toast.error("Az emlékeztető email nem ment ki");
+    }
+
+    return await emailScheduleResponse.json();
+  };
+
+  const deleteBookingData = async (id: string) => {
+    const response = await fetch(`/api/booking/${id}`, {
+      method: "DELETE",
+    });
+
+    if (!response.ok) {
+      toast.error("Hiba történt, a módosítás sikertelen");
+      return;
+    }
+
+    return await response.json();
+  };
+
+  const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
+    setIsLoading(true);
+
+    const selectedTimeSlot = `${values.startTime} - ${values.endTime}`;
+    const [startHour, startMinute] = values.startTime.split(":").map(Number);
+    const [endHour, endMinute] = values.endTime.split(":").map(Number);
+
+    const updatedSelectedDate = new Date(selectedDate);
+    updatedSelectedDate.setHours(startHour, startMinute, 0, 0);
+
+    const booking: Partial<Booking> = {
+      contactInfo: {
+        name: values.name,
+        email: values.email,
+        phone: values.phone,
+        otherInfo: values.otherInfo,
+      },
+      selectedDate: selectedDate.toString(),
+      selectedTimeSlot,
+    };
+
+    if (!booking.selectedDate || !booking.selectedTimeSlot) {
+      toast.error("Nincs kiválasztott időpont");
+      setIsLoading(false);
+      return;
+    }
+
+    const bookingData = await updateBooking(booking);
+
+    if (bookingData.message === "Overlap with existing booking") {
+      toast.error(
+        "A kiválasztott időpont már nem elérhető. Kérlek válassz másik időpontot."
+      );
+      return;
+    }
+
+    if (bookingData.error) {
+      toast.error(
+        "Hoppá! Valami hiba történt a foglalás során. Kérlek próbáld meg később."
+      );
+      return;
+    }
+
+    const [modificationResult, scheduleResult] = await Promise.all([
+      sendModifierEmail(booking),
+      scheduleReminderEmail(booking),
+    ]);
+
+    if (!modificationResult) {
+      deleteBookingData(bookingData.id);
+      return;
+    }
+
+    if (!scheduleResult) {
+      toast.error("Az emlekeztető email beütemezés sikertelen volt");
+    }
+
     setCalendarEvents((prevCalendarEvents: CalendarEvent[]) => {
       const updatedCalendarEvents = prevCalendarEvents.map((event) => {
         if (event.id === calendarEvent.event.id && event.start && event.end) {
@@ -91,12 +214,16 @@ const BigCalendarEventForm = ({
             year: selectedDate.getFullYear(),
             month: selectedDate.getMonth(),
             date: selectedDate.getDate(),
+            hours: startHour,
+            minutes: startMinute,
           });
 
           const updatedEndDate = set(event.end, {
             year: selectedDate.getFullYear(),
             month: selectedDate.getMonth(),
             date: selectedDate.getDate(),
+            hours: endHour,
+            minutes: endMinute,
           });
 
           return {
@@ -131,35 +258,69 @@ const BigCalendarEventForm = ({
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-black">Dátum</FormLabel>
+          <FormItem>
+            <FormLabel className="text-black">Dátum</FormLabel>
 
-                <FormControl>
-                  <DayPicker
-                    className="text-sm sm:text-base md:text-lg dayPicker"
-                    mode="single"
-                    selected={new Date(selectedDate)}
-                    // TODO / high: change to selectedDate
-                    defaultMonth={new Date("2024-08-01")}
-                    weekStartsOn={1}
-                    locale={hu}
-                    disabled={(date) =>
-                      isBefore(date, new Date(Date.now())) ||
-                      isSunday(date) ||
-                      isSaturday(date)
-                    }
-                    onSelect={handleSelect}
-                  />
-                </FormControl>
+            <FormControl>
+              <DayPicker
+                className="text-sm sm:text-base md:text-lg dayPicker"
+                mode="single"
+                selected={new Date(selectedDate)}
+                // TODO / high: change to selectedDate
+                defaultMonth={new Date("2024-08-01")}
+                weekStartsOn={1}
+                locale={hu}
+                disabled={(date) =>
+                  isBefore(date, new Date(Date.now())) ||
+                  isSunday(date) ||
+                  isSaturday(date)
+                }
+                onSelect={handleSelect}
+              />
+            </FormControl>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+            <FormMessage />
+          </FormItem>
+
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="startTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black">Időpont kezdete</FormLabel>
+
+                  <FormControl>
+                    <Input
+                      type="time"
+                      {...field}
+                      onChange={(event) =>
+                        onStartTimeChange(event, field.onChange)
+                      }
+                    />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="endTime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-black">Időpont vége</FormLabel>
+
+                  <FormControl>
+                    <Input type="time" {...field} disabled readOnly />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
 
           <FormField
             control={form.control}
