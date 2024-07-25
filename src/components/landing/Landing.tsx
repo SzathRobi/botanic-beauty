@@ -20,19 +20,14 @@ const Landing = async () => {
       />
       <div className="px-2 sm:px-0 flex h-full w-full flex-col items-center justify-center">
         <BackgroundBlur className="mb-24 mt-16 flex flex-col items-center justify-center gap-4">
-          <CharacterReveal
-            isHeading1
-            transitionDuration={0.3}
-            className="text-center text-xl md:text-2xl mb-2 2xl:text-3xl"
-            text="Lépj be a fenntartható és személyre szabott hajápolás világába a
-            Botanic Beauty fodrászatnál!"
-          />
+          <h1 className="text-center text-xl md:text-2xl mb-2 2xl:text-3xl">
+            Lépj be a fenntartható és személyre szabott hajápolás világába a
+            Botanic Beauty fodrászatnál!
+          </h1>
 
-          <CharacterReveal
-            isHeading2
-            className="text-center mb-12 text-md md:text-xl opacity-75"
-            text="A természet és az egyéniséged ihlette fodrászat Újpesten."
-          />
+          <h2 className="text-center mb-12 text-md md:text-xl opacity-75">
+            A természet és az egyéniséged ihlette fodrászat Újpesten.
+          </h2>
 
           <Link
             href={BOOKING_ROUTE}
