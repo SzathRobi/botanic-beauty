@@ -19,14 +19,10 @@ export const mapBookingToEvent = ({
     .split(":")
     .map((num) => parseInt(num));
 
-  console.log({ startTime });
-
   const startDateWithTime = addMinutes(
     addHours(selectedDate, startHours),
     startMinutes
   );
-
-  console.log({ startDateWithTime });
 
   const [endHours, endMinutes] = endTime.split(":").map((num) => parseInt(num));
 

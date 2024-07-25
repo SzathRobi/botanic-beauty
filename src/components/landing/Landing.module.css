@@ -1,0 +1,16 @@
+.glow-shadow-spin {
+  box-shadow: 0 0 70px 10px #16a34acc;
+  animation: glow-shadow-spin 12s infinite ease;
+}
+
+@keyframes glow-shadow-spin {
+  0% {
+    box-shadow: 0 0 60px 4px #16a34acc;
+  }
+  40% {
+    box-shadow: 0 0 10px 2px #16a34acc;
+  }
+  100% {
+    box-shadow: 0 0 60px 4px #16a34acc;
+  }
+}

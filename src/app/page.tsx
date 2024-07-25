@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import About from "@/components/About";
 import Contact from "@/components/Contact";
-import Landing from "@/components/Landing";
+import Landing from "@/components/landing/Landing";
 import OurWorks from "@/components/OurWorks";
 import Transition from "@/components/Transition";
 import ExtraServices from "@/components/ExtraServices";

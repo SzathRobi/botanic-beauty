@@ -113,18 +113,6 @@ section {
   margin-bottom: 64px;
 }
 
-.green-glow {
-  box-shadow: 0 0 8px 0 #21954c;
-}
-
-.green-glow:hover {
-  box-shadow: 0 0 16px 4px #21954c;
-}
-
-.green-glow-text {
-  filter: drop-shadow(0 0 1px #21954c);
-}
-
 .rdp-months {
   display: flex;
   flex-wrap: wrap;
