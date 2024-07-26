@@ -23,11 +23,13 @@ const Header = async () => {
           alt="Logo"
           width={170}
           height={48}
+          className="h-auto w-auto"
         />
       </Link>
 
       <HamburgerMenu />
-      <nav className="hidden sm:block">
+
+      <nav className="hidden md:block">
         <ul className="flex items-center gap-8">
           <li className="shadow transition hover:text-green-700 ">
             <Link href={HOME_ROUTE}>Főoldal</Link>
