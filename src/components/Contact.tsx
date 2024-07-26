@@ -32,7 +32,7 @@ const Contact = () => {
               </div>
               <div className="flex flex-row sm:flex-col items-center justify-start sm:justify-center gap-2">
                 <Mail size={72} className="size-12 md:size-16" />
-                <p className="text-sm md:text-base max-w-20 md:max-w-auto">
+                <p className="min-w-[25ch] text-sm md:text-base max-w-20 md:max-w-auto">
                   {CONTACT_EMAIL}
                 </p>
               </div>
