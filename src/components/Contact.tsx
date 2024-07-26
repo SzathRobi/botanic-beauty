@@ -9,6 +9,7 @@ import {
   CONTACT_EMAIL,
   CONTACT_PHONE,
 } from "@/constants/contact.constants";
+import Link from "next/link";
 
 const Contact = () => {
   return (
@@ -45,25 +46,35 @@ const Contact = () => {
             <div className="pl-2 sm:pl-0 flex flex-col items-start justify-center gap-12 sm:flex-row">
               <div className="relative flex flex-row sm:flex-col items-center sm:items-start justify-center gap-4 sm:gap-2">
                 <div className="relative mx-auto size-12 md:size-16">
-                  <Image
-                    alt=""
-                    src="/instagram-80x80.png"
-                    fill
-                    className="object-cover"
-                  />
+                  <a
+                    href="https://www.instagram.com/botanic_beauty_hajszalon"
+                    target="_blank"
+                  >
+                    <Image
+                      alt=""
+                      src="/instagram-80x80.png"
+                      fill
+                      className="object-cover"
+                    />
+                  </a>
                 </div>
-                <p className="text-sm md:text-base">instagramm/bbh</p>
+                <p className="text-sm md:text-base">instagramm</p>
               </div>
               <div className="relative flex flex-row sm:flex-col items-center sm:items-start justify-center gap-4 sm:gap-2">
                 <div className="relative mx-auto size-12 md:size-16">
-                  <Image
-                    alt=""
-                    src="/facebook-80x80.png"
-                    fill
-                    className="object-cover"
-                  />
+                  <a
+                    href="https://www.facebook.com/profile.php?id=61563419040169"
+                    target="_blank"
+                  >
+                    <Image
+                      alt=""
+                      src="/facebook-80x80.png"
+                      fill
+                      className="object-cover"
+                    />
+                  </a>
                 </div>
-                <p className="text-sm md:text-base">facebook/bbh</p>
+                <p className="text-sm md:text-base">facebook</p>
               </div>
             </div>
           </BackgroundBlur>
