@@ -58,7 +58,7 @@ const Contact = () => {
                     />
                   </a>
                 </div>
-                <p className="text-sm md:text-base">instagramm</p>
+                <p className="text-sm md:text-base">instagram</p>
               </div>
               <div className="relative flex flex-row sm:flex-col items-center sm:items-start justify-center gap-4 sm:gap-2">
                 <div className="relative mx-auto size-12 md:size-16">
