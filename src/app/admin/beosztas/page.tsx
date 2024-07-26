@@ -14,7 +14,7 @@ const AdminHairdresserSchedulePage = async () => {
   const schedule = await getSchedule();
 
   return (
-    <div className="w-full min-h-[calc(100vh-80px)] pt-14">
+    <div className="w-full min-h-[calc(100vh-80px)] lg:pt-14">
       <BackgroundBlur className="!max-w-fit mx-auto">
         <Schedules schedule={schedule} />
       </BackgroundBlur>

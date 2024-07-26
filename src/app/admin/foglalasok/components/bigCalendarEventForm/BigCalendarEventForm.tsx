@@ -269,7 +269,7 @@ const BigCalendarEventForm = ({
 
             <FormControl>
               <DayPicker
-                className="text-sm sm:text-base md:text-lg dayPicker"
+                className="text-gray-900 text-sm sm:text-base md:text-lg dayPicker"
                 mode="single"
                 selected={new Date(selectedDate)}
                 // TODO / high: change to selectedDate
