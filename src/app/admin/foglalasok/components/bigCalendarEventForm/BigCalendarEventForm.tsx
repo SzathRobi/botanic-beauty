@@ -34,6 +34,7 @@ import {
 } from "date-fns";
 import "./BigCalendarEventForm.override.css";
 import { getSecondsToDate } from "@/app/idopontfoglalas/utils/getSecondsToDate";
+import { Separator } from "@/components/ui/Separator";
 
 type BigCalendarEventFormProps = {
   calendarEvent: EventProps<CalendarEvent>;
@@ -335,6 +336,44 @@ const BigCalendarEventForm = ({
               )}
             />
           </div>
+
+          <Separator className="my-4" />
+
+          <FormField
+            control={form.control}
+            name="service.name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-black">Szolgáltalás neve</FormLabel>
+
+                <FormControl>
+                  <Input {...field} disabled readOnly />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="service.duration"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="text-black">
+                  Szolgáltalás időtartama (perc)
+                </FormLabel>
+
+                <FormControl>
+                  <Input {...field} disabled readOnly />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Separator className="my-4" />
 
           <FormField
             control={form.control}
