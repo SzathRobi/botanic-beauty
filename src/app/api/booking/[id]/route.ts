@@ -36,8 +36,13 @@ export async function PATCH(request: NextRequest, { params }: any) {
     const [newStartTime, newEndTime] = selectedTimeSlot.split(" - ");
 
     const overlaps = allBookings.some((booking) => {
+      if (booking.id === id) {
+        return false;
+      }
+
       const [existingStartTime, existingEndTime] =
         booking.selectedTimeSlot.split(" - ");
+
       return (
         (newStartTime < existingEndTime && newEndTime > existingStartTime) ||
         (newEndTime > existingStartTime && newStartTime < existingEndTime)

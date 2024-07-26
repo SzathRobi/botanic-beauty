@@ -25,6 +25,7 @@ import { hu } from "date-fns/locale";
 import {
   format,
   isBefore,
+  isSameDay,
   isSunday,
   isSaturday,
   set,
@@ -199,18 +200,25 @@ const BigCalendarEventForm = ({
       return;
     }
 
-    const [modificationResult, scheduleResult] = await Promise.all([
-      sendModifierEmail(booking),
-      scheduleReminderEmail(booking),
-    ]);
+    const originalBooking = mapEventToBooking(calendarEvent.event);
 
-    if (!modificationResult) {
-      deleteBookingData(bookingData.id);
-      return;
-    }
+    if (
+      !isSameDay(booking.selectedDate!, originalBooking.selectedDate) ||
+      booking.selectedTimeSlot !== originalBooking.selectedTimeSlot
+    ) {
+      const [modificationResult, scheduleResult] = await Promise.all([
+        sendModifierEmail(booking),
+        scheduleReminderEmail(booking),
+      ]);
 
-    if (!scheduleResult) {
-      toast.error("Az emlekeztető email beütemezés sikertelen volt");
+      if (!modificationResult) {
+        deleteBookingData(bookingData.id);
+        return;
+      }
+
+      if (!scheduleResult) {
+        toast.error("Az emlekeztető email beütemezés sikertelen volt");
+      }
     }
 
     setCalendarEvents((prevCalendarEvents: CalendarEvent[]) => {
