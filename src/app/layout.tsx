@@ -28,6 +28,20 @@ export const metadata: Metadata = {
     siteName: "Botanic Beauty",
     type: "website",
     locale: "hu_HU",
+    images: [
+      {
+        url: "https://botanic-beauty.hu/path/to/logo-google-square.png",
+        width: 1200,
+        height: 1200,
+        alt: "Botanic Beauty Logo",
+      },
+      {
+        url: "https://botanic-beauty.hu/path/to/logo-google-wide.png",
+        width: 1200,
+        height: 630,
+        alt: "Botanic Beauty Logo",
+      },
+    ],
   },
   robots: {
     index: true,
