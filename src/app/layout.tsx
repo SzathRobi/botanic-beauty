@@ -51,11 +51,11 @@ export const metadata: Metadata = {
     "max-video-preview": -1,
     googleBot: "index, follow",
   },
-  alternates: {
-    types: {
-      "application/rss+xml": "https://botanic-beauty.hu/rss.xml",
-    },
-  },
+  // alternates: {
+  //   types: {
+  //     "application/rss+xml": "https://botanic-beauty.hu/rss.xml",
+  //   },
+  // },
   applicationName: "Botanic Beauty",
   appleWebApp: {
     title: "Botanic Beauty",
