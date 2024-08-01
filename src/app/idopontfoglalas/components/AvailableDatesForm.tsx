@@ -126,7 +126,7 @@ const AvailableDatesForm = ({
           mode="single"
           selected={selectedDate}
           // TODO / high: change to selectedDate
-          defaultMonth={new Date("2024-08-01")}
+          defaultMonth={selectedDate}
           weekStartsOn={1}
           locale={hu}
           disabled={(date) =>
