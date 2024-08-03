@@ -48,11 +48,16 @@ export const metadata: Metadata = {
       "botanic-beauty.hu -  A szalon koncepcióját, fenntarthatóság iránti elkötelezettséggel hoztam létre , ezért vegán, állatkísérlet mentes termékekkel dolgozom. Ebben a szalonban minden a te elképzelésedről és a minőségi, de megfizethető és környezetbarát anyagok használatáról szól.",
     images: [
       {
-        // TODO / medium: add proper image
-        url: "https://botanic-beauty.hu/images/home/thumbnail.png",
+        url: "https://botanic-beauty.hu/logo-google-square.png",
+        width: 1200,
+        height: 1200,
+        alt: "Botanic Beauty Logo",
+      },
+      {
+        url: "https://botanic-beauty.hu/logo-google-wide.png",
         width: 1200,
         height: 630,
-        alt: "Botanic Beauty",
+        alt: "Botanic Beauty Logo",
       },
     ],
   },

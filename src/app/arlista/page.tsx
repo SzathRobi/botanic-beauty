@@ -30,10 +30,16 @@ export const metadata: Metadata = {
       "Fedezd fel a Botanic Beauty árlistáját! Kínálatunkban megtalálod a hajvágás, hajfestés és egyéb szolgáltatások árait, mind vegán és környezetbarát termékekkel.",
     images: [
       {
-        url: "https://botanic-beauty.hu/images/arlista/thumbnail.png",
+        url: "https://botanic-beauty.hu/logo-google-square.png",
+        width: 1200,
+        height: 1200,
+        alt: "Botanic Beauty Logo",
+      },
+      {
+        url: "https://botanic-beauty.hu/logo-google-wide.png",
         width: 1200,
         height: 630,
-        alt: "Botanic Beauty Árlista",
+        alt: "Botanic Beauty Logo",
       },
     ],
   },
