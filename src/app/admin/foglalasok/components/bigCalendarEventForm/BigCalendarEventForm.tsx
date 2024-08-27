@@ -61,6 +61,7 @@ const BigCalendarEventForm = ({
       startTime: booking.selectedTimeSlot.split(" - ")[0],
       endTime: booking.selectedTimeSlot.split(" - ")[1],
       service: calendarEvent.event.service,
+      extraService: calendarEvent.event.extraService,
       name: calendarEvent.event.contactInfo.name,
       email: calendarEvent.event.contactInfo.email,
       phone: calendarEvent.event.contactInfo.phone,
@@ -76,7 +77,13 @@ const BigCalendarEventForm = ({
 
     const startDateTime = parse(startTime, "HH:mm", new Date());
 
-    const endDateTime = addMinutes(startDateTime, service?.duration ?? 0);
+    let endDateTime = addMinutes(startDateTime, service.duration);
+
+    const extraService = form.getValues("extraService");
+
+    if (extraService) {
+      endDateTime = addMinutes(endDateTime, extraService.duration);
+    }
 
     form.setValue("endTime", format(endDateTime, "HH:mm"));
   };

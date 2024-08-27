@@ -13,7 +13,7 @@ const AdminPage = async () => {
     redirect("/admin/bejelentkezes");
   }
 
-  redirect("/admin/beosztas");
+  redirect("/admin/foglalasok");
 };
 
 export default AdminPage;
