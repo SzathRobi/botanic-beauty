@@ -11,7 +11,7 @@ const Landing = async () => {
   return (
     <section className="h-screen">
       <Image
-        alt="Botanic Beauty landing background"
+        alt="Botanic Beauty Hajszalon"
         src="/landing-bg.png"
         width={1920}
         height={1080}

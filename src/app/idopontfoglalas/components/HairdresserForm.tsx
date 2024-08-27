@@ -37,7 +37,7 @@ const HairdresserForm = ({
           <div className="flex w-full items-center justify-start gap-8">
             <Image
               src="/timi.png"
-              alt="Timi"
+              alt="Botanic Beauty fodrász: Timi"
               className="size-[120px] object-cover rounded-lg"
               width={120}
               height={120}

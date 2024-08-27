@@ -15,7 +15,7 @@ const Contact = () => {
   return (
     <section className="px-2 sm:px-0 min-h-screen mb-40">
       <Image
-        alt=""
+        alt="Botanic Beauty fodrászat"
         src="/contact-bg.png"
         fill
         className="object-fit min-h-[110vh] -z-10"
@@ -51,7 +51,7 @@ const Contact = () => {
                     target="_blank"
                   >
                     <Image
-                      alt=""
+                      alt="Botanic Beauty hajszalon instagramja"
                       src="/instagram-80x80.png"
                       fill
                       className="object-cover"
@@ -67,7 +67,7 @@ const Contact = () => {
                     target="_blank"
                   >
                     <Image
-                      alt=""
+                      alt="Botanic Beauty hajszalon facebookja"
                       src="/facebook-80x80.png"
                       fill
                       className="object-cover"

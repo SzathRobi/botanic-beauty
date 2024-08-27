@@ -70,7 +70,7 @@ const OurWorksPage = async () => {
               resources.map((image: any, index: number) => (
                 <FadeInView key={image.public_id}>
                   <Image
-                    alt=""
+                    alt={`Botanic Beauty szalonban készult haj ${index}`}
                     src={image.url}
                     width={320}
                     height={424}

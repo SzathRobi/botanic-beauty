@@ -19,63 +19,63 @@ const OurWorks = () => {
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 1"
                 src="/our-works-1.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 2"
                 src="/our-works-2.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 3"
                 src="/our-works-3.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 4"
                 src="/our-works-4.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 5"
                 src="/our-works-5.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 6"
                 src="/our-works-6.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 7"
                 src="/our-works-7.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 8"
                 src="/our-works-8.png"
                 className="max-h-[354px] object-cover rounded"
               />
               <Image
                 width={300}
                 height={424}
-                alt=""
+                alt="Botanic Beauty szalonban készult haj 9"
                 src="/our-works-9.png"
                 className="max-h-[354px] object-cover rounded"
               />

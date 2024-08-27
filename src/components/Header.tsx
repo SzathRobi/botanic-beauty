@@ -15,12 +15,11 @@ const Header = async () => {
 
   return (
     <header className="fixed top-0 z-50 flex w-full items-center justify-between bg-black/70 p-4 text-white backdrop-blur-md md:px-16">
-      {/* <Image src="/logo.svg" alt="Logo" width={137} height={40} /> */}
       <Link href={HOME_ROUTE}>
         <Image
           src="/logo.svg"
           priority={true}
-          alt="Logo"
+          alt="Botanic Beauty Hajszalon logo"
           width={170}
           height={48}
           className="h-auto w-auto"
