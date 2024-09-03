@@ -11,7 +11,7 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Botanic Beauty",
   description:
-    "botanic-beauty.hu -  A szalon koncepcióját, fenntarthatóság iránti elkötelezettséggel hoztam létre , ezért vegán, állatkísérlet mentes termékekkel dolgozom. Ebben a szalonban minden a te elképzelésedről és a minőségi, de megfizethető és környezetbarát anyagok használatáról szól.",
+    "Újpesti fodrászat, ahol fenntarthatóság és minőség találkozik. Vegán, állatkísérlet-mentes termékekkel dolgozom, hogy elképzeléseid megvalósuljanak környezetbarát módon.",
   keywords: [
     "Fodrászat Budapest",
     "Fodrász Újpest",
@@ -63,7 +63,7 @@ export const metadata: Metadata = {
   },
   // TODO / low: twitter
   alternates: {
-    canonical: "https://botanic-beauty.hu",
+    canonical: "https://botanic-beauty.hu/",
   },
 };
 

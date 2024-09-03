@@ -167,10 +167,6 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    // TODO / medium: szövegek átnézése
-    // TODO / medium: i18n
-    // TODO / high: SEO
-    // TODO / low: console.log gyilok
     <html lang="hu">
       <body className={`${inter.className}`}>
         <Header />
