@@ -5,9 +5,6 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Botanic Beauty | Adatvédelmi nyilatkozat",
   description: "Botanic Beauty adatvédelmi nyilatkozat",
-  alternates: {
-    canonical: "https://botanic-beauty.hu/adatvedelmi-nyilatkozat",
-  },
 };
 
 const PrivacyPolicyPage = async () => {

@@ -5,9 +5,6 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Botanic Beauty | Felhasználási feltételek",
   description: "Botanic Beauty felhasználási feltételek",
-  alternates: {
-    canonical: "https://botanic-beauty.hu/felhasznalasi-feltetelek",
-  },
 };
 
 const TermOfUsePage = async () => {

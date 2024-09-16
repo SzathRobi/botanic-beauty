@@ -39,9 +39,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  alternates: {
-    canonical: "https://botanic-beauty.hu/idopontfoglalas",
-  },
 };
 
 const BookingPage = async () => {

@@ -49,6 +49,7 @@ const Contact = () => {
                   <a
                     href="https://www.instagram.com/botanic_beauty_hajszalon"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     <Image
                       alt="Botanic Beauty hajszalon instagramja"
@@ -65,6 +66,7 @@ const Contact = () => {
                   <a
                     href="https://www.facebook.com/profile.php?id=61563419040169"
                     target="_blank"
+                    rel="noreferrer"
                   >
                     <Image
                       alt="Botanic Beauty hajszalon facebookja"

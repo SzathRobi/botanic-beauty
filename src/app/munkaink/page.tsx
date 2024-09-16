@@ -48,9 +48,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  alternates: {
-    canonical: "https://botanic-beauty.hu/munkaink",
-  },
 };
 
 const OurWorksPage = async () => {

@@ -61,10 +61,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  // TODO / low: twitter
-  alternates: {
-    canonical: "https://botanic-beauty.hu/",
-  },
 };
 
 export default function Home() {

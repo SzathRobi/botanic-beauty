@@ -43,9 +43,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  alternates: {
-    canonical: "https://botanic-beauty.hu/arlista",
-  },
 };
 
 const getServiceIcon = (serviceGroup: ServiceGroup) => {
