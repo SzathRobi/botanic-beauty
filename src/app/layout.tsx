@@ -53,7 +53,7 @@ export const metadata: Metadata = {
   },
   applicationName: "Botanic Beauty",
   appleWebApp: {
-    title: "Botanic Beauty",
+    title: "Botanic Beauty Hajszalon",
     statusBarStyle: "default",
     capable: true,
   },

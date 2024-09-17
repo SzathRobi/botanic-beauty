@@ -22,11 +22,11 @@ const Landing = async () => {
         <BackgroundBlur className="mb-24 mt-16 flex flex-col items-center justify-center gap-4">
           <h1 className="text-center text-xl md:text-2xl mb-2 2xl:text-3xl">
             Lépj be a fenntartható és személyre szabott hajápolás világába a
-            Botanic Beauty fodrászatnál!
+            Botanic Beauty hajszalonnál!
           </h1>
 
           <h2 className="text-center mb-12 text-md md:text-xl opacity-75">
-            A természet és az egyéniséged ihlette fodrászat Újpesten.
+            A természet és az egyéniséged ihlette hajszalon Újpesten.
           </h2>
 
           <Link

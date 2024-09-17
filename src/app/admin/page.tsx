@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty | Admin",
+  title: "Botanic Beauty Hajszalon| Admin",
 };
 
 const AdminPage = async () => {

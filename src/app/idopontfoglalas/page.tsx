@@ -5,7 +5,7 @@ import { getBookings } from "@/actions/booking";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty | Időpontfoglalás",
+  title: "Botanic Beauty Hajszalon | Időpontfoglalás",
   description:
     "Foglalj időpontot a Botanic Beauty szalonba online! Gyors és kényelmes időpontfoglalási rendszerünk segítségével egyszerűen választhatsz időpontot.",
   keywords: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: "https://botanic-beauty.hu/idopontfoglalas",
     type: "website",
-    title: "Botanic Beauty | Időpontfoglalás",
+    title: "Botanic Beauty Hajszalon | Időpontfoglalás",
     description:
       "Foglalj időpontot a Botanic Beauty szalonba online! Gyors és kényelmes időpontfoglalási rendszerünk segítségével egyszerűen választhatsz időpontot.",
     images: [

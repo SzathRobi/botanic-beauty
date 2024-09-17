@@ -3,7 +3,7 @@ import { CONTACT_EMAIL, CONTACT_PHONE } from "@/constants/contact.constants";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty | Felhasználási feltételek",
+  title: "Botanic Beauty Hajszalon | Felhasználási feltételek",
   description: "Botanic Beauty felhasználási feltételek",
 };
 

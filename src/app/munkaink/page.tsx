@@ -13,7 +13,7 @@ cloudinary.v2.config({
 });
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty | Munkáink",
+  title: "Botanic Beauty Hajszalon | Munkáink",
   description:
     "Tekintsd meg a Botanic Beauty szalon korábbi munkáit! Inspirálódj kreatív hajfestéseinkből és hajvágásainkból, mind vegán és környezetbarát termékekkel.",
   keywords: [
@@ -30,7 +30,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: "https://botanic-beauty.hu/munkaink",
     type: "website",
-    title: "Botanic Beauty | Munkáink",
+    title: "Botanic Beauty Hajszalon | Munkáink",
     description:
       "Tekintsd meg a Botanic Beauty szalon korábbi munkáit! Inspirálódj kreatív hajfestéseinkből és hajvágásainkból, mind vegán és környezetbarát termékekkel.",
     images: [

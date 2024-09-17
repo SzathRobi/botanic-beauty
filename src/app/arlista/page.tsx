@@ -8,7 +8,7 @@ import { ServiceGroup } from "@/types/serviceGroup.type";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty | Árlista",
+  title: "Botanic Beauty Hajszalon | Árlista",
   description:
     "Fedezd fel a Botanic Beauty árlistáját! Kínálatunkban megtalálod a hajvágás, hajfestés és egyéb szolgáltatások árait, mind vegán és környezetbarát termékekkel.",
   keywords: [
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   openGraph: {
     url: "https://botanic-beauty.hu/arlista",
     type: "website",
-    title: "Botanic Beauty | Árlista",
+    title: "Botanic Beauty Hajszalon | Árlista",
     description:
       "Fedezd fel a Botanic Beauty árlistáját! Kínálatunkban megtalálod a hajvágás, hajfestés és egyéb szolgáltatások árait, mind vegán és környezetbarát termékekkel.",
     images: [
