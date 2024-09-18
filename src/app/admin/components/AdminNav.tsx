@@ -26,14 +26,14 @@ const AdminNav = async () => {
             Foglalások
           </Link>
         </li>
-        {/* <li>
+        <li>
           <Link
-            href="/admin/szolgaltatasok"
+            href="/admin/ugyfelek"
             className="px-1 sm:px-4 py-2 hover:bg-green-500/20"
           >
-            Szolgaltatasok
+            Ügyfelek
           </Link>
-        </li> */}
+        </li>
         <li>
           <Link
             href="/admin/kepfeltoltes"

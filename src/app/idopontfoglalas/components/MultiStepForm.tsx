@@ -196,6 +196,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
           {activeStep === 4 && selectedService && (
             <FadeIn>
               <SummaryForm
+                contactInfo={contactInfo}
                 selectedService={selectedService}
                 selectedExtraService={selectedExtraService}
                 selectedHairdresser={selectedHairdresser}
