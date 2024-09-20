@@ -5,6 +5,7 @@ import OurWorks from "@/components/OurWorks";
 import Transition from "@/components/Transition";
 import ExtraServices from "@/components/ExtraServices";
 import { Metadata } from "next";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Botanic Beauty Hajszalon",
@@ -90,6 +91,8 @@ export default async function Home() {
         <Contact />
         <OurWorks />
       </main>
+
+      <Footer />
     </Transition>
   );
 }

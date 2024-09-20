@@ -3,6 +3,7 @@ import "react-day-picker/dist/style.css";
 import { getSchedule } from "@/actions/schedule";
 import { getBookings } from "@/actions/booking";
 import { Metadata } from "next";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Botanic Beauty Hajszalon | Időpontfoglalás",
@@ -47,9 +48,13 @@ const BookingPage = async () => {
   const bookings = await getBookings();
 
   return (
-    <section className="px-2 sm:px-0 min-h-screen  flex flex-col items-center justify-start pt-24 mb-0!">
-      <MultiStepForm schedule={schedule} bookings={bookings || []} />
-    </section>
+    <>
+      <section className="px-2 sm:px-0 min-h-screen  flex flex-col items-center justify-start pt-24 mb-0!">
+        <MultiStepForm schedule={schedule} bookings={bookings || []} />
+      </section>
+
+      <Footer />
+    </>
   );
 };
 

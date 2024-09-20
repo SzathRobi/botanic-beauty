@@ -1,7 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
@@ -176,7 +175,6 @@ export default function RootLayout({
           />
         </div>
         {children}
-        <Footer />
 
         <script
           type="application/ld+json"

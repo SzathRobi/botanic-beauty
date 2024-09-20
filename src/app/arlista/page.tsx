@@ -6,6 +6,7 @@ import Transition from "@/components/Transition";
 import { SERVICE_GROUPS } from "@/constants/services.constants";
 import { ServiceGroup } from "@/types/serviceGroup.type";
 import { Metadata } from "next";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "Botanic Beauty Hajszalon | Árlista",
@@ -125,6 +126,8 @@ const PricinggPage = async () => {
           </div>
         </BackgroundBlur>
       </section>
+
+      <Footer />
     </Transition>
   );
 };

@@ -1,5 +1,6 @@
 import BackgroundBlur from "@/components/BackgroundBlur";
 import FadeInView from "@/components/FadeInView";
+import Footer from "@/components/Footer";
 import Transition from "@/components/Transition";
 import cloudinary from "cloudinary";
 import { Metadata } from "next";
@@ -78,6 +79,8 @@ const OurWorksPage = async () => {
           </div>
         </BackgroundBlur>
       </section>
+
+      <Footer />
     </Transition>
   );
 };
