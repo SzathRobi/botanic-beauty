@@ -12,7 +12,11 @@ import Link from "next/link";
 import { useState } from "react";
 import { IoMenu } from "react-icons/io5";
 
-const HamburgerMenu = () => {
+type HamburgerMenuProps = {
+  user: any;
+};
+
+const HamburgerMenu = ({ user }: HamburgerMenuProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -57,6 +61,11 @@ const HamburgerMenu = () => {
                 <li className="shadow transition hover:text-green-700 ">
                   <Link href={OUR_WORKS_ROUTE}>Munkáink</Link>
                 </li>
+                {user && (
+                  <li className="shadow transition hover:text-green-700 ">
+                    <Link href="/admin">Admin</Link>
+                  </li>
+                )}
               </ul>
             </motion.div>
             <div className="h-full" onClick={() => setIsMenuOpen(false)}></div>

@@ -89,7 +89,7 @@ const columns: (
     ),
   },
   {
-    accessorKey: "Egyéb infó",
+    accessorKey: "otherInfo",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Egyéb infó" />
     ),
@@ -252,10 +252,11 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
     }
 
     setCustomers(filteredCustomers);
+    toast.success("A kijelölt ügyfelek törlése sikeres.");
   };
 
   return (
-    <div className="container">
+    <div>
       <Dialog
         open={!!excelHeadersError}
         onOpenChange={() => setExcelHeadersError(null)}

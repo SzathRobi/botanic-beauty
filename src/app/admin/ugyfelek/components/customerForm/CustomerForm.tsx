@@ -62,7 +62,7 @@ const CustomerForm = ({
         body: JSON.stringify(newCustomer),
       });
 
-      if (response.status === 403) {
+      if (response.status === 401) {
         toast.error("You have no permission to add employees");
         setIsLoading(false);
         return;
@@ -102,7 +102,7 @@ const CustomerForm = ({
       body: JSON.stringify(updatedCustomer),
     });
 
-    if (response.status === 403) {
+    if (response.status === 401) {
       toast.error("You have no permission to modify customer");
       setIsLoading(false);
       return;

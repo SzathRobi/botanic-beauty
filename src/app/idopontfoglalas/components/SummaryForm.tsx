@@ -59,7 +59,7 @@ const SummaryForm = ({
         email: contactInfo.email,
         name: contactInfo.name,
         phone: contactInfo.phone,
-        hairdresser: selectedHairdresser,
+        hairdressers: [selectedHairdresser],
       }),
     });
   };

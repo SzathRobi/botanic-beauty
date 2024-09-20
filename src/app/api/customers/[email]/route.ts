@@ -23,8 +23,6 @@ export async function PATCH(
     );
   }
 
-  console.log(params.email);
-
   const existingCustomer = await prisma.customer.findUnique({
     where: {
       email: params.email,

@@ -9,11 +9,11 @@ const AdminNav = async () => {
 
   return (
     <div>
-      <ul className="py-2 sm:pt-16 flex sm:flex-col items-start gap-4 px-2 h-full bg-emerald-800 text-white">
+      <ul className="py-2 sm:pt-16 flex sm:flex-col items-start gap-2 sm:gap-4 px-2 h-full bg-emerald-800 text-white">
         <li>
           <Link
             href="/admin/beosztas"
-            className="px-1 sm:px-4 py-2 hover:bg-green-500/20"
+            className="px-1 sm:px-4 py-2 hover:bg-green-500/20 text-xs md:text-base"
           >
             Beosztás
           </Link>
@@ -21,7 +21,7 @@ const AdminNav = async () => {
         <li>
           <Link
             href="/admin/foglalasok"
-            className="px-1 sm:px-4 py-2 hover:bg-green-500/20"
+            className="px-1 sm:px-4 py-2 hover:bg-green-500/20 text-xs md:text-base"
           >
             Foglalások
           </Link>
@@ -29,7 +29,7 @@ const AdminNav = async () => {
         <li>
           <Link
             href="/admin/ugyfelek"
-            className="px-1 sm:px-4 py-2 hover:bg-green-500/20"
+            className="px-1 sm:px-4 py-2 hover:bg-green-500/20 text-xs md:text-base"
           >
             Ügyfelek
           </Link>
@@ -37,7 +37,7 @@ const AdminNav = async () => {
         <li>
           <Link
             href="/admin/kepfeltoltes"
-            className="px-1 sm:px-4 py-2 hover:bg-green-500/20"
+            className="px-1 sm:px-4 py-2 hover:bg-green-500/20 text-xs md:text-base"
           >
             Képfeltöltés
           </Link>

@@ -26,7 +26,7 @@ const Header = async () => {
         />
       </Link>
 
-      <HamburgerMenu />
+      <HamburgerMenu user={session?.user} />
 
       <nav className="hidden md:block">
         <ul className="flex items-center gap-8">

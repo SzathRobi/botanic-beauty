@@ -6,7 +6,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
   const body = await req.json();
 
-  const { email, name, phone, hairdressers, originalEmail, otherInfo } = body;
+  const { email, name, phone, hairdressers, otherInfo } = body;
 
   if (!email || !name || !phone || !hairdressers) {
     return NextResponse.json(
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       try {
         await prisma.customer.update({
           where: {
-            email: originalEmail,
+            email,
           },
           data: {
             email,
