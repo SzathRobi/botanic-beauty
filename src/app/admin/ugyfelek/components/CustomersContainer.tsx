@@ -331,6 +331,7 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
         <DataTable
           columns={columns(openCustomerForm)}
           data={customers}
+          noDataText="Nincsenek ügyfelek"
           onDeleteSelectedRows={deleteSelectedCustomers}
         />
       </BackgroundBlur>

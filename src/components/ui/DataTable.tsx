@@ -23,12 +23,14 @@ import { Button } from "../Button";
 interface DataTableProps<T> {
   data: T[];
   columns: ColumnDef<T>[];
+  noDataText?: string;
   onDeleteSelectedRows?: (data: any) => Promise<void>;
 }
 
 export function DataTable<T>({
   data,
   columns,
+  noDataText = "Nincs adat",
   onDeleteSelectedRows,
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -120,7 +122,7 @@ export function DataTable<T>({
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  Nincsenek szolgáltatások
+                  {noDataText}
                 </TableCell>
               </TableRow>
             )}
