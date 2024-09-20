@@ -1,13 +1,23 @@
+"use client";
+
 import { Button } from "@/components/Button";
 import { CONTACT_PHONE } from "@/constants/contact.constants";
 import { HOME_ROUTE } from "@/constants/routes.constants";
+import prisma from "@/lib/db";
 import { TService } from "@prisma/client";
 import { User, Calendar } from "lucide-react";
 import Link from "next/link";
+import { useEffect } from "react";
 import { IoColorPaletteOutline } from "react-icons/io5";
 import { PiHairDryer, PiScissors } from "react-icons/pi";
 
 type SummaryFormProps = {
+  contactInfo: {
+    name: string;
+    email: string;
+    phone: string;
+    otherInfo: string;
+  };
   selectedService: TService;
   selectedExtraService: TService | null;
   selectedHairdresser: "Timi" | "nem_Timi" | null;
@@ -19,6 +29,7 @@ type SummaryFormProps = {
 const ICON_SIZE = 48;
 
 const SummaryForm = ({
+  contactInfo,
   selectedHairdresser,
   selectedService,
   selectedExtraService,
@@ -37,6 +48,25 @@ const SummaryForm = ({
 
     return <PiHairDryer size={ICON_SIZE} className="min-w-10" />;
   };
+
+  const createCustomer = async () => {
+    await fetch("/api/customers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        email: contactInfo.email,
+        name: contactInfo.name,
+        phone: contactInfo.phone,
+        hairdressers: [selectedHairdresser],
+      }),
+    });
+  };
+
+  useEffect(() => {
+    createCustomer();
+  }, []);
 
   return (
     <div>

@@ -193,7 +193,7 @@ export default function RootLayout({
               priceRange: "2000Ft - 30000Ft",
               address: {
                 "@type": "PostalAddress",
-                streetAddress: "Széchenyi tér 4",
+                streetAddress: "Széchenyi tér 4a.",
                 addressLocality: "Budapest",
                 postalCode: "1045",
                 addressCountry: "HU",
