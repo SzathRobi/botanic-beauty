@@ -1,38 +1,39 @@
-import { auth } from "@/auth";
-import cloudinary from "cloudinary";
-import { NextRequest, NextResponse } from "next/server";
+import cloudinary from 'cloudinary'
+import { NextRequest, NextResponse } from 'next/server'
+
+import { auth } from '@/auth'
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
   // secure: true,
-});
+})
 
 export async function DELETE(request: NextRequest) {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user) {
     return NextResponse.json(
-      { error: true, message: "Unauthenticated" },
+      { error: true, message: 'Unauthenticated' },
       { status: 401 }
-    );
+    )
   }
 
-  const { selectedImages } = await request.json();
+  const { selectedImages } = await request.json()
 
   if (!selectedImages || selectedImages.length === 0) {
     return NextResponse.json(
-      { error: true, message: "Nem megfelelő adatok" },
+      { error: true, message: 'Nem megfelelő adatok' },
       { status: 400 }
-    );
+    )
   }
 
   try {
-    await cloudinary.v2.api.delete_resources(selectedImages);
+    await cloudinary.v2.api.delete_resources(selectedImages)
 
-    return NextResponse.json({ success: true }, { status: 200 });
+    return NextResponse.json({ success: true }, { status: 200 })
   } catch (error) {
-    return NextResponse.json({ error: true, message: error }, { status: 500 });
+    return NextResponse.json({ error: true, message: error }, { status: 500 })
   }
 }

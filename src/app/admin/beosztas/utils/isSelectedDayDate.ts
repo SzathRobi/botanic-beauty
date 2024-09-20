@@ -1,5 +1,6 @@
-import { DayProps } from "react-day-picker";
-import { SelectedDate } from "../types/selectedDate.type";
+import { DayProps } from 'react-day-picker'
+
+import { SelectedDate } from '../types/selectedDate.type'
 
 export const isSelectedDayDate = (
   selectedDates: SelectedDate[],
@@ -10,4 +11,4 @@ export const isSelectedDayDate = (
     (date) =>
       new Date(date.date).getTime() === day.date.getTime() &&
       date.person === selectedPerson
-  );
+  )

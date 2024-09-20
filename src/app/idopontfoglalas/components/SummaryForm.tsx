@@ -1,32 +1,32 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/Button";
-import { CONTACT_PHONE } from "@/constants/contact.constants";
-import { HOME_ROUTE } from "@/constants/routes.constants";
-import prisma from "@/lib/db";
-import { TService } from "@prisma/client";
-import { User, Calendar } from "lucide-react";
-import Link from "next/link";
-import { useEffect } from "react";
-import { IoColorPaletteOutline } from "react-icons/io5";
-import { PiHairDryer, PiScissors } from "react-icons/pi";
+import { TService } from '@prisma/client'
+import { Calendar, User } from 'lucide-react'
+import Link from 'next/link'
+import { useEffect } from 'react'
+import { IoColorPaletteOutline } from 'react-icons/io5'
+import { PiHairDryer, PiScissors } from 'react-icons/pi'
+
+import { Button } from '@/components/Button'
+import { CONTACT_PHONE } from '@/constants/contact.constants'
+import { HOME_ROUTE } from '@/constants/routes.constants'
 
 type SummaryFormProps = {
   contactInfo: {
-    name: string;
-    email: string;
-    phone: string;
-    otherInfo: string;
-  };
-  selectedService: TService;
-  selectedExtraService: TService | null;
-  selectedHairdresser: "Timi" | "nem_Timi" | null;
-  selectedDate: Date;
-  selectedTimeSlot: string | null;
-  resetForm: () => void;
-};
+    name: string
+    email: string
+    phone: string
+    otherInfo: string
+  }
+  selectedService: TService
+  selectedExtraService: TService | null
+  selectedHairdresser: 'Timi' | 'nem_Timi' | null
+  selectedDate: Date
+  selectedTimeSlot: string | null
+  resetForm: () => void
+}
 
-const ICON_SIZE = 48;
+const ICON_SIZE = 48
 
 const SummaryForm = ({
   contactInfo,
@@ -38,22 +38,22 @@ const SummaryForm = ({
   resetForm,
 }: SummaryFormProps) => {
   const geServiceIconByCategory = (category: string) => {
-    if (category === "Hajvágás" || category === "extra") {
-      return <PiScissors size={ICON_SIZE} className="min-w-10" />;
+    if (category === 'Hajvágás' || category === 'extra') {
+      return <PiScissors size={ICON_SIZE} className="min-w-10" />
     }
 
-    if (category === "Festések") {
-      return <IoColorPaletteOutline size={ICON_SIZE} className="min-w-10" />;
+    if (category === 'Festések') {
+      return <IoColorPaletteOutline size={ICON_SIZE} className="min-w-10" />
     }
 
-    return <PiHairDryer size={ICON_SIZE} className="min-w-10" />;
-  };
+    return <PiHairDryer size={ICON_SIZE} className="min-w-10" />
+  }
 
   const createCustomer = async () => {
-    await fetch("/api/customers", {
-      method: "POST",
+    await fetch('/api/customers', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         email: contactInfo.email,
@@ -61,26 +61,26 @@ const SummaryForm = ({
         phone: contactInfo.phone,
         hairdressers: [selectedHairdresser],
       }),
-    });
-  };
+    })
+  }
 
   useEffect(() => {
-    createCustomer();
-  }, []);
+    createCustomer()
+  }, [])
 
   return (
     <div>
-      <p className="text-2xl text-center mb-16">
+      <p className="mb-16 text-center text-2xl">
         Az időpontodat sikeresen felvettük!
       </p>
 
-      <div className="mb-24 flex flex-col md:flex-row items-start justify-evenly gap-8">
+      <div className="mb-24 flex flex-col items-start justify-evenly gap-8 md:flex-row">
         <div>
-          <div className="flex gap-4 mb-4">
+          <div className="mb-4 flex gap-4">
             {geServiceIconByCategory(selectedService.category)}
             <div>
               <p>Szolgáltatás:</p>
-              <p className="mb-2 font-medium text-lg max-w-xs">
+              <p className="mb-2 max-w-xs text-lg font-medium">
                 {selectedService.name} ({selectedService.duration} perc)
               </p>
             </div>
@@ -91,8 +91,8 @@ const SummaryForm = ({
               {geServiceIconByCategory(selectedExtraService.category)}
               <div>
                 <p>Extra Szolgáltatás:</p>
-                <p className="mb-2 font-medium text-lg max-w-xs">
-                  {selectedExtraService.name} ({selectedExtraService.duration}{" "}
+                <p className="mb-2 max-w-xs text-lg font-medium">
+                  {selectedExtraService.name} ({selectedExtraService.duration}{' '}
                   perc)
                 </p>
               </div>
@@ -104,7 +104,7 @@ const SummaryForm = ({
           <User size={48} className="min-w-10" />
           <div>
             <p>Fordrász:</p>
-            <p className="font-medium text-lg">{selectedHairdresser}</p>
+            <p className="text-lg font-medium">{selectedHairdresser}</p>
           </div>
         </div>
 
@@ -112,14 +112,14 @@ const SummaryForm = ({
           <Calendar size={48} className="min-w-10" />
           <div>
             <p>Időpont:</p>
-            <p className="font-medium text-lg">
+            <p className="text-lg font-medium">
               {selectedDate.toLocaleDateString()} {selectedTimeSlot}
             </p>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col gap-4 justify-center items-center mb-24">
+      <div className="mb-24 flex flex-col items-center justify-center gap-4">
         <p className="text-center">
           Email címedre kiküldtünk egy visszaigazoló levelet.
         </p>
@@ -139,7 +139,7 @@ const SummaryForm = ({
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default SummaryForm;
+export default SummaryForm

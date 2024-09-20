@@ -1,9 +1,10 @@
-"use client";
+'use client'
 
-import React from "react";
-import { CalendarEvent } from "@/app/admin/types/calendarEvent.type";
-import { ToolbarProps, View } from "react-big-calendar";
-import { Button } from "@/components/Button";
+import React from 'react'
+import { ToolbarProps, View } from 'react-big-calendar'
+
+import { CalendarEvent } from '@/app/admin/types/calendarEvent.type'
+import { Button } from '@/components/Button'
 
 const BigCalendarToolbar = ({
   date,
@@ -15,34 +16,34 @@ const BigCalendarToolbar = ({
   views,
   children,
 }: ToolbarProps<CalendarEvent, object>) => {
-  const availableViews: View[] = Object.values(views) as View[];
+  const availableViews: View[] = Object.values(views) as View[]
 
   const getViewTranslations = (viewName: View) => {
-    if (viewName === "week") {
-      return "Hét";
+    if (viewName === 'week') {
+      return 'Hét'
     }
 
-    if (viewName === "day") {
-      return "Nap";
+    if (viewName === 'day') {
+      return 'Nap'
     }
 
-    if (viewName === "month") {
-      return "Hónap";
+    if (viewName === 'month') {
+      return 'Hónap'
     }
 
-    return localizer.messages[viewName];
-  };
+    return localizer.messages[viewName]
+  }
 
   return (
     <div className="flex items-center justify-between pb-4">
-      <div className="flex items-center justify-strat">
-        <Button size="sm" variant="ghost" onClick={() => onNavigate("PREV")}>
+      <div className="justify-strat flex items-center">
+        <Button size="sm" variant="ghost" onClick={() => onNavigate('PREV')}>
           Előző
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => onNavigate("NEXT")}>
+        <Button size="sm" variant="ghost" onClick={() => onNavigate('NEXT')}>
           Következő
         </Button>
-        <Button size="sm" variant="ghost" onClick={() => onNavigate("TODAY")}>
+        <Button size="sm" variant="ghost" onClick={() => onNavigate('TODAY')}>
           Ma
         </Button>
       </div>
@@ -52,10 +53,10 @@ const BigCalendarToolbar = ({
           <Button
             key={viewName}
             size="sm"
-            variant={view === viewName ? "default" : "ghost"}
+            variant={view === viewName ? 'default' : 'ghost'}
             onClick={() => onView(viewName)}
             // TODO: Add active state
-            className={view === viewName ? "active" : ""}
+            className={view === viewName ? 'active' : ''}
           >
             {getViewTranslations(viewName)}
           </Button>
@@ -63,7 +64,7 @@ const BigCalendarToolbar = ({
       </div>
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default BigCalendarToolbar;
+export default BigCalendarToolbar

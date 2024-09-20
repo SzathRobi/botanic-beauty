@@ -1,19 +1,20 @@
-import { auth } from "@/auth";
-import { Metadata } from "next";
-import { redirect } from "next/navigation";
+import { Metadata } from 'next'
+import { redirect } from 'next/navigation'
+
+import { auth } from '@/auth'
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty Hajszalon| Admin",
-};
+  title: 'Botanic Beauty Hajszalon| Admin',
+}
 
 const AdminPage = async () => {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user) {
-    redirect("/admin/bejelentkezes");
+    redirect('/admin/bejelentkezes')
   }
 
-  redirect("/admin/foglalasok");
-};
+  redirect('/admin/foglalasok')
+}
 
-export default AdminPage;
+export default AdminPage

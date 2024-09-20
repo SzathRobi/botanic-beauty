@@ -1,19 +1,19 @@
-"use client";
+'use client'
 
-import { isSunday, isSameDay } from "date-fns";
-import { DayProps } from "react-day-picker";
+import { isSameDay, isSunday } from 'date-fns'
+import { DayProps } from 'react-day-picker'
 
-import { SelectedDate } from "../types/selectedDate.type";
-import { isSelectedDayDate } from "../utils/isSelectedDayDate";
-import { isPersonSelected } from "../utils/isPersonSelected";
+import { SelectedDate } from '../types/selectedDate.type'
+import { isPersonSelected } from '../utils/isPersonSelected'
+import { isSelectedDayDate } from '../utils/isSelectedDayDate'
 
 type DayComponentProps = {
-  selectedDates: SelectedDate[];
-  day: DayProps;
-  selectedPerson: string;
-  datesAppearingTwice: Date[];
-  handleDayClick: (day: any) => void;
-};
+  selectedDates: SelectedDate[]
+  day: DayProps
+  selectedPerson: string
+  datesAppearingTwice: Date[]
+  handleDayClick: (day: any) => void
+}
 
 const Day = ({
   day,
@@ -22,26 +22,26 @@ const Day = ({
   datesAppearingTwice,
   handleDayClick,
 }: DayComponentProps) => {
-  let color = "";
-  let cursor = "cursor-pointer";
-  let opacity = 1;
+  let color = ''
+  let cursor = 'cursor-pointer'
+  let opacity = 1
 
   if (
     datesAppearingTwice.some((dateAppearingTwice) =>
       isSameDay(dateAppearingTwice, day.date)
     )
   ) {
-    color = "orange";
+    color = 'orange'
   } else if (isSelectedDayDate(selectedDates, selectedPerson, day)) {
-    color = selectedPerson === "Timi" ? "red" : "blue";
+    color = selectedPerson === 'Timi' ? 'red' : 'blue'
   } else if (isSunday(day.date)) {
-    color = "gray";
-    cursor = "cursor-not-allowed";
-    opacity = 0.8;
-  } else if (isPersonSelected(selectedDates, day, "Timi")) {
-    color = "red";
-  } else if (isPersonSelected(selectedDates, day, "nem_Timi")) {
-    color = "blue";
+    color = 'gray'
+    cursor = 'cursor-not-allowed'
+    opacity = 0.8
+  } else if (isPersonSelected(selectedDates, day, 'Timi')) {
+    color = 'red'
+  } else if (isPersonSelected(selectedDates, day, 'nem_Timi')) {
+    color = 'blue'
   }
 
   return (
@@ -51,7 +51,7 @@ const Day = ({
     >
       {day.date.getDate()}
     </div>
-  );
-};
+  )
+}
 
-export default Day;
+export default Day

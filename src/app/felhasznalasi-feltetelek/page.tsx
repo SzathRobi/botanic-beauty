@@ -1,12 +1,13 @@
-import BackgroundBlur from "@/components/BackgroundBlur";
-import Footer from "@/components/Footer";
-import { CONTACT_EMAIL, CONTACT_PHONE } from "@/constants/contact.constants";
-import { Metadata } from "next";
+import { Metadata } from 'next'
+
+import BackgroundBlur from '@/components/BackgroundBlur'
+import Footer from '@/components/Footer'
+import { CONTACT_EMAIL, CONTACT_PHONE } from '@/constants/contact.constants'
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty Hajszalon | Felhasználási feltételek",
-  description: "Botanic Beauty felhasználási feltételek",
-};
+  title: 'Botanic Beauty Hajszalon | Felhasználási feltételek',
+  description: 'Botanic Beauty felhasználási feltételek',
+}
 
 const TermOfUsePage = async () => {
   return (
@@ -14,7 +15,7 @@ const TermOfUsePage = async () => {
       <div className="min-h-screen pt-32">
         <BackgroundBlur className="mx-auto mb-12">
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Felhasználási feltételek
             </h1>
 
@@ -26,7 +27,7 @@ const TermOfUsePage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Szolgáltatás használata
             </h1>
 
@@ -39,7 +40,7 @@ const TermOfUsePage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">Felelősség</h1>
+            <h1 className="mb-4 text-lg font-medium">Felelősség</h1>
 
             <p>
               Mindent megteszünk annak érdekében, hogy az oldalon található
@@ -50,7 +51,7 @@ const TermOfUsePage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Felhasználói kötelezettségek
             </h1>
 
@@ -62,7 +63,7 @@ const TermOfUsePage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">Kapcsolat</h1>
+            <h1 className="mb-4 text-lg font-medium">Kapcsolat</h1>
 
             <p>
               Ha bármilyen kérdése vagy észrevétele van a felhasználási
@@ -76,7 +77,7 @@ const TermOfUsePage = async () => {
 
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default TermOfUsePage;
+export default TermOfUsePage

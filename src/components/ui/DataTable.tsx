@@ -1,13 +1,16 @@
-"use client";
+'use client'
 
 import {
   ColumnDef,
-  SortingState,
   flexRender,
   getCoreRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
-} from "@tanstack/react-table";
+} from '@tanstack/react-table'
+import { useState } from 'react'
+
+import { Button } from '../Button'
 import {
   Table,
   TableBody,
@@ -15,27 +18,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "./Table";
-
-import { useState } from "react";
-import { Button } from "../Button";
+} from './Table'
 
 interface DataTableProps<T> {
-  data: T[];
-  columns: ColumnDef<T>[];
-  noDataText?: string;
-  onDeleteSelectedRows?: (data: any) => Promise<void>;
+  data: T[]
+  columns: ColumnDef<T>[]
+  noDataText?: string
+  onDeleteSelectedRows?: (data: any) => Promise<void>
 }
 
 export function DataTable<T>({
   data,
   columns,
-  noDataText = "Nincs adat",
+  noDataText = 'Nincs adat',
   onDeleteSelectedRows,
 }: DataTableProps<T>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
-  const [rowSelection, setRowSelection] = useState({});
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [sorting, setSorting] = useState<SortingState>([])
+  const [rowSelection, setRowSelection] = useState({})
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false)
 
   const table = useReactTable({
     data,
@@ -48,24 +48,24 @@ export function DataTable<T>({
       sorting,
       rowSelection,
     },
-  });
+  })
 
-  const selectedRowIndexes = Object.keys(rowSelection);
+  const selectedRowIndexes = Object.keys(rowSelection)
   const extendedRowSelectionData = data.filter((_, index) =>
     selectedRowIndexes.includes(index.toString())
-  );
+  )
 
   const deleteAllSelectedRows = () => {
-    setIsDeleteLoading(true);
+    setIsDeleteLoading(true)
     !!onDeleteSelectedRows &&
       onDeleteSelectedRows(extendedRowSelectionData)
         .then(() => {
-          setRowSelection({});
+          setRowSelection({})
         })
         .finally(() => {
-          setIsDeleteLoading(false);
-        });
-  };
+          setIsDeleteLoading(false)
+        })
+  }
 
   return (
     <div>
@@ -94,7 +94,7 @@ export function DataTable<T>({
                             header.getContext()
                           )}
                     </TableHead>
-                  );
+                  )
                 })}
               </TableRow>
             ))}
@@ -104,7 +104,7 @@ export function DataTable<T>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={row.getIsSelected() && 'selected'}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
@@ -130,5 +130,5 @@ export function DataTable<T>({
         </Table>
       </div>
     </div>
-  );
+  )
 }

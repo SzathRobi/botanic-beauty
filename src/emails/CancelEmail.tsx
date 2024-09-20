@@ -1,23 +1,24 @@
-import { CONTACT_ADDRESS, CONTACT_PHONE } from "@/constants/contact.constants";
-import { Booking } from "@prisma/client";
+import { Booking } from '@prisma/client'
 import {
   Body,
-  Container,
   Column,
+  Container,
   Head,
   Heading,
   Html,
   Img,
+  Link,
   Preview,
   Row,
   Section,
   Text,
-  Link,
-} from "@react-email/components";
-import * as React from "react";
+} from '@react-email/components'
+import * as React from 'react'
+
+import { CONTACT_ADDRESS, CONTACT_PHONE } from '@/constants/contact.constants'
 
 interface CancelEmailProps {
-  booking: Booking;
+  booking: Booking
 }
 
 export const CancelEmail = ({ booking }: CancelEmailProps) => {
@@ -36,23 +37,23 @@ export const CancelEmail = ({ booking }: CancelEmailProps) => {
               />
             </Row>
 
-            <Row style={{ ...boxInfos, paddingBottom: "0" }}>
+            <Row style={{ ...boxInfos, paddingBottom: '0' }}>
               <Column>
                 <Heading
                   style={{
                     fontSize: 24,
-                    fontWeight: "normal",
-                    textAlign: "left",
+                    fontWeight: 'normal',
+                    textAlign: 'left',
                   }}
                 >
                   Kedves {booking.contactInfo.name},
                 </Heading>
 
                 <Text style={{ marginBottom: 48 }}>
-                  A(z){" "}
+                  A(z){' '}
                   <b>
                     {booking.selectedDate} {booking.selectedTimeSlot}
-                  </b>{" "}
+                  </b>{' '}
                   -kor lévő időpontodat töröltük.
                 </Text>
 
@@ -66,55 +67,55 @@ export const CancelEmail = ({ booking }: CancelEmailProps) => {
 
           <Text
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               fontSize: 12,
-              color: "rgb(0,0,0, 0.7)",
+              color: 'rgb(0,0,0, 0.7)',
             }}
           >
-            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{" "}
+            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{' '}
             <Link href="https://www.botanic-beauty.hu">
               www.botanic-beauty.hu
-            </Link>{" "}
+            </Link>{' '}
             | {CONTACT_PHONE}
           </Text>
         </Container>
       </Body>
     </Html>
-  );
-};
+  )
+}
 
 CancelEmail.PreviewProps = {
   booking: {
     contactInfo: {
-      name: "Omamori Himari",
+      name: 'Omamori Himari',
     },
     service: {
-      name: "Tőfestés",
+      name: 'Tőfestés',
     },
 
-    selectedDate: "2022-10-10",
-    selectedTimeSlot: "10:00 - 11:00",
+    selectedDate: '2022-10-10',
+    selectedTimeSlot: '10:00 - 11:00',
   },
-} as CancelEmailProps;
+} as CancelEmailProps
 
-export default CancelEmail;
+export default CancelEmail
 
 const main = {
-  backgroundColor: "#fff",
+  backgroundColor: '#fff',
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-};
+}
 
 const content = {
-  border: "1px solid rgb(0,0,0, 0.1)",
-  borderRadius: "3px",
-  overflow: "hidden",
-};
+  border: '1px solid rgb(0,0,0, 0.1)',
+  borderRadius: '3px',
+  overflow: 'hidden',
+}
 
 const image = {
-  maxWidth: "100%",
-};
+  maxWidth: '100%',
+}
 
 const boxInfos = {
-  padding: "20px",
-};
+  padding: '20px',
+}

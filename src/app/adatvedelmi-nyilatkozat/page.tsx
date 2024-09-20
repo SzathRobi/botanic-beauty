@@ -1,12 +1,13 @@
-import BackgroundBlur from "@/components/BackgroundBlur";
-import Footer from "@/components/Footer";
-import { CONTACT_EMAIL, CONTACT_PHONE } from "@/constants/contact.constants";
-import { Metadata } from "next";
+import { Metadata } from 'next'
+
+import BackgroundBlur from '@/components/BackgroundBlur'
+import Footer from '@/components/Footer'
+import { CONTACT_EMAIL, CONTACT_PHONE } from '@/constants/contact.constants'
 
 export const metadata: Metadata = {
-  title: "Botanic Beauty Hajszalon | Adatvédelmi nyilatkozat",
-  description: "Botanic Beauty adatvédelmi nyilatkozat",
-};
+  title: 'Botanic Beauty Hajszalon | Adatvédelmi nyilatkozat',
+  description: 'Botanic Beauty adatvédelmi nyilatkozat',
+}
 
 const PrivacyPolicyPage = async () => {
   return (
@@ -14,7 +15,7 @@ const PrivacyPolicyPage = async () => {
       <div className="min-h-screen pt-32">
         <BackgroundBlur className="mx-auto mb-12">
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Adatvedelmi nyilatkozat
             </h1>
 
@@ -27,7 +28,7 @@ const PrivacyPolicyPage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Milyen adatokat gyűjtünk?
             </h1>
 
@@ -36,7 +37,7 @@ const PrivacyPolicyPage = async () => {
               adatokat gyűjtjük:
             </p>
 
-            <ul className="list-disc list-inside">
+            <ul className="list-inside list-disc">
               <li>Név</li>
 
               <li>E-mail cím</li>
@@ -46,13 +47,13 @@ const PrivacyPolicyPage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Miért gyűjtjük ezeket az adatokat?
             </h1>
 
             <p>Az adatokat az alábbi célokra használjuk fel:</p>
 
-            <ul className="list-disc list-inside">
+            <ul className="list-inside list-disc">
               <li>Időpontfoglalás kezelése</li>
 
               <li>Értesítések küldése a foglalás állapotáról</li>
@@ -62,7 +63,7 @@ const PrivacyPolicyPage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Hogyan tároljuk az adatokat?
             </h1>
 
@@ -74,7 +75,7 @@ const PrivacyPolicyPage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Ki fér hozzá az adatokhoz?
             </h1>
 
@@ -85,7 +86,7 @@ const PrivacyPolicyPage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">
+            <h1 className="mb-4 text-lg font-medium">
               Hogyan védjük az adatokat?
             </h1>
 
@@ -96,7 +97,7 @@ const PrivacyPolicyPage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">Felhasználói jogok</h1>
+            <h1 className="mb-4 text-lg font-medium">Felhasználói jogok</h1>
 
             <p>
               Önnek jogában áll hozzáférni az Önre vonatkozó személyes
@@ -109,7 +110,7 @@ const PrivacyPolicyPage = async () => {
           </div>
 
           <div className="mb-12">
-            <h1 className="text-lg font-medium mb-4">Kapcsolat</h1>
+            <h1 className="mb-4 text-lg font-medium">Kapcsolat</h1>
 
             <p>
               Ha bármilyen kérdése van az adatvédelmi nyilatkozattal
@@ -122,7 +123,7 @@ const PrivacyPolicyPage = async () => {
 
       <Footer />
     </>
-  );
-};
+  )
+}
 
-export default PrivacyPolicyPage;
+export default PrivacyPolicyPage

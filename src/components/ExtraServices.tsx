@@ -1,29 +1,29 @@
-import React from "react";
-import FadeInView from "./FadeInView";
-import Title from "./Title";
-import BackgroundBlur from "./BackgroundBlur";
-import { CalendarCheck, Gem, PawPrint, Vegan } from "lucide-react";
+import { CalendarCheck, Gem, PawPrint, Vegan } from 'lucide-react'
+import React from 'react'
+
+import BackgroundBlur from './BackgroundBlur'
+import FadeInView from './FadeInView'
 
 type ServiceCardProps = {
-  icon: any;
-  title: string;
-};
+  icon: any
+  title: string
+}
 
 const ServiceCard = ({ icon, title }: ServiceCardProps) => {
   return (
-    <div className="min-w-max flex flex-col items-center justify-center gap-4">
+    <div className="flex min-w-max flex-col items-center justify-center gap-4">
       <div>{icon}</div>
       <h3 className="min-w-max">{title}</h3>
     </div>
-  );
-};
+  )
+}
 
 const ExtraServices = () => {
   return (
-    <section className="px-2 sm:px-0 min-h-fit mb-40 grid place-items-center">
+    <section className="mb-40 grid min-h-fit place-items-center px-2 sm:px-0">
       <FadeInView>
-        <BackgroundBlur className="min-w-[300px] mx-auto space-y-24">
-          <div className="flex flex-col md:flex-row justify-between gap-10 lg:gap-28">
+        <BackgroundBlur className="mx-auto min-w-[300px] space-y-24">
+          <div className="flex flex-col justify-between gap-10 md:flex-row lg:gap-28">
             <FadeInView delay={0}>
               <ServiceCard
                 icon={<CalendarCheck size={64} />}
@@ -49,7 +49,7 @@ const ExtraServices = () => {
         </BackgroundBlur>
       </FadeInView>
     </section>
-  );
-};
+  )
+}
 
-export default ExtraServices;
+export default ExtraServices

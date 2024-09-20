@@ -1,53 +1,55 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
+import './AvailableDatesForm.override.css'
+
+import { Booking, Schedule, TOffDay, TService } from '@prisma/client'
 import {
   addDays,
+  addMinutes,
   isBefore,
-  isSaturday,
   isSameDay,
+  isSaturday,
   isSunday,
   isToday,
-  addMinutes,
   setHours,
   setMinutes,
   startOfDay,
-} from "date-fns";
+} from 'date-fns'
+import { hu } from 'date-fns/locale'
+import { useEffect, useState } from 'react'
+import { DayPicker } from 'react-day-picker'
 
-import { DayPicker } from "react-day-picker";
-import TimeSlots from "./TimeSlots";
-import { Booking, TOffDay, Schedule, TService } from "@prisma/client";
+import { Button } from '@/components/Button'
+
 import {
   CLOSING_HOUR,
   LAST_BOOKING_HOUR,
   OPENING_HOUR,
-} from "../constants/openingHours.constants";
-import { Button } from "@/components/Button";
-import { hu } from "date-fns/locale";
-import "./AvailableDatesForm.override.css";
+} from '../constants/openingHours.constants'
+import TimeSlots from './TimeSlots'
 
 type AvailableDatesFormProps = {
-  bookings: Booking[];
-  selectedDate: Date;
-  setSelectedDate: (date: Date) => void;
-  selectedTimeSlot: string | null;
-  setSelectedTimeSlot: (timeSlot: string | null) => void;
-  selectedService: TService;
-  selectedExtraService: TService | null;
-  selectedHairdresser: "Timi" | "nem_Timi";
-  schedule: Schedule;
-  incrementActiveStep: () => void;
-  decrementActiveStep: () => void;
-};
+  bookings: Booking[]
+  selectedDate: Date
+  setSelectedDate: (date: Date) => void
+  selectedTimeSlot: string | null
+  setSelectedTimeSlot: (timeSlot: string | null) => void
+  selectedService: TService
+  selectedExtraService: TService | null
+  selectedHairdresser: 'Timi' | 'nem_Timi'
+  schedule: Schedule
+  incrementActiveStep: () => void
+  decrementActiveStep: () => void
+}
 
 const roundUpToNearestQuarter = (date: Date): Date => {
-  const minutes = date.getMinutes();
-  const remainder = minutes % 15;
+  const minutes = date.getMinutes()
+  const remainder = minutes % 15
   if (remainder !== 0) {
-    date = addMinutes(date, 15 - remainder);
+    date = addMinutes(date, 15 - remainder)
   }
-  return date;
-};
+  return date
+}
 
 const AvailableDatesForm = ({
   bookings,
@@ -62,32 +64,32 @@ const AvailableDatesForm = ({
   decrementActiveStep,
   incrementActiveStep,
 }: AvailableDatesFormProps) => {
-  const now = new Date();
-  const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120));
+  const now = new Date()
+  const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120))
   const serviceDuration = selectedExtraService
     ? selectedExtraService.duration + selectedService.duration
-    : selectedService.duration;
+    : selectedService.duration
 
   const [
     datesWithNoTimeForSelectedService,
     setDatesWithNoTimeForSelectedService,
-  ] = useState<Date[]>([]);
+  ] = useState<Date[]>([])
 
   const hairdresserOffDays: Date[] = schedule.offDays
     .filter((offDay: TOffDay) => offDay.person === selectedHairdresser)
-    .map((offDay: TOffDay) => offDay.date);
-  const isClosedForToday = selectedDate.getHours() >= LAST_BOOKING_HOUR;
+    .map((offDay: TOffDay) => offDay.date)
+  const isClosedForToday = selectedDate.getHours() >= LAST_BOOKING_HOUR
 
-  const [isClosedDay, setIsClosedDay] = useState<boolean>(false);
+  const [isClosedDay, setIsClosedDay] = useState<boolean>(false)
 
   const handleSelect = (day: Date | undefined) => {
     if (day) {
-      setSelectedDate(day);
+      setSelectedDate(day)
     }
-  };
+  }
 
   const getFirstAvailableDate = (): Date => {
-    let firstAvailableDate = selectedDate;
+    let firstAvailableDate = selectedDate
 
     while (
       isSunday(firstAvailableDate) ||
@@ -97,32 +99,32 @@ const AvailableDatesForm = ({
           (isClosedForToday && isToday(firstAvailableDate))
       )
     ) {
-      firstAvailableDate = addDays(firstAvailableDate, 1);
+      firstAvailableDate = addDays(firstAvailableDate, 1)
     }
 
-    return firstAvailableDate;
-  };
+    return firstAvailableDate
+  }
 
   useEffect(() => {
     if (isClosedDay) {
-      setSelectedTimeSlot(null);
+      setSelectedTimeSlot(null)
     }
-  }, [isClosedDay]);
+  }, [isClosedDay])
 
   useEffect(() => {
-    setSelectedDate(getFirstAvailableDate());
-  }, []);
+    setSelectedDate(getFirstAvailableDate())
+  }, [])
 
   const getOpeningHour = () => {
-    const date = startOfDay(selectedDate);
-    return setMinutes(setHours(date, OPENING_HOUR), 0);
-  };
+    const date = startOfDay(selectedDate)
+    return setMinutes(setHours(date, OPENING_HOUR), 0)
+  }
 
   return (
     <div className="mb-8">
-      <div className="mb-12 flex flex-col md:flex-row justify-evenly items-start gap-4">
+      <div className="mb-12 flex flex-col items-start justify-evenly gap-4 md:flex-row">
         <DayPicker
-          className="text-sm sm:text-base md:text-lg dayPicker"
+          className="dayPicker text-sm sm:text-base md:text-lg"
           mode="single"
           selected={selectedDate}
           // TODO / high: change to selectedDate
@@ -174,7 +176,7 @@ const AvailableDatesForm = ({
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default AvailableDatesForm;
+export default AvailableDatesForm

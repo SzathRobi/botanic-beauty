@@ -1,7 +1,7 @@
-import { Booking } from "@prisma/client";
-import { format } from "date-fns";
+import { Booking } from '@prisma/client'
+import { format } from 'date-fns'
 
-import { CalendarEvent } from "../types/calendarEvent.type";
+import { CalendarEvent } from '../types/calendarEvent.type'
 
 export const mapEventToBooking = ({
   contactInfo,
@@ -19,14 +19,14 @@ export const mapEventToBooking = ({
       start!.getFullYear(),
       start!.getMonth(),
       start!.getDate()
-    )?.toISOString() ?? "",
+    )?.toISOString() ?? '',
   contactInfo: contactInfo,
   hairdresser: hairdresser,
   service,
   extraService,
   selectedTimeSlot:
-    `${format(start!, "HH:mm")} - ${format(end!, "HH:mm")}` ?? "",
+    `${format(start!, 'HH:mm')} - ${format(end!, 'HH:mm')}` ?? '',
   id,
   createdAt: createdAt,
   updatedAt: updatedAt,
-});
+})

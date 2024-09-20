@@ -1,32 +1,32 @@
-import { getBookings } from "@/actions/booking";
+import 'react-big-calendar/lib/css/react-big-calendar.css'
 
-import BigCalendar from "./components/bigCalendar/BigCalendar";
-import { mapBookingToEvent } from "../mappers/mapBookingToEvent.mapper";
+import { redirect } from 'next/navigation'
 
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import BigCalendarContainer from "./components/bigCalendarContainer/BigCalendarContainer";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { getSchedule } from "@/actions/schedule";
-import BackgroundBlur from "@/components/BackgroundBlur";
+import { getBookings } from '@/actions/booking'
+import { getSchedule } from '@/actions/schedule'
+import { auth } from '@/auth'
+import BackgroundBlur from '@/components/BackgroundBlur'
+
+import { mapBookingToEvent } from '../mappers/mapBookingToEvent.mapper'
+import BigCalendarContainer from './components/bigCalendarContainer/BigCalendarContainer'
 
 const BookingPage = async () => {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user) {
-    redirect("/admin/bejelentkezes");
+    redirect('/admin/bejelentkezes')
   }
 
-  const schedule = await getSchedule();
+  const schedule = await getSchedule()
 
-  const bookings = await getBookings();
+  const bookings = await getBookings()
 
-  const calendarEvents = bookings?.map(mapBookingToEvent) ?? [];
+  const calendarEvents = bookings?.map(mapBookingToEvent) ?? []
 
   return (
-    <div className="w-full min-h-screen">
-      <BackgroundBlur className="!max-w-full mb-8">
-        <h1 className="text-3xl mb-8">Foglalások</h1>
+    <div className="min-h-screen w-full">
+      <BackgroundBlur className="mb-8 !max-w-full">
+        <h1 className="mb-8 text-3xl">Foglalások</h1>
 
         <BigCalendarContainer
           events={calendarEvents}
@@ -34,7 +34,7 @@ const BookingPage = async () => {
         />
       </BackgroundBlur>
     </div>
-  );
-};
+  )
+}
 
-export default BookingPage;
+export default BookingPage

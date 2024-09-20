@@ -1,16 +1,15 @@
-import Image from "next/image";
-import BackgroundBlur from "./BackgroundBlur";
-import Title from "./Title";
-import FadeInView from "./FadeInView";
+import BackgroundBlur from './BackgroundBlur'
+import FadeInView from './FadeInView'
+import Title from './Title'
 
 const About = () => {
   return (
-    <section className="px-2 sm:px-0 mb-40">
+    <section className="mb-40 px-2 sm:px-0">
       <FadeInView>
         <Title title="Szalonról" />
 
         <BackgroundBlur className="mx-auto space-y-24">
-          <div className="flex gap-8 flex-col md:flex-row">
+          <div className="flex flex-col gap-8 md:flex-row">
             <p className="text-lg md:text-center">
               Timi vagyok, a szalon tulajdonosa, és nagy szenvedéllyel törekszem
               arra, hogy együtt alkossuk meg a vendéggel a tökéletes frizurát. A
@@ -31,7 +30,7 @@ const About = () => {
         </BackgroundBlur>
       </FadeInView>
     </section>
-  );
-};
+  )
+}
 
-export default About;
+export default About

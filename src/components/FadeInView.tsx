@@ -1,12 +1,12 @@
-"use client";
+'use client'
 
-import { motion } from "framer-motion";
-import { ReactNode } from "react";
+import { motion } from 'framer-motion'
+import { ReactNode } from 'react'
 
 type FadeInViewProps = {
-  children: ReactNode;
-  delay?: number;
-};
+  children: ReactNode
+  delay?: number
+}
 
 const FadeInView = ({ children, delay = 0 }: FadeInViewProps) => {
   return (
@@ -14,11 +14,11 @@ const FadeInView = ({ children, delay = 0 }: FadeInViewProps) => {
       initial={{ opacity: 0, y: 32 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ ease: "easeInOut", duration: 0.75, delay }}
+      transition={{ ease: 'easeInOut', duration: 0.75, delay }}
     >
       {children}
     </motion.div>
-  );
-};
+  )
+}
 
-export default FadeInView;
+export default FadeInView

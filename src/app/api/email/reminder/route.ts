@@ -1,29 +1,30 @@
-import { CONTACT_EMAIL, EMAIL_SENDER } from "@/constants/contact.constants";
-import ReminderEmail from "@/emails/ReminderEmail";
-import { NextRequest, NextResponse } from "next/server";
-import { Resend } from "resend";
+import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+import { CONTACT_EMAIL, EMAIL_SENDER } from '@/constants/contact.constants'
+import ReminderEmail from '@/emails/ReminderEmail'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: NextRequest) {
-  const { booking } = await request.json();
+  const { booking } = await request.json()
 
   if (!booking) {
-    return NextResponse.json({ error: true, message: "Invalid data" });
+    return NextResponse.json({ error: true, message: 'Invalid data' })
   }
 
   try {
     await resend.emails.send({
       from: EMAIL_SENDER,
       to: booking.contactInfo.email,
-      subject: "Emlékeztető",
+      subject: 'Emlékeztető',
       react: ReminderEmail({ booking }),
       reply_to: CONTACT_EMAIL,
-    });
+    })
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true })
   } catch (error) {
-    console.log(error);
-    return NextResponse.json({ error: true, message: error }, { status: 500 });
+    console.log(error)
+    return NextResponse.json({ error: true, message: error }, { status: 500 })
   }
 }

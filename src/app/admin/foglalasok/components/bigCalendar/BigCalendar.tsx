@@ -1,41 +1,41 @@
-"use client";
+'use client'
 
-import { isSaturday, isSunday } from "date-fns";
-import moment from "moment";
-import { Dispatch, SetStateAction, useState } from "react";
+import 'moment/locale/hu'
+import './calendar.css'
+
+import { TOffDay } from '@prisma/client'
+import { isSaturday, isSunday } from 'date-fns'
+import moment from 'moment'
+import { Dispatch, SetStateAction, useState } from 'react'
 import {
   Calendar,
   EventProps,
+  momentLocalizer,
   ToolbarProps,
   View,
   Views,
-  momentLocalizer,
-} from "react-big-calendar";
+} from 'react-big-calendar'
 import withDragAndDrop, {
   EventInteractionArgs,
-} from "react-big-calendar/lib/addons/dragAndDrop";
+} from 'react-big-calendar/lib/addons/dragAndDrop'
 
-import { CalendarEvent } from "../../../types/calendarEvent.type";
-import BigCalendarDay from "../bigCalendarDay/BigalendarDay";
+import { CalendarEvent } from '../../../types/calendarEvent.type'
+import { isOffDayOfNemTimi, isOffDayOfTimi } from '../../utils/offDay'
+import { SelectedHairdresser } from '../bigCalendarContainer/BigCalendarContainer'
+import BigCalendarDay from '../bigCalendarDay/BigalendarDay'
+import BigCalendarToolbar from '../bigCalendarToolbar/BigCalendarToolbar'
 
-import "moment/locale/hu";
-import "./calendar.css";
-import { TOffDay } from "@prisma/client";
-import { SelectedHairdresser } from "../bigCalendarContainer/BigCalendarContainer";
-import { isOffDayOfNemTimi, isOffDayOfTimi } from "../../utils/offDay";
-import BigCalendarToolbar from "../bigCalendarToolbar/BigCalendarToolbar";
-
-const localizer = momentLocalizer(moment);
+const localizer = momentLocalizer(moment)
 
 type BigCalendarProps = {
-  calendarEvents: CalendarEvent[];
-  onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void;
-  offDays: TOffDay[];
-  selectedHairdresser: SelectedHairdresser;
-  setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
-};
+  calendarEvents: CalendarEvent[]
+  onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void
+  offDays: TOffDay[]
+  selectedHairdresser: SelectedHairdresser
+  setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>
+}
 
-const DndCalendar = withDragAndDrop<CalendarEvent>(Calendar);
+const DndCalendar = withDragAndDrop<CalendarEvent>(Calendar)
 
 const BigCalendar = ({
   calendarEvents,
@@ -44,22 +44,22 @@ const BigCalendar = ({
   selectedHairdresser,
   setCalendarEvents,
 }: BigCalendarProps) => {
-  const [view, setView] = useState<View>(Views.WEEK);
-  const [date, setDate] = useState(new Date());
+  const [view, setView] = useState<View>(Views.WEEK)
+  const [date, setDate] = useState(new Date())
 
-  const today = new Date();
+  const today = new Date()
   const minCalendarStartTime = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
     8
-  );
+  )
   const maxCalendarStartTime = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
     19
-  );
+  )
 
   const eventStyleGetter = (calendarEvent: CalendarEvent) => {
     if (
@@ -68,78 +68,78 @@ const BigCalendar = ({
     ) {
       return {
         style: {
-          backgroundColor: "lightgray",
+          backgroundColor: 'lightgray',
           opacity: 0.5,
-          cursor: "not-allowed",
+          cursor: 'not-allowed',
         },
-      };
+      }
     }
 
     if (
-      calendarEvent.hairdresser === "Timi" &&
+      calendarEvent.hairdresser === 'Timi' &&
       isOffDayOfTimi(calendarEvent.start!, offDays)
     ) {
       return {
         style: {
-          cursor: "not-allowed",
+          cursor: 'not-allowed',
         },
-      };
+      }
     }
 
     if (
-      calendarEvent.hairdresser === "nem_Timi" &&
+      calendarEvent.hairdresser === 'nem_Timi' &&
       isOffDayOfNemTimi(calendarEvent.start!, offDays)
     ) {
       return {
         style: {
-          cursor: "not-allowed",
+          cursor: 'not-allowed',
         },
-      };
+      }
     }
 
-    return {};
-  };
+    return {}
+  }
 
   const dayStyleGetter = (date: Date) => {
     if (isSunday(date) || isSaturday(date)) {
       return {
         style: {
-          backgroundColor: "lightgray",
+          backgroundColor: 'lightgray',
           opacity: 0.5,
         },
-      };
+      }
     }
 
     if (
       isOffDayOfNemTimi(date, offDays) &&
       isOffDayOfTimi(date, offDays) &&
-      selectedHairdresser === "all"
+      selectedHairdresser === 'all'
     ) {
       return {
         style: {
-          backgroundColor: "#ffa60090",
+          backgroundColor: '#ffa60090',
         },
-      };
+      }
     }
 
-    if (isOffDayOfTimi(date, offDays) && selectedHairdresser !== "nem_Timi") {
+    if (isOffDayOfTimi(date, offDays) && selectedHairdresser !== 'nem_Timi') {
       return {
         style: {
-          backgroundColor: "#ff000050",
+          backgroundColor: '#ff000050',
         },
-      };
+      }
     }
 
-    if (isOffDayOfNemTimi(date, offDays) && selectedHairdresser !== "Timi") {
+    if (isOffDayOfNemTimi(date, offDays) && selectedHairdresser !== 'Timi') {
       return {
         style: {
-          backgroundColor: "#0000ff90",
+          backgroundColor: '#0000ff90',
         },
-      };
+      }
     }
 
-    return {};
-  };
+    return {}
+  }
 
   return (
     <div>
@@ -165,18 +165,18 @@ const BigCalendar = ({
         defaultView={view}
         view={view}
         date={date}
-        className="min-h-[80vh] bg-black/60 w-[200vw] md:w-full"
+        className="min-h-[80vh] w-[200vw] bg-black/60 md:w-full"
         eventPropGetter={eventStyleGetter}
         dayPropGetter={dayStyleGetter}
         draggableAccessor={() => true}
         onEventDrop={onEventDrop}
         onNavigate={(date) => {
-          setDate(new Date(date));
+          setDate(new Date(date))
         }}
         onView={(view) => setView(view)}
       />
     </div>
-  );
-};
+  )
+}
 
-export default BigCalendar;
+export default BigCalendar
