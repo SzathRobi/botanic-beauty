@@ -31,7 +31,7 @@ const STYLING_SERVICES: TService[] = [
     price: 6000,
     duration: 30,
   },
-]
+] as const
 
 const CUTTING_SERVICES: TService[] = [
   {
@@ -90,7 +90,7 @@ const CUTTING_SERVICES: TService[] = [
     price: 1800,
     duration: 20,
   },
-]
+] as const
 
 const COLORING_SERVICES: TService[] = [
   {
@@ -156,13 +156,13 @@ const COLORING_SERVICES: TService[] = [
     price: 25000,
     duration: 180,
   },
-]
+] as const
 
 export const SERVICES: TService[] = [
   ...STYLING_SERVICES,
   ...CUTTING_SERVICES,
   ...COLORING_SERVICES,
-]
+] as const
 
 export const SERVICE_GROUPS: ServiceGroup[] = [
   {
@@ -178,7 +178,7 @@ export const SERVICE_GROUPS: ServiceGroup[] = [
     services: COLORING_SERVICES,
     pricePostfix: '(+anyag)',
   },
-]
+] as const
 
 export const EXTRA_SERVICE: TService = {
   id: '21',
@@ -186,4 +186,6 @@ export const EXTRA_SERVICE: TService = {
   name: 'Hajvágás festéshez',
   price: 0,
   duration: 30,
-}
+} as const
+
+export const SERVICE_NAMES = SERVICES.map((service) => service.name)
