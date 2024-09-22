@@ -1,25 +1,27 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import Schedules from "./components/Schedules";
-import { getSchedule } from "@/actions/schedule";
-import BackgroundBlur from "@/components/BackgroundBlur";
+import { redirect } from 'next/navigation'
+
+import { getSchedule } from '@/actions/schedule'
+import { auth } from '@/auth'
+import BackgroundBlur from '@/components/BackgroundBlur'
+
+import Schedules from './components/Schedules'
 
 const AdminHairdresserSchedulePage = async () => {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user) {
-    redirect("/admin/bejelentkezes");
+    redirect('/admin/bejelentkezes')
   }
 
-  const schedule = await getSchedule();
+  const schedule = await getSchedule()
 
   return (
-    <div className="w-full min-h-[calc(100vh-80px)] lg:pt-14">
-      <BackgroundBlur className="!max-w-fit mx-auto">
+    <div className="min-h-[calc(100vh-80px)] w-full lg:pt-14">
+      <BackgroundBlur className="mx-auto !max-w-fit">
         <Schedules schedule={schedule} />
       </BackgroundBlur>
     </div>
-  );
-};
+  )
+}
 
-export default AdminHairdresserSchedulePage;
+export default AdminHairdresserSchedulePage

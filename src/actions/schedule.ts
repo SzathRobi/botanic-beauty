@@ -1,7 +1,7 @@
-"use server";
+'use server'
 
-import { SelectedDate } from "@/app/admin/beosztas/types/selectedDate.type";
-import prisma from "@/lib/db";
+import { SelectedDate } from '@/app/admin/beosztas/types/selectedDate.type'
+import prisma from '@/lib/db'
 
 export const addSchedule = async (schedule: SelectedDate[]) => {
   await prisma.schedule.create({
@@ -12,8 +12,8 @@ export const addSchedule = async (schedule: SelectedDate[]) => {
         displayMonth: date.displayMonth,
       })),
     },
-  });
-};
+  })
+}
 
 export const modifySchedule = async (
   schedule: SelectedDate[],
@@ -30,14 +30,14 @@ export const modifySchedule = async (
         displayMonth: date.displayMonth,
       })),
     },
-  });
-};
+  })
+}
 
 export const getSchedule = async () => {
   try {
-    return await prisma.schedule.findFirst();
+    return await prisma.schedule.findFirst()
   } catch (error: any) {
-    console.log({ error });
-    throw new Error(error.message || error);
+    console.log({ error })
+    throw new Error(error.message || error)
   }
-};
+}

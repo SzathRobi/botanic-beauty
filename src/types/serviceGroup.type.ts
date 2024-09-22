@@ -1,7 +1,7 @@
-import { TService } from "@prisma/client";
+import { TService } from '@prisma/client'
 
 export type ServiceGroup = {
-  name: string;
-  services: TService[];
-  pricePostfix?: string;
-};
+  name: string
+  services: TService[]
+  pricePostfix?: string
+}

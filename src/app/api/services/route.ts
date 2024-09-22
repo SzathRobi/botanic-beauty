@@ -1,9 +1,7 @@
-import { serviceFormSchema } from "@/app/admin/szolgaltatasok/schemas/serviceForm.schema";
-import prisma from "@/lib/db";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server'
 
 export async function GET() {
-  return NextResponse.json({ success: true, message: "success" });
+  return NextResponse.json({ success: true, message: 'success' })
 
   //   const services = await prisma.service.findMany();
   //   return NextResponse.json(services);

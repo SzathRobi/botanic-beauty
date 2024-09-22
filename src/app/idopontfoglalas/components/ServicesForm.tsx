@@ -1,20 +1,22 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/Button";
-import ServiceCard from "./ServiceCard";
-import { TService } from "@prisma/client";
-import { SERVICES } from "@/constants/services.constants";
+import { TService } from '@prisma/client'
+
+import { Button } from '@/components/Button'
+import { SERVICES } from '@/constants/services.constants'
+
+import ServiceCard from './ServiceCard'
 
 type ServiceFormProps = {
-  selectedDate: Date;
-  setSelectedDate: (date: Date) => void;
-  selectedTimeSlot: string | null;
-  setSelectedTimeSlot: (time: string | null) => void;
-  selectService: (service: TService) => void;
-  selectedService: TService | null;
-  incrementActiveStep: () => void;
-  selectExtraService: (service: TService | null) => void;
-};
+  selectedDate: Date
+  setSelectedDate: (date: Date) => void
+  selectedTimeSlot: string | null
+  setSelectedTimeSlot: (time: string | null) => void
+  selectService: (service: TService) => void
+  selectedService: TService | null
+  incrementActiveStep: () => void
+  selectExtraService: (service: TService | null) => void
+}
 
 const ServicesForm = ({
   selectedDate,
@@ -27,7 +29,7 @@ const ServicesForm = ({
   selectExtraService,
 }: ServiceFormProps) => {
   return (
-    <div className="flex-1 flex flex-col">
+    <div className="flex flex-1 flex-col">
       <div className="mb-12 flex-1">
         {SERVICES.map((service, index) => (
           <ServiceCard
@@ -51,7 +53,7 @@ const ServicesForm = ({
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ServicesForm;
+export default ServicesForm

@@ -1,11 +1,12 @@
-import prisma from "@/lib/db";
-import { Booking } from "@prisma/client";
+import { Booking } from '@prisma/client'
+
+import prisma from '@/lib/db'
 
 export const createBooking = async (booking: Booking) => {
   return await prisma.booking.create({
     data: booking,
-  });
-};
+  })
+}
 
 export const modifyBooking = async (booking: Booking) => {
   return await prisma.booking.update({
@@ -13,14 +14,14 @@ export const modifyBooking = async (booking: Booking) => {
       id: booking.id,
     },
     data: booking,
-  });
-};
+  })
+}
 
 export const getBookings = async () => {
   try {
-    return await prisma.booking.findMany();
+    return await prisma.booking.findMany()
   } catch (error: any) {
-    console.log({ error });
-    throw new Error(error.message || error);
+    console.log({ error })
+    throw new Error(error.message || error)
   }
-};
+}

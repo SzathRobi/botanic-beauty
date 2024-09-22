@@ -1,9 +1,12 @@
-"use client";
+'use client'
 
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { serviceFormSchema } from "../schemas/serviceForm.schema";
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { Button } from '@/components/Button'
+import { DialogClose } from '@/components/ui/Dialog'
 import {
   Form,
   FormControl,
@@ -11,64 +14,63 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/Form";
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/Button";
-import { DialogClose } from "@/components/ui/Dialog";
-import { useState } from "react";
+} from '@/components/ui/Form'
+import { Input } from '@/components/ui/Input'
+
+import { serviceFormSchema } from '../schemas/serviceForm.schema'
 
 const createService = async (service: z.infer<typeof serviceFormSchema>) => {
-  const response = await fetch("/api/services", {
-    method: "POST",
+  const response = await fetch('/api/services', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
     body: JSON.stringify(service),
-  });
+  })
 
-  const data = await response.json();
+  const data = await response.json()
 
-  return data;
-};
+  return data
+}
 
 const ServiceForm = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [requestError, setRequestError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false)
+  const [requestError, setRequestError] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof serviceFormSchema>>({
     resolver: zodResolver(serviceFormSchema),
     defaultValues: {
-      category: "",
+      category: '',
       duration: 0,
       price: 0,
-      name: "",
+      name: '',
     },
-  });
+  })
 
   const onSubmit = async (values: z.infer<typeof serviceFormSchema>) => {
-    setIsLoading(true);
-    setRequestError(null);
+    setIsLoading(true)
+    setRequestError(null)
 
-    const validatedFiels = serviceFormSchema.safeParse(values);
+    const validatedFiels = serviceFormSchema.safeParse(values)
 
     if (!validatedFiels.success) {
-      return;
+      return
     }
 
     try {
-      const data = await createService(values);
+      const data = await createService(values)
 
       if (data.error) {
-        setRequestError(data.message);
+        setRequestError(data.message)
       }
 
-      console.log(data);
+      console.log(data)
     } catch (error: any) {
-      setRequestError(error.message);
+      setRequestError(error.message)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Form {...form}>
@@ -158,12 +160,12 @@ const ServiceForm = () => {
 
         <div>
           {requestError && (
-            <p className="text-red-500 text-right">{requestError}</p>
+            <p className="text-right text-red-500">{requestError}</p>
           )}
         </div>
       </form>
     </Form>
-  );
-};
+  )
+}
 
-export default ServiceForm;
+export default ServiceForm

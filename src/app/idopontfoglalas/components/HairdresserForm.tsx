@@ -1,14 +1,15 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/Button";
-import Image from "next/image";
+import Image from 'next/image'
+
+import { Button } from '@/components/Button'
 
 type HairdresserFormProps = {
-  selectedHairdresser: "Timi" | "nem_Timi" | null;
-  selectHairdresser: (hairdresser: "Timi" | "nem_Timi") => void;
-  incrementActiveStep: () => void;
-  decrementActiveStep: () => void;
-};
+  selectedHairdresser: 'Timi' | 'nem_Timi' | null
+  selectHairdresser: (hairdresser: 'Timi' | 'nem_Timi') => void
+  incrementActiveStep: () => void
+  decrementActiveStep: () => void
+}
 
 const HairdresserForm = ({
   selectHairdresser,
@@ -18,27 +19,27 @@ const HairdresserForm = ({
 }: HairdresserFormProps) => {
   return (
     <div>
-      <p className="text-lg mb-8">Elérhető fodrászok</p>
+      <p className="mb-8 text-lg">Elérhető fodrászok</p>
 
-      <div className="mb-12 flex items-start justify-center gap-8 w-full">
+      <div className="mb-12 flex w-full items-start justify-center gap-8">
         <label
           className={`${
-            selectedHairdresser === "Timi" ? "border-2" : ""
-          } p-2 cursor-pointer w-full rounded-lg`}
+            selectedHairdresser === 'Timi' ? 'border-2' : ''
+          } w-full cursor-pointer rounded-lg p-2`}
         >
           <input
             type="radio"
             className="hidden"
             name="hairdresser"
             value="Timi"
-            checked={selectedHairdresser === "Timi"}
-            onChange={() => selectHairdresser("Timi")}
+            checked={selectedHairdresser === 'Timi'}
+            onChange={() => selectHairdresser('Timi')}
           />
           <div className="flex w-full items-center justify-start gap-8">
             <Image
               src="/timi.png"
               alt="Botanic Beauty fodrász: Timi"
-              className="size-[120px] object-cover rounded-lg"
+              className="size-[120px] rounded-lg object-cover"
               width={120}
               height={120}
             />
@@ -82,7 +83,7 @@ const HairdresserForm = ({
         </Button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default HairdresserForm;
+export default HairdresserForm

@@ -1,19 +1,17 @@
-import Link from "next/link";
-import { Album, CalendarDays, ImageUp, Users } from "lucide-react";
+import { auth } from '@/auth'
 
-import { auth } from "@/auth";
-import AdminNavList from "./AdminNavList";
+import AdminNavList from './AdminNavList'
 
 const AdminNav = async () => {
-  const session = await auth();
+  const session = await auth()
 
-  if (!session?.user) return null;
+  if (!session?.user) return null
 
   return (
-    <div className="fixed z-20 bottom-0 left-0 w-full md:w-fit md:relative">
+    <div className="fixed bottom-0 left-0 z-20 w-full md:relative md:w-fit">
       <AdminNavList />
     </div>
-  );
-};
+  )
+}
 
-export default AdminNav;
+export default AdminNav

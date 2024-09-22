@@ -1,46 +1,46 @@
-import { MetadataRoute } from "next";
+import { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const defaultPages: MetadataRoute.Sitemap = [
     {
-      url: "https://botanic-beauty.hu",
+      url: 'https://botanic-beauty.hu',
       lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
+      changeFrequency: 'monthly',
       priority: 1.0,
     },
     {
-      url: "https://botanic-beauty.hu/arlista",
+      url: 'https://botanic-beauty.hu/arlista',
       lastModified: new Date().toISOString(),
-      changeFrequency: "yearly",
+      changeFrequency: 'yearly',
       priority: 0.6,
     },
     {
-      url: "https://botanic-beauty.hu/idopontfoglalas",
+      url: 'https://botanic-beauty.hu/idopontfoglalas',
       lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
+      changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: "https://botanic-beauty.hu/munkaink",
+      url: 'https://botanic-beauty.hu/munkaink',
       lastModified: new Date().toISOString(),
-      changeFrequency: "monthly",
+      changeFrequency: 'monthly',
       priority: 0.6,
     },
     {
-      url: "https://botanic-beauty.hu/adatvedelmi-nyilatkozat",
+      url: 'https://botanic-beauty.hu/adatvedelmi-nyilatkozat',
       lastModified: new Date().toISOString(),
-      changeFrequency: "yearly",
+      changeFrequency: 'yearly',
       priority: 0.1,
     },
     {
-      url: "https://botanic-beauty.hu/felhasznalasi-feltetelek",
+      url: 'https://botanic-beauty.hu/felhasznalasi-feltetelek',
       lastModified: new Date().toISOString(),
-      changeFrequency: "yearly",
+      changeFrequency: 'yearly',
       priority: 0.1,
     },
-  ];
+  ]
 
-  const sitemap = [...defaultPages];
+  const sitemap = [...defaultPages]
 
-  return sitemap;
+  return sitemap
 }

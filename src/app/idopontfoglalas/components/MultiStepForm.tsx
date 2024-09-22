@@ -1,82 +1,83 @@
-"use client";
+'use client'
 
-import { Booking, Schedule, TService } from "@prisma/client";
-import { motion } from "framer-motion";
-import { ReactNode, useState } from "react";
+import { Booking, Schedule, TService } from '@prisma/client'
+import { motion } from 'framer-motion'
+import { ReactNode, useState } from 'react'
 
-import BackgroundBlur from "@/components/BackgroundBlur";
-import { mapMultistepFormDataToBooking } from "../mappers/mapMultistepFormdataToBooking.mapper";
-import ServicesForm from "./ServicesForm";
-import Stepper from "./Stepper";
-import HairdresserForm from "./HairdresserForm";
-import AvailableDatesForm from "./AvailableDatesForm";
-import ContactForm from "./ContactForm";
-import SummaryForm from "./SummaryForm";
+import BackgroundBlur from '@/components/BackgroundBlur'
+
+import { mapMultistepFormDataToBooking } from '../mappers/mapMultistepFormdataToBooking.mapper'
+import AvailableDatesForm from './AvailableDatesForm'
+import ContactForm from './ContactForm'
+import HairdresserForm from './HairdresserForm'
+import ServicesForm from './ServicesForm'
+import Stepper from './Stepper'
+import SummaryForm from './SummaryForm'
 
 type FadeInProps = {
-  children: ReactNode;
-};
+  children: ReactNode
+}
 
 const FadeIn = ({ children }: FadeInProps) => (
   <motion.div
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
-    transition={{ ease: "easeInOut", duration: 0.75 }}
+    transition={{ ease: 'easeInOut', duration: 0.75 }}
   >
     {children}
   </motion.div>
-);
+)
 
 type MultiStepFormProps = {
-  schedule: Schedule | null;
-  bookings: Booking[];
-};
+  schedule: Schedule | null
+  bookings: Booking[]
+}
 
 const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
-  const [activeStep, setActiveStep] = useState(0);
-  const [selectedService, setSelectedService] = useState<TService | null>(null);
+  const [activeStep, setActiveStep] = useState(0)
+  const [selectedService, setSelectedService] = useState<TService | null>(null)
   const [selectedExtraService, setSelectedExtraService] =
-    useState<TService | null>(null);
+    useState<TService | null>(null)
   const [selectedHairdresser, setSelectedHairdresser] = useState<
-    "Timi" | "nem_Timi" | null
-  >("Timi");
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()));
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+    'Timi' | 'nem_Timi' | null
+  >('Timi')
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null)
   const [contactInfo, setContactInfo] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    otherInfo: "",
-  });
+    name: '',
+    email: '',
+    phone: '',
+    otherInfo: '',
+  })
 
   const selectService = (service: TService) => {
-    setSelectedExtraService(null);
-    setSelectedService(service);
-  };
+    setSelectedExtraService(null)
+    setSelectedService(service)
+  }
 
   const selectExtraService = (service: TService | null) => {
-    setSelectedExtraService(service);
-  };
+    setSelectedExtraService(service)
+  }
 
-  const selectHairdresser = (hairdresser: "Timi" | "nem_Timi") => {
-    setSelectedHairdresser("Timi");
-  };
+  const selectHairdresser = (hairdresser: 'Timi' | 'nem_Timi') => {
+    setSelectedHairdresser('Timi')
+  }
 
   const incrementActiveStep = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+  }
 
   const decrementActiveStep = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
 
   const postBookingData = async (contactInfo: any) => {
-    if (!selectedHairdresser || !selectedService || !selectedTimeSlot) return;
+    if (!selectedHairdresser || !selectedService || !selectedTimeSlot) return
 
-    const response = await fetch("/api/booking", {
-      method: "POST",
+    const response = await fetch('/api/booking', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(
         mapMultistepFormDataToBooking({
@@ -88,44 +89,44 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
           selectedTimeSlot,
         })
       ),
-    });
+    })
 
-    const data = await response.json();
+    const data = await response.json()
 
-    return data;
-  };
+    return data
+  }
 
   const deleteBookingData = async (id: string) => {
     const response = await fetch(`/api/booking/${id}`, {
-      method: "DELETE",
-    });
+      method: 'DELETE',
+    })
 
-    const data = await response.json();
+    const data = await response.json()
 
-    return data;
-  };
+    return data
+  }
 
   const resetForm = () => {
-    setActiveStep(0);
-    setSelectedService(null);
-    setSelectedExtraService(null);
-    setSelectedHairdresser("Timi");
-    setSelectedDate(new Date(Date.now()));
-    setSelectedTimeSlot(null);
+    setActiveStep(0)
+    setSelectedService(null)
+    setSelectedExtraService(null)
+    setSelectedHairdresser('Timi')
+    setSelectedDate(new Date(Date.now()))
+    setSelectedTimeSlot(null)
     setContactInfo({
-      name: "",
-      email: "",
-      phone: "",
-      otherInfo: "",
-    });
-  };
+      name: '',
+      email: '',
+      phone: '',
+      otherInfo: '',
+    })
+  }
 
   return (
     <div className="w-full sm:w-auto">
-      <BackgroundBlur className="min-h-[75vh] min-w-[75vw] flex flex-col w-full mx-auto">
+      <BackgroundBlur className="mx-auto flex min-h-[75vh] w-full min-w-[75vw] flex-col">
         <Stepper activeStep={activeStep} />
 
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-1 flex-col">
           {activeStep === 0 && (
             <FadeIn>
               <ServicesForm
@@ -209,7 +210,7 @@ const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
         </div>
       </BackgroundBlur>
     </div>
-  );
-};
+  )
+}
 
-export default MultiStepForm;
+export default MultiStepForm

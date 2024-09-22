@@ -1,10 +1,12 @@
-import BackgroundBlur from "@/components/BackgroundBlur";
-import { TService } from "@prisma/client";
-import prisma from "@/lib/db";
-import ServiceTable from "./components/serviceTable";
+import { TService } from '@prisma/client'
+
+import BackgroundBlur from '@/components/BackgroundBlur'
+import prisma from '@/lib/db'
+
+import ServiceTable from './components/serviceTable'
 
 const ServicesPage = async () => {
-  const services: TService[] = []; // await prisma.service.findMany();
+  const services: TService[] = [] // await prisma.service.findMany();
 
   return (
     <section>
@@ -14,7 +16,7 @@ const ServicesPage = async () => {
         <ServiceTable services={services} />
       </BackgroundBlur>
     </section>
-  );
-};
+  )
+}
 
-export default ServicesPage;
+export default ServicesPage

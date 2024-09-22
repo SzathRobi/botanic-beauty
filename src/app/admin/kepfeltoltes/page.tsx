@@ -1,21 +1,23 @@
-import cloudinary from "cloudinary";
-import ImageUpload from "./components/imageUpload";
-import ImageList from "./components/imageList";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
+import cloudinary from 'cloudinary'
+import { redirect } from 'next/navigation'
+
+import { auth } from '@/auth'
+
+import ImageList from './components/imageList'
+import ImageUpload from './components/imageUpload'
 
 cloudinary.v2.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
   api_key: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
   // secure: true,
-});
+})
 
 const ImageUploadPage = async () => {
-  const session = await auth();
+  const session = await auth()
 
   if (!session?.user) {
-    redirect("/admin/bejelentkezes");
+    redirect('/admin/bejelentkezes')
   }
 
   // TODO / high: cloudinary CRUD
@@ -23,13 +25,13 @@ const ImageUploadPage = async () => {
   // TODO / low: add infinite scroll pagination
 
   const cloudinaryData = await cloudinary.v2.api.resources({
-    type: "upload",
+    type: 'upload',
     max_results: 200,
-  });
+  })
 
   return (
     <section>
-      <div className="max-w-5xl mx-auto">
+      <div className="mx-auto max-w-5xl">
         <div className="mb-10">
           <ImageUpload />
         </div>
@@ -37,7 +39,7 @@ const ImageUploadPage = async () => {
         <ImageList resources={cloudinaryData.resources} />
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default ImageUploadPage;
+export default ImageUploadPage

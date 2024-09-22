@@ -1,27 +1,28 @@
-import {
-  CONTACT_ADDRESS,
-  CONTACT_EMAIL,
-  CONTACT_PHONE,
-} from "@/constants/contact.constants";
-import { Booking } from "@prisma/client";
+import { Booking } from '@prisma/client'
 import {
   Body,
-  Container,
   Column,
+  Container,
   Head,
   Heading,
   Html,
   Img,
+  Link,
   Preview,
   Row,
   Section,
   Text,
-  Link,
-} from "@react-email/components";
-import * as React from "react";
+} from '@react-email/components'
+import * as React from 'react'
+
+import {
+  CONTACT_ADDRESS,
+  CONTACT_EMAIL,
+  CONTACT_PHONE,
+} from '@/constants/contact.constants'
 
 interface VerificationEmailProps {
-  booking: Booking;
+  booking: Booking
 }
 
 export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
@@ -40,13 +41,13 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
               />
             </Row>
 
-            <Row style={{ ...boxInfos, paddingBottom: "0" }}>
+            <Row style={{ ...boxInfos, paddingBottom: '0' }}>
               <Column>
                 <Heading
                   style={{
                     fontSize: 24,
-                    fontWeight: "normal",
-                    textAlign: "left",
+                    fontWeight: 'normal',
+                    textAlign: 'left',
                   }}
                 >
                   Kedves {booking.contactInfo.name},
@@ -55,8 +56,8 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                   as="h2"
                   style={{
                     fontSize: 16,
-                    fontWeight: "bold",
-                    textAlign: "left",
+                    fontWeight: 'bold',
+                    textAlign: 'left',
                     marginBottom: 48,
                   }}
                 >
@@ -66,7 +67,7 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                 <Text style={paragraph}>Foglalás részletei:</Text>
 
                 <Text>
-                  Időpont:{" "}
+                  Időpont:{' '}
                   <b>
                     {booking.selectedDate} {booking.selectedTimeSlot}
                   </b>
@@ -89,58 +90,58 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
 
           <Text
             style={{
-              textAlign: "center",
+              textAlign: 'center',
               fontSize: 12,
-              color: "rgb(0,0,0, 0.7)",
+              color: 'rgb(0,0,0, 0.7)',
             }}
           >
-            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{" "}
+            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{' '}
             <Link href="https://www.botanic-beauty.hu">
               www.botanic-beauty.hu
-            </Link>{" "}
+            </Link>{' '}
             | {CONTACT_PHONE}
           </Text>
         </Container>
       </Body>
     </Html>
-  );
-};
+  )
+}
 
 VerificationEmail.PreviewProps = {
   booking: {
     contactInfo: {
-      name: "Omamori Himari",
+      name: 'Omamori Himari',
     },
     service: {
-      name: "Tőfestés",
+      name: 'Tőfestés',
     },
-    selectedDate: "2022-10-10",
-    selectedTimeSlot: "10:00 - 11:00",
+    selectedDate: '2022-10-10',
+    selectedTimeSlot: '10:00 - 11:00',
   },
-} as VerificationEmailProps;
+} as VerificationEmailProps
 
-export default VerificationEmail;
+export default VerificationEmail
 
 const main = {
-  backgroundColor: "#fff",
+  backgroundColor: '#fff',
   fontFamily:
     '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
-};
+}
 
 const paragraph = {
   fontSize: 16,
-};
+}
 
 const content = {
-  border: "1px solid rgb(0,0,0, 0.1)",
-  borderRadius: "3px",
-  overflow: "hidden",
-};
+  border: '1px solid rgb(0,0,0, 0.1)',
+  borderRadius: '3px',
+  overflow: 'hidden',
+}
 
 const image = {
-  maxWidth: "100%",
-};
+  maxWidth: '100%',
+}
 
 const boxInfos = {
-  padding: "20px",
-};
+  padding: '20px',
+}

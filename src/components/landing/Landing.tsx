@@ -1,11 +1,11 @@
-import Link from "next/link";
-import Image from "next/image";
-import BackgroundBlur from "../BackgroundBlur";
-import { BOOKING_ROUTE } from "@/constants/routes.constants";
-import CharacterReveal from "../CharacterReveal";
-import { Button } from "../Button";
+import Image from 'next/image'
+import Link from 'next/link'
 
-import styles from "./Landing.module.css";
+import { BOOKING_ROUTE } from '@/constants/routes.constants'
+
+import BackgroundBlur from '../BackgroundBlur'
+import { Button } from '../Button'
+import styles from './Landing.module.css'
 
 const Landing = async () => {
   return (
@@ -16,16 +16,16 @@ const Landing = async () => {
         width={1920}
         height={1080}
         priority={true}
-        className="absolute -z-10 md:-top-24 object-cover"
+        className="absolute -z-10 object-cover md:-top-24"
       />
-      <div className="px-2 sm:px-0 flex h-full w-full flex-col items-center justify-center">
+      <div className="flex h-full w-full flex-col items-center justify-center px-2 sm:px-0">
         <BackgroundBlur className="mb-24 mt-16 flex flex-col items-center justify-center gap-4">
-          <h1 className="text-center text-xl md:text-2xl mb-2 2xl:text-3xl">
+          <h1 className="mb-2 text-center text-xl md:text-2xl 2xl:text-3xl">
             Lépj be a fenntartható és személyre szabott hajápolás világába a
             Botanic Beauty hajszalonnál!
           </h1>
 
-          <h2 className="text-center mb-12 text-md md:text-xl opacity-75">
+          <h2 className="text-md mb-12 text-center opacity-75 md:text-xl">
             A természet és az egyéniséged ihlette hajszalon Újpesten.
           </h2>
 
@@ -35,7 +35,7 @@ const Landing = async () => {
           >
             <Button
               size="lg"
-              className={`${styles["glow-shadow-spin"]} text-xl`}
+              className={`${styles['glow-shadow-spin']} text-xl`}
             >
               Időpontfoglalás
             </Button>
@@ -43,7 +43,7 @@ const Landing = async () => {
         </BackgroundBlur>
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Landing;
+export default Landing

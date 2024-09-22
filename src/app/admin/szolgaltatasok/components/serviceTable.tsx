@@ -1,25 +1,27 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/Button";
+import { TService } from '@prisma/client'
+import { useState } from 'react'
+
+import { Button } from '@/components/Button'
+import { DataTable } from '@/components/ui/DataTable'
 import {
-  DialogTrigger,
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/Dialog";
-import ServiceForm from "./ServiceForm";
-import { DataTable } from "@/components/ui/DataTable";
-import { TService } from "@prisma/client";
-import { columns } from "./serviceColumns";
-import { useState } from "react";
+  DialogTrigger,
+} from '@/components/ui/Dialog'
+
+import { columns } from './serviceColumns'
+import ServiceForm from './ServiceForm'
 
 interface ServiceTableProps {
-  services: TService[];
+  services: TService[]
 }
 
 const ServiceTable = ({ services }: ServiceTableProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div>
@@ -39,7 +41,7 @@ const ServiceTable = ({ services }: ServiceTableProps) => {
         <DataTable data={services} columns={columns} />
       </Dialog>
     </div>
-  );
-};
+  )
+}
 
-export default ServiceTable;
+export default ServiceTable

@@ -1,6 +1,7 @@
-import { Booking } from "@prisma/client";
-import { addHours, addMinutes } from "date-fns";
-import { CalendarEvent } from "../types/calendarEvent.type";
+import { Booking } from '@prisma/client'
+import { addHours, addMinutes } from 'date-fns'
+
+import { CalendarEvent } from '../types/calendarEvent.type'
 
 export const mapBookingToEvent = ({
   contactInfo,
@@ -13,23 +14,23 @@ export const mapBookingToEvent = ({
   createdAt,
   updatedAt,
 }: Booking): CalendarEvent => {
-  const [startTime, endTime] = selectedTimeSlot.split(" - ");
+  const [startTime, endTime] = selectedTimeSlot.split(' - ')
 
   const [startHours, startMinutes] = startTime
-    .split(":")
-    .map((num) => parseInt(num));
+    .split(':')
+    .map((num) => parseInt(num))
 
   const startDateWithTime = addMinutes(
     addHours(selectedDate, startHours),
     startMinutes
-  );
+  )
 
-  const [endHours, endMinutes] = endTime.split(":").map((num) => parseInt(num));
+  const [endHours, endMinutes] = endTime.split(':').map((num) => parseInt(num))
 
   const endDateWithTime = addMinutes(
     addHours(selectedDate, endHours),
     endMinutes
-  );
+  )
 
   return {
     id,
@@ -42,5 +43,5 @@ export const mapBookingToEvent = ({
     extraService,
     createdAt,
     updatedAt,
-  };
-};
+  }
+}

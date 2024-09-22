@@ -1,39 +1,40 @@
-"use client";
+'use client'
 
-import { formatDuration } from "@/lib/utils";
-import { TService } from "@prisma/client";
-import { ChangeEvent, useState } from "react";
-import { PiScissors } from "react-icons/pi";
-import { EXTRA_SERVICE } from "@/constants/services.constants";
+import { TService } from '@prisma/client'
+import { ChangeEvent, useState } from 'react'
+import { PiScissors } from 'react-icons/pi'
+
+import { EXTRA_SERVICE } from '@/constants/services.constants'
+import { formatDuration } from '@/lib/utils'
 
 type ExtraServiceCardProps = {
-  selectExtraService: (service: TService | null) => void;
-};
+  selectExtraService: (service: TService | null) => void
+}
 
-const ICON_SIZE = 32;
+const ICON_SIZE = 32
 
 const ExtraServiceCard = ({ selectExtraService }: ExtraServiceCardProps) => {
-  const [isExtraServiceSelected, setIsExtraServiceSelected] = useState(false);
+  const [isExtraServiceSelected, setIsExtraServiceSelected] = useState(false)
 
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsExtraServiceSelected(event.target.checked);
+    setIsExtraServiceSelected(event.target.checked)
 
     if (event.target.checked) {
-      selectExtraService(EXTRA_SERVICE);
-      return;
+      selectExtraService(EXTRA_SERVICE)
+      return
     }
 
-    selectExtraService(null);
-  };
+    selectExtraService(null)
+  }
 
   return (
     <div
       className={`${
-        isExtraServiceSelected ? "bg-green-600/10" : "bg-black/30"
+        isExtraServiceSelected ? 'bg-green-600/10' : 'bg-black/30'
       } mb-4 rounded-md transition-colors`}
     >
-      <label className="cursor-pointer flex px-4 pl-16 py-2 rounded-md items-center mb-2 gap-4">
-        <div className="p-2 bg-green-600 rounded-full">
+      <label className="mb-2 flex cursor-pointer items-center gap-4 rounded-md px-4 py-2 pl-16">
+        <div className="rounded-full bg-green-600 p-2">
           <PiScissors size={ICON_SIZE / 2} />
         </div>
         <div className="flex-1">
@@ -48,7 +49,7 @@ const ExtraServiceCard = ({ selectExtraService }: ExtraServiceCardProps) => {
         />
       </label>
     </div>
-  );
-};
+  )
+}
 
-export default ExtraServiceCard;
+export default ExtraServiceCard

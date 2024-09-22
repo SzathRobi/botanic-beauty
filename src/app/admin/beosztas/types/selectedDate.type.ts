@@ -1,7 +1,7 @@
-import { Hairdresser } from "@prisma/client";
+import { Hairdresser } from '@prisma/client'
 
 export type SelectedDate = {
-  date: Date;
-  displayMonth: Date;
-  person: Hairdresser;
-};
+  date: Date
+  displayMonth: Date
+  person: Hairdresser
+}

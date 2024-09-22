@@ -1,7 +1,18 @@
-"use client";
+'use client'
 
-import { Button } from "@/components/Button";
-import { DataTable } from "@/components/ui/DataTable";
+import { Customer } from '@prisma/client'
+import { ColumnDef } from '@tanstack/react-table'
+import { MoreHorizontal, UserPlus, X } from 'lucide-react'
+import Image from 'next/image'
+import { useState } from 'react'
+import toast from 'react-hot-toast'
+import { read, utils } from 'xlsx'
+
+import BackgroundBlur from '@/components/BackgroundBlur'
+import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/ui/Checkbox'
+import { DataTable } from '@/components/ui/DataTable'
+import { DataTableColumnHeader } from '@/components/ui/DataTableHeader'
 import {
   Dialog,
   DialogContent,
@@ -10,8 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/Dialog";
-import { read, utils } from "xlsx";
+} from '@/components/ui/Dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,36 +29,28 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/Dropdown";
-import { Input } from "@/components/ui/Input";
-import { Customer } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, UserPlus, X } from "lucide-react";
-import { useState } from "react";
-import Image from "next/image";
-import { Checkbox } from "@/components/ui/Checkbox";
-import { DataTableColumnHeader } from "@/components/ui/DataTableHeader";
-import CustomerForm from "./customerForm/CustomerForm";
-import toast from "react-hot-toast";
-import BackgroundBlur from "@/components/BackgroundBlur";
+} from '@/components/ui/Dropdown'
+import { Input } from '@/components/ui/Input'
+
+import CustomerForm from './customerForm/CustomerForm'
 
 type CustomersContainerProps = {
-  salonCustomers: Customer[];
-};
+  salonCustomers: Customer[]
+}
 
-const requiredHeaders = ["Név", "Email", "Telefonszám"];
+const requiredHeaders = ['Név', 'Email', 'Telefonszám']
 
 const columns: (
   // eslint-disable-next-line no-unused-vars
   openCustomerForm: (customer: Customer) => void
 ) => ColumnDef<Customer>[] = (openCustomerForm) => [
   {
-    id: "select",
+    id: 'select',
     header: ({ table }) => (
       <Checkbox
         checked={
           table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
+          (table.getIsSomePageRowsSelected() && 'indeterminate')
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
@@ -65,39 +67,39 @@ const columns: (
     enableHiding: false,
   },
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Név" />
     ),
   },
   {
-    accessorKey: "email",
+    accessorKey: 'email',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Email" />
     ),
   },
   {
-    accessorKey: "phone",
+    accessorKey: 'phone',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Telefon" />
     ),
   },
   {
-    accessorKey: "hairdressers",
+    accessorKey: 'hairdressers',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Fodrászok" />
     ),
   },
   {
-    accessorKey: "otherInfo",
+    accessorKey: 'otherInfo',
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Egyéb infó" />
     ),
   },
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
-      const customer = row.original;
+      const customer = row.original
 
       return (
         <DropdownMenu>
@@ -125,135 +127,135 @@ const columns: (
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
-      );
+      )
     },
   },
-];
+]
 
 const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
-  const [customers, setCustomers] = useState<Customer[]>(salonCustomers);
+  const [customers, setCustomers] = useState<Customer[]>(salonCustomers)
   const [excelHeadersError, setExcelHeadersError] = useState<string | null>(
     null
-  );
-  const [isCustomerFormOpen, setIsCustomerFormOpen] = useState(false);
+  )
+  const [isCustomerFormOpen, setIsCustomerFormOpen] = useState(false)
   const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
     null
-  );
+  )
 
   const openCustomerForm = (customer: Customer) => {
-    setSelectedCustomer(customer);
-    setIsCustomerFormOpen(true);
-  };
+    setSelectedCustomer(customer)
+    setIsCustomerFormOpen(true)
+  }
 
   const onDialogOpenChange = (open: boolean) => {
     if (!open) {
-      setSelectedCustomer(null);
+      setSelectedCustomer(null)
     }
 
-    setIsCustomerFormOpen(open);
-  };
+    setIsCustomerFormOpen(open)
+  }
 
   const readExcel = (file?: File) => {
-    if (!file) return;
+    if (!file) return
 
     const promise = new Promise((resolve, reject) => {
-      const fileReader = new FileReader();
-      fileReader.readAsArrayBuffer(file);
+      const fileReader = new FileReader()
+      fileReader.readAsArrayBuffer(file)
 
       fileReader.onload = (e) => {
-        const bufferArray = e.target?.result;
-        const wb = read(bufferArray, { type: "buffer" });
-        const wsname = wb.SheetNames[0];
-        const ws = wb.Sheets[wsname];
-        const data = utils.sheet_to_json(ws);
+        const bufferArray = e.target?.result
+        const wb = read(bufferArray, { type: 'buffer' })
+        const wsname = wb.SheetNames[0]
+        const ws = wb.Sheets[wsname]
+        const data = utils.sheet_to_json(ws)
 
         // Ellenőrizze az oszlopfejléceket
-        const headers = Object.keys(data[0] as any);
+        const headers = Object.keys(data[0] as any)
         const isValid = requiredHeaders.every((header) =>
           headers.includes(header)
-        );
+        )
 
         if (!isValid) {
           setExcelHeadersError(
-            `Hibás fejléc. Az elvárt oszlopnevek: ${requiredHeaders.join(", ")}`
-          );
-          return;
+            `Hibás fejléc. Az elvárt oszlopnevek: ${requiredHeaders.join(', ')}`
+          )
+          return
         }
 
-        setExcelHeadersError(null);
-        resolve(data);
-      };
+        setExcelHeadersError(null)
+        resolve(data)
+      }
 
       fileReader.onerror = (error) => {
-        reject(error);
-      };
-    });
+        reject(error)
+      }
+    })
 
     promise
       .then(async (excelData: any) => {
         if (!excelHeadersError) {
           const excelCustomers: Customer[] = excelData.map((row: any) => ({
-            name: row["Név"],
-            email: row["Email"],
-            phone: row["Telefonszám"].toString(),
-            otherInfo: row["Egyeb információ"],
+            name: row['Név'],
+            email: row['Email'],
+            phone: row['Telefonszám'].toString(),
+            otherInfo: row['Egyeb információ'],
             hairdressers: [],
-          }));
+          }))
 
           try {
             const response = await fetch(`/api/customers/excel-upload`, {
-              method: "POST",
+              method: 'POST',
               headers: {
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
               },
               body: JSON.stringify(excelCustomers),
-            });
+            })
 
             if (!response.ok) {
-              toast.error("Hiba történt az Excel fájl feldolgozása során.");
-              return;
+              toast.error('Hiba történt az Excel fájl feldolgozása során.')
+              return
             }
 
             setCustomers((prevCustomers) => [
               ...prevCustomers,
               ...(excelCustomers as Customer[]),
-            ]);
+            ])
           } catch (error) {
-            toast.error("Hiba történt az Excel fájl feldolgozása során.");
-            return;
+            toast.error('Hiba történt az Excel fájl feldolgozása során.')
+            return
           }
         }
       })
       .catch(() => {
-        toast.error("Hiba történt az Excel fájl feldolgozása során.");
-      });
-  };
+        toast.error('Hiba történt az Excel fájl feldolgozása során.')
+      })
+  }
 
   const deleteSelectedCustomers = async (customersToBeDeleted: Customer[]) => {
     const selectedCustomerEmails = customersToBeDeleted.map(
       (customerToBeDeleted) => customerToBeDeleted.email
-    );
+    )
 
     const filteredCustomers = customers.filter(
       (customer) => !selectedCustomerEmails.includes(customer.email)
-    );
+    )
 
-    const response = await fetch("/api/customers", {
-      method: "DELETE",
+    const response = await fetch('/api/customers', {
+      method: 'DELETE',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify(selectedCustomerEmails),
-    });
+    })
 
     if (!response.ok) {
-      toast.error("Hiba történt a kijelzett ugyfelek feldolgozása során.");
-      return;
+      toast.error('Hiba történt a kijelzett ugyfelek feldolgozása során.')
+      return
     }
 
-    setCustomers(filteredCustomers);
-    toast.success("A kijelölt ügyfelek törlése sikeres.");
-  };
+    setCustomers(filteredCustomers)
+    toast.success('A kijelölt ügyfelek törlése sikeres.')
+  }
 
   return (
     <div>
@@ -317,25 +319,26 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
         </DialogContent>
       </Dialog>
 
-      <BackgroundBlur className="!max-w-none !w-full">
+      <BackgroundBlur className="!w-full !max-w-none">
         <Input
           type="file"
           className="mb-8 max-w-72 bg-primary text-primary-foreground file:text-primary-foreground"
           accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
           onChange={(e) => {
-            const file = e.target.files?.[0];
-            readExcel(file);
+            const file = e.target.files?.[0]
+            readExcel(file)
           }}
         />
 
         <DataTable
           columns={columns(openCustomerForm)}
           data={customers}
+          noDataText="Nincsenek ügyfelek"
           onDeleteSelectedRows={deleteSelectedCustomers}
         />
       </BackgroundBlur>
     </div>
-  );
-};
+  )
+}
 
-export default CustomersContainer;
+export default CustomersContainer

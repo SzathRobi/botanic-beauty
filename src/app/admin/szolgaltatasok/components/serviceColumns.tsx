@@ -1,39 +1,40 @@
-"use client";
+'use client'
 
-import { TService } from "@prisma/client";
-import { ColumnDef } from "@tanstack/react-table";
-import { formatDuration } from "@/lib/utils";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "@/components/ui/Dropdown";
-import { Button } from "@/components/Button";
+import { TService } from '@prisma/client'
+import { ColumnDef } from '@tanstack/react-table'
 import {
   ArrowDown,
   ArrowUpDown,
   MoreHorizontal,
   Pen,
   Trash2,
-} from "lucide-react";
-import BackgroundBlur from "@/components/BackgroundBlur";
+} from 'lucide-react'
+
+import BackgroundBlur from '@/components/BackgroundBlur'
+import { Button } from '@/components/Button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from '@/components/ui/Dropdown'
+import { formatDuration } from '@/lib/utils'
 
 const deleteService = async (id: string) => {
   try {
     await fetch(`/api/services`, {
-      method: "DELETE",
+      method: 'DELETE',
       body: JSON.stringify({ id }),
-    });
+    })
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 export const columns: ColumnDef<TService>[] = [
   {
-    id: "actions",
+    id: 'actions',
     cell: ({ row }) => {
       return (
         <DropdownMenu>
@@ -60,65 +61,65 @@ export const columns: ColumnDef<TService>[] = [
             </BackgroundBlur>
           </DropdownMenuContent>
         </DropdownMenu>
-      );
+      )
     },
   },
   {
-    accessorKey: "name",
+    accessorKey: 'name',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Név
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
+      )
     },
   },
   {
-    accessorKey: "price",
+    accessorKey: 'price',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Ár
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
+      )
     },
     cell: ({ cell }) => `${cell.renderValue()} Ft`,
   },
   {
-    accessorKey: "duration",
+    accessorKey: 'duration',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Időtartam
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
+      )
     },
     cell: ({ cell }) => `${formatDuration(Number(cell.renderValue()))}`,
   },
   {
-    accessorKey: "category",
+    accessorKey: 'category',
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          onClick={() => column.toggleSorting(column.getIsSorted() === 'asc')}
         >
           Kategória
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      );
+      )
     },
   },
-];
+]

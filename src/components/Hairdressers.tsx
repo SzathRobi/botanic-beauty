@@ -1,7 +1,8 @@
-import Image from "next/image";
-import BackgroundBlur from "./BackgroundBlur";
-import Title from "./Title";
-import Link from "next/link";
+import Image from 'next/image'
+import Link from 'next/link'
+
+import BackgroundBlur from './BackgroundBlur'
+import Title from './Title'
 
 const Hairdressers = () => {
   return (
@@ -21,12 +22,12 @@ const Hairdressers = () => {
             src="/timi.png"
             width={240}
             height={320}
-            className="w-full sm:w-auto rounded-md object-cover"
+            className="w-full rounded-md object-cover sm:w-auto"
           />
 
           <div>
             <p className="mb-12 text-2xl">Timi</p>
-            <p className="text-lg mb-8">
+            <p className="mb-8 text-lg">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris at
               mi commodo, mollis nunc id, facilisis nunc. Donec feugiat gravida
               porta. Proin viverra lobortis vestibulum. Morbi tincidunt
@@ -82,7 +83,7 @@ const Hairdressers = () => {
         </BackgroundBlur> */}
       </div>
     </section>
-  );
-};
+  )
+}
 
-export default Hairdressers;
+export default Hairdressers

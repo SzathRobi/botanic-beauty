@@ -1,10 +1,31 @@
-"use client";
+'use client'
 
-import { useForm } from "react-hook-form";
-import { eventFormSchema } from "../../schemas/eventFormSchema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { CalendarEvent } from "@/app/admin/types/calendarEvent.type";
+import './BigCalendarEventForm.override.css'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Booking } from '@prisma/client'
+import {
+  addMinutes,
+  format,
+  isBefore,
+  isSameDay,
+  isSaturday,
+  isSunday,
+  parse,
+  set,
+} from 'date-fns'
+import { hu } from 'date-fns/locale'
+import { Dispatch, SetStateAction, useState } from 'react'
+import { EventProps } from 'react-big-calendar'
+import { DayPicker } from 'react-day-picker'
+import { useForm } from 'react-hook-form'
+import toast from 'react-hot-toast'
+import { z } from 'zod'
+
+import { mapEventToBooking } from '@/app/admin/mappers/mapEventToBooking.mapper'
+import { CalendarEvent } from '@/app/admin/types/calendarEvent.type'
+import { getSecondsToDate } from '@/app/idopontfoglalas/utils/getSecondsToDate'
+import { Button } from '@/components/Button'
 import {
   Form,
   FormControl,
@@ -12,54 +33,36 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/Form";
-import { Input } from "@/components/ui/Input";
-import { Button } from "@/components/Button";
-import { EventProps } from "react-big-calendar";
-import { Dispatch, SetStateAction, useState } from "react";
-import toast from "react-hot-toast";
-import { DayPicker } from "react-day-picker";
-import { Booking } from "@prisma/client";
-import { mapEventToBooking } from "@/app/admin/mappers/mapEventToBooking.mapper";
-import { hu } from "date-fns/locale";
-import {
-  format,
-  isBefore,
-  isSameDay,
-  isSunday,
-  isSaturday,
-  set,
-  parse,
-  addMinutes,
-} from "date-fns";
-import "./BigCalendarEventForm.override.css";
-import { getSecondsToDate } from "@/app/idopontfoglalas/utils/getSecondsToDate";
-import { Separator } from "@/components/ui/Separator";
+} from '@/components/ui/Form'
+import { Input } from '@/components/ui/Input'
+import { Separator } from '@/components/ui/Separator'
+
+import { eventFormSchema } from '../../schemas/eventFormSchema'
 
 type BigCalendarEventFormProps = {
-  calendarEvent: EventProps<CalendarEvent>;
-  setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>;
-  setIsDialogOpen: Dispatch<SetStateAction<boolean>>;
-};
+  calendarEvent: EventProps<CalendarEvent>
+  setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>
+  setIsDialogOpen: Dispatch<SetStateAction<boolean>>
+}
 
 const BigCalendarEventForm = ({
   calendarEvent,
   setCalendarEvents,
   setIsDialogOpen,
 }: BigCalendarEventFormProps) => {
-  const booking = mapEventToBooking(calendarEvent.event);
+  const booking = mapEventToBooking(calendarEvent.event)
 
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(
     new Date(booking.selectedDate)
-  );
+  )
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
       hairdresser: calendarEvent.event.hairdresser,
-      startTime: booking.selectedTimeSlot.split(" - ")[0],
-      endTime: booking.selectedTimeSlot.split(" - ")[1],
+      startTime: booking.selectedTimeSlot.split(' - ')[0],
+      endTime: booking.selectedTimeSlot.split(' - ')[1],
       service: calendarEvent.event.service,
       extraService: calendarEvent.event.extraService,
       name: calendarEvent.event.contactInfo.name,
@@ -67,113 +70,113 @@ const BigCalendarEventForm = ({
       phone: calendarEvent.event.contactInfo.phone,
       otherInfo: calendarEvent.event.contactInfo?.otherInfo,
     },
-  });
+  })
 
   const onStartTimeChange = (event: any, fieldOnchange: any) => {
-    fieldOnchange(event);
+    fieldOnchange(event)
 
-    const startTime = form.getValues("startTime");
-    const service = form.getValues("service");
+    const startTime = form.getValues('startTime')
+    const service = form.getValues('service')
 
-    const startDateTime = parse(startTime, "HH:mm", new Date());
+    const startDateTime = parse(startTime, 'HH:mm', new Date())
 
-    let endDateTime = addMinutes(startDateTime, service.duration);
+    let endDateTime = addMinutes(startDateTime, service.duration)
 
-    const extraService = form.getValues("extraService");
+    const extraService = form.getValues('extraService')
 
     if (extraService) {
-      endDateTime = addMinutes(endDateTime, extraService.duration);
+      endDateTime = addMinutes(endDateTime, extraService.duration)
     }
 
-    form.setValue("endTime", format(endDateTime, "HH:mm"));
-  };
+    form.setValue('endTime', format(endDateTime, 'HH:mm'))
+  }
 
   const handleSelect = (day: Date | undefined) => {
     if (day) {
-      setSelectedDate(day);
+      setSelectedDate(day)
     }
-  };
+  }
 
   const updateBooking = async (booking: Partial<Booking>) => {
     const response = await fetch(`/api/booking/${calendarEvent.event.id}`, {
-      method: "PATCH",
+      method: 'PATCH',
       body: JSON.stringify(booking),
-    });
+    })
 
     if (!response.ok) {
-      toast.error("Hiba történt, a módosítás sikertelen");
-      return;
+      toast.error('Hiba történt, a módosítás sikertelen')
+      return
     }
 
-    return await response.json();
-  };
+    return await response.json()
+  }
 
   const sendModifierEmail = async (booking: Partial<Booking>) => {
-    const emailResponse = await fetch("/api/email/modifier", {
-      method: "POST",
+    const emailResponse = await fetch('/api/email/modifier', {
+      method: 'POST',
       body: JSON.stringify({
         booking: {
           ...booking,
-          selectedDate: format(booking.selectedDate!, "yyyy-MM-dd"),
+          selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
         },
       }),
-    });
+    })
 
     if (!emailResponse.ok) {
-      toast.error("A módosító email nem ment ki");
+      toast.error('A módosító email nem ment ki')
 
-      return;
+      return
     }
 
-    return await emailResponse.json();
-  };
+    return await emailResponse.json()
+  }
 
   const scheduleReminderEmail = async (booking: Partial<Booking>) => {
-    const emailDelayInMiliseconds = getSecondsToDate(booking as Booking) * 1000;
+    const emailDelayInMiliseconds = getSecondsToDate(booking as Booking) * 1000
 
-    const emailScheduleResponse = await fetch("/api/email/schedule", {
-      method: "POST",
+    const emailScheduleResponse = await fetch('/api/email/schedule', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
       },
       body: JSON.stringify({
         booking: {
           ...booking,
-          selectedDate: format(booking.selectedDate!, "yyyy-MM-dd"),
+          selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
         },
         emailDelayInMiliseconds,
       }),
-    });
+    })
 
     if (!emailScheduleResponse.ok) {
-      toast.error("Az emlékeztető email nem ment ki");
+      toast.error('Az emlékeztető email nem ment ki')
     }
 
-    return await emailScheduleResponse.json();
-  };
+    return await emailScheduleResponse.json()
+  }
 
   const deleteBookingData = async (id: string) => {
     const response = await fetch(`/api/booking/${id}`, {
-      method: "DELETE",
-    });
+      method: 'DELETE',
+    })
 
     if (!response.ok) {
-      toast.error("Hiba történt, a módosítás sikertelen");
-      return;
+      toast.error('Hiba történt, a módosítás sikertelen')
+      return
     }
 
-    return await response.json();
-  };
+    return await response.json()
+  }
 
   const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
-    setIsLoading(true);
+    setIsLoading(true)
 
-    const selectedTimeSlot = `${values.startTime} - ${values.endTime}`;
-    const [startHour, startMinute] = values.startTime.split(":").map(Number);
-    const [endHour, endMinute] = values.endTime.split(":").map(Number);
+    const selectedTimeSlot = `${values.startTime} - ${values.endTime}`
+    const [startHour, startMinute] = values.startTime.split(':').map(Number)
+    const [endHour, endMinute] = values.endTime.split(':').map(Number)
 
-    const updatedSelectedDate = new Date(selectedDate);
-    updatedSelectedDate.setHours(startHour, startMinute, 0, 0);
+    const updatedSelectedDate = new Date(selectedDate)
+    updatedSelectedDate.setHours(startHour, startMinute, 0, 0)
 
     const booking: Partial<Booking> = {
       contactInfo: {
@@ -184,31 +187,31 @@ const BigCalendarEventForm = ({
       },
       selectedDate: selectedDate.toString(),
       selectedTimeSlot,
-    };
-
-    if (!booking.selectedDate || !booking.selectedTimeSlot) {
-      toast.error("Nincs kiválasztott időpont");
-      setIsLoading(false);
-      return;
     }
 
-    const bookingData = await updateBooking(booking);
+    if (!booking.selectedDate || !booking.selectedTimeSlot) {
+      toast.error('Nincs kiválasztott időpont')
+      setIsLoading(false)
+      return
+    }
 
-    if (bookingData.message === "Overlap with existing booking") {
+    const bookingData = await updateBooking(booking)
+
+    if (bookingData.message === 'Overlap with existing booking') {
       toast.error(
-        "A kiválasztott időpont már nem elérhető. Kérlek válassz másik időpontot."
-      );
-      return;
+        'A kiválasztott időpont már nem elérhető. Kérlek válassz másik időpontot.'
+      )
+      return
     }
 
     if (bookingData.error) {
       toast.error(
-        "Hoppá! Valami hiba történt a foglalás során. Kérlek próbáld meg később."
-      );
-      return;
+        'Hoppá! Valami hiba történt a foglalás során. Kérlek próbáld meg később.'
+      )
+      return
     }
 
-    const originalBooking = mapEventToBooking(calendarEvent.event);
+    const originalBooking = mapEventToBooking(calendarEvent.event)
 
     if (
       !isSameDay(booking.selectedDate!, originalBooking.selectedDate) ||
@@ -217,15 +220,15 @@ const BigCalendarEventForm = ({
       const [modificationResult, scheduleResult] = await Promise.all([
         sendModifierEmail(booking),
         scheduleReminderEmail(booking),
-      ]);
+      ])
 
       if (!modificationResult) {
-        deleteBookingData(bookingData.id);
-        return;
+        deleteBookingData(bookingData.id)
+        return
       }
 
       if (!scheduleResult) {
-        toast.error("Az emlekeztető email beütemezés sikertelen volt");
+        toast.error('Az emlekeztető email beütemezés sikertelen volt')
       }
     }
 
@@ -238,7 +241,7 @@ const BigCalendarEventForm = ({
             date: selectedDate.getDate(),
             hours: startHour,
             minutes: startMinute,
-          });
+          })
 
           const updatedEndDate = set(event.end, {
             year: selectedDate.getFullYear(),
@@ -246,7 +249,7 @@ const BigCalendarEventForm = ({
             date: selectedDate.getDate(),
             hours: endHour,
             minutes: endMinute,
-          });
+          })
 
           return {
             ...event,
@@ -258,23 +261,23 @@ const BigCalendarEventForm = ({
               phone: values.phone,
               otherInfo: values.otherInfo,
             },
-          };
+          }
         }
 
-        return event;
-      });
+        return event
+      })
 
-      return updatedCalendarEvents;
-    });
+      return updatedCalendarEvents
+    })
 
-    toast.success("Sikeres módosítás");
-    setIsLoading(false);
-    setIsDialogOpen(false);
-  };
+    toast.success('Sikeres módosítás')
+    setIsLoading(false)
+    setIsDialogOpen(false)
+  }
 
   const onCancel = () => {
-    setIsDialogOpen(false);
-  };
+    setIsDialogOpen(false)
+  }
 
   return (
     <div>
@@ -285,11 +288,11 @@ const BigCalendarEventForm = ({
 
             <FormControl>
               <DayPicker
-                className="text-gray-900 text-sm sm:text-base md:text-lg dayPicker"
+                className="dayPicker text-sm text-gray-900 sm:text-base md:text-lg"
                 mode="single"
                 selected={new Date(selectedDate)}
                 // TODO / high: change to selectedDate
-                defaultMonth={new Date("2024-08-01")}
+                defaultMonth={new Date('2024-08-01')}
                 weekStartsOn={1}
                 locale={hu}
                 disabled={(date) =>
@@ -437,7 +440,7 @@ const BigCalendarEventForm = ({
               <FormItem>
                 <FormLabel className="text-black">Egyéb infó</FormLabel>
                 <FormControl>
-                  <Input {...field} value={field.value || ""} />
+                  <Input {...field} value={field.value || ''} />
                 </FormControl>
 
                 <FormMessage />
@@ -456,7 +459,7 @@ const BigCalendarEventForm = ({
         </form>
       </Form>
     </div>
-  );
-};
+  )
+}
 
-export default BigCalendarEventForm;
+export default BigCalendarEventForm

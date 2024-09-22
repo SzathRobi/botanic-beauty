@@ -1,17 +1,17 @@
 export const steps = [
   {
-    title: "Szolgáltatások",
+    title: 'Szolgáltatások',
   },
   {
-    title: "Fodrászok",
+    title: 'Fodrászok',
   },
   {
-    title: "Foglalás",
+    title: 'Foglalás',
   },
   {
-    title: "Elérhetőség",
+    title: 'Elérhetőség',
   },
   {
-    title: "Visszaigazolás",
+    title: 'Visszaigazolás',
   },
-];
+]
