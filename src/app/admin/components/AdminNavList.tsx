@@ -105,7 +105,7 @@ const AdminNavList = () => {
           element.component ? (
             <li
               key={index}
-              className="my-auto flex flex-1 items-center justify-center rounded-md md:w-full md:flex-none"
+              className="my-auto flex min-w-12 items-center justify-center rounded-md md:w-full md:flex-none"
             >
               {element.component}
             </li>
