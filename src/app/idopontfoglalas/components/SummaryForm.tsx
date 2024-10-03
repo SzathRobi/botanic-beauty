@@ -39,14 +39,23 @@ const SummaryForm = ({
 }: SummaryFormProps) => {
   const geServiceIconByCategory = (category: string) => {
     if (category === 'Hajvágás' || category === 'extra') {
-      return <PiScissors size={ICON_SIZE} className="min-w-10" />
+      return (
+        <PiScissors size={ICON_SIZE} className="min-w-10 text-emerald-600" />
+      )
     }
 
     if (category === 'Festések') {
-      return <IoColorPaletteOutline size={ICON_SIZE} className="min-w-10" />
+      return (
+        <IoColorPaletteOutline
+          size={ICON_SIZE}
+          className="min-w-10 text-emerald-600"
+        />
+      )
     }
 
-    return <PiHairDryer size={ICON_SIZE} className="min-w-10" />
+    return (
+      <PiHairDryer size={ICON_SIZE} className="min-w-10 text-emerald-600" />
+    )
   }
 
   const createCustomer = async () => {
@@ -101,7 +110,7 @@ const SummaryForm = ({
         </div>
 
         <div className="flex gap-4">
-          <User size={48} className="min-w-10" />
+          <User size={48} className="min-w-10 text-emerald-600" />
           <div>
             <p>Fordrász:</p>
             <p className="text-lg font-medium">{selectedHairdresser}</p>
@@ -109,7 +118,7 @@ const SummaryForm = ({
         </div>
 
         <div className="flex gap-4">
-          <Calendar size={48} className="min-w-10" />
+          <Calendar size={48} className="min-w-10 text-emerald-600" />
           <div>
             <p>Időpont:</p>
             <p className="text-lg font-medium">

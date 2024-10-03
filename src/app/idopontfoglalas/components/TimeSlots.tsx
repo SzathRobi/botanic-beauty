@@ -129,7 +129,7 @@ const TimeSlots = ({
             onClick={() => setSelectedTimeSlot(timeSlotText)}
             className={`p-2 ${isClosedDay && 'cursor-not-allowed opacity-50'} ${
               selectedTimeSlot === timeSlotText
-                ? 'bg-green-600/40'
+                ? 'bg-emerald-600/40'
                 : 'bg-black/50'
             } transition`}
             disabled={isClosedDay}

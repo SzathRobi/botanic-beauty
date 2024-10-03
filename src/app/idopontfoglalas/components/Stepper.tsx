@@ -9,10 +9,10 @@ type StepperProps = {
 }
 
 const Stepper = ({ activeStep }: StepperProps) => {
-  const activeColor = 'text-green-600 dark:text-green-500'
+  const activeColor = 'text-emerald-600 dark:text-emerald-500'
   const inactiveColor = 'text-gray-500 dark:text-gray-400'
 
-  const activeBorderColor = 'border-green-600 dark:border-green-500'
+  const activeBorderColor = 'border-emerald-600 dark:border-emerald-500'
   const inactiveBorderColor = 'border-gray-300 dark:border-gray-600'
 
   useEffect(() => {

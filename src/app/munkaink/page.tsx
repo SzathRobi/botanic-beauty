@@ -62,7 +62,15 @@ const OurWorksPage = async () => {
   // TODO / low: add infinite scroll pagination
   return (
     <Transition>
-      <section className="px-2 pt-24 sm:px-0">
+      <section className="overflow-hidden px-2 pt-24 sm:px-0">
+        <Image
+          alt="Botanic Beauty Hajszalon növény"
+          src="/leaves-vertical.png"
+          width={508}
+          height={1080}
+          className="absolute left-0 top-0 -z-10 rotate-[25deg] object-cover"
+        />
+
         <BackgroundBlur className="mx-auto grid !max-w-6xl place-items-center">
           <div className="columns-1 gap-8 md:columns-2 lg:md:columns-3">
             {resources.length &&

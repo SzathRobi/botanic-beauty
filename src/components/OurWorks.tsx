@@ -10,7 +10,15 @@ import Title from './Title'
 
 const OurWorks = () => {
   return (
-    <section>
+    <section className="relative">
+      <Image
+        alt="Botanic Beauty Hajszalon növény"
+        src="/contact-plant.png"
+        width={628}
+        height={770}
+        className="absolute -left-12 bottom-full -z-10 translate-y-3/4 -rotate-[25deg] transform object-cover sm:left-0"
+      />
+
       <FadeInView>
         <Title title="Munkáink" />
 

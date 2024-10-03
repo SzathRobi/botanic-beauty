@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import Image from 'next/image'
 import { IoColorPaletteOutline } from 'react-icons/io5'
 import { PiHairDryer, PiScissors } from 'react-icons/pi'
 
@@ -61,7 +62,14 @@ const getServiceIcon = (serviceGroup: ServiceGroup) => {
 const PricinggPage = async () => {
   return (
     <Transition>
-      <section className="relative flex min-h-screen flex-col items-center justify-center px-2 pt-24 sm:px-0">
+      <section className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden px-2 pt-24 sm:px-0">
+        <Image
+          alt="Botanic Beauty Hajszalon növény"
+          src="/leaves-vertical.png"
+          width={508}
+          height={1080}
+          className="absolute left-0 top-0 -z-10 rotate-[25deg] object-cover"
+        />
         <BackgroundBlur className="py-16">
           <h1 className="mb-12 text-center text-3xl">Árlista</h1>
 

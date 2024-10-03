@@ -11,7 +11,7 @@ const BackgroundBlur = ({
 }: BackgroundBlurProps) => {
   return (
     <div
-      className={`w-full max-w-md rounded-2xl border-2 border-white/15 bg-black/60 px-4 py-8 text-white shadow-md backdrop-blur-md sm:max-w-2xl sm:p-10 md:max-w-3xl md:p-12 lg:max-w-5xl ${className}`}
+      className={`w-full max-w-md rounded-2xl border-2 border-white/15 bg-black/30 px-4 py-8 text-white shadow-md backdrop-blur sm:max-w-2xl sm:p-10 md:max-w-3xl md:p-12 lg:max-w-5xl ${className}`}
       {...props}
     >
       {children}

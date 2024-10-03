@@ -1,6 +1,7 @@
 import 'react-day-picker/dist/style.css'
 
 import { Metadata } from 'next'
+import Image from 'next/image'
 
 import { getBookings } from '@/actions/booking'
 import { getSchedule } from '@/actions/schedule'
@@ -52,7 +53,15 @@ const BookingPage = async () => {
 
   return (
     <>
-      <section className="mb-0! flex min-h-screen flex-col items-center justify-start px-2 pt-24 sm:px-0">
+      <section className="mb-0! flex min-h-screen flex-col items-center justify-start overflow-hidden px-2 pt-24 sm:px-0">
+        <Image
+          alt="Botanic Beauty Hajszalon növény"
+          src="/leaves-vertical.png"
+          width={508}
+          height={1080}
+          className="absolute left-0 top-0 -z-10 rotate-[25deg] object-cover"
+        />
+
         <MultiStepForm schedule={schedule} bookings={bookings || []} />
       </section>
 

@@ -84,7 +84,7 @@ export const metadata: Metadata = {
 export default async function Home() {
   return (
     <Transition>
-      <main className="relative flex min-h-screen flex-col items-center justify-center">
+      <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden">
         <Landing />
         <ExtraServices />
         <About />
