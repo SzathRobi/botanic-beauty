@@ -66,7 +66,7 @@ const ExtraServices = () => {
               />
             </FadeInView>
 
-            <FadeInView delay={0.6}>
+            <FadeInView delay={0}>
               <ServiceCard
                 description="Legfőbb célom, hogy elégedett legyél a hajaddal."
                 icon={<Gem size={64} />}
@@ -74,7 +74,7 @@ const ExtraServices = () => {
               />
             </FadeInView>
 
-            <FadeInView delay={0.8}>
+            <FadeInView delay={0.2}>
               <ServiceCard
                 description="Fizess kártyával gyorsan és egyszerűen"
                 icon={<FaRegCreditCard size={64} />}
@@ -82,7 +82,7 @@ const ExtraServices = () => {
               />
             </FadeInView>
 
-            <FadeInView delay={1}>
+            <FadeInView delay={0.4}>
               <ServiceCard
                 description="Újpesti Hajszalonunk környékén mindenhol díjmentes"
                 icon={<SquareParking size={64} />}
