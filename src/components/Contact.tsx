@@ -1,5 +1,6 @@
 import { GoogleMapsEmbed } from '@next/third-parties/google'
 import { Mail, MapPin, Smartphone } from 'lucide-react'
+import Image from 'next/image'
 import { FaInstagram } from 'react-icons/fa'
 import { TiSocialFacebook } from 'react-icons/ti'
 
@@ -15,7 +16,15 @@ import Title from './Title'
 
 const Contact = () => {
   return (
-    <section className="relative mb-40 min-h-screen px-2 sm:px-0">
+    <section className="mb-80 px-2 sm:px-0">
+      <Image
+        alt="Botanic Beauty Hajszalon növény"
+        src="/not-found-bg.png"
+        width={480}
+        height={660}
+        className="absolute bottom-full right-0 -z-10 object-cover"
+      />
+
       <FadeInView>
         <Title title="Elérhetőség / média" />
         <div>

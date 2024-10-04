@@ -35,12 +35,12 @@ const ShinyButton = ({ children, className }: ShinyButtonProps) => {
     <motion.button
       {...animationProps}
       className={cn(
-        'relative min-w-max rounded-lg border-2 border-emerald-500 bg-emerald-800 px-6 py-2 font-medium shadow-md shadow-black/30 backdrop-blur-xl transition-[box-shadow] duration-300 ease-in-out hover:border-emerald-600 hover:bg-emerald-900 hover:shadow-lg',
+        'relative min-w-max rounded-lg border-2 border-emerald-900 bg-emerald-800 px-6 py-2 text-lg font-medium shadow-[inset_0_-2px_12px_rgba(250,0,0,0.4)] shadow-black/30 backdrop-blur-xl transition duration-300 ease-in-out hover:border-emerald-950 hover:bg-emerald-900 hover:shadow-lg',
         className
       )}
     >
       <span
-        className="relative block h-full w-full text-lg tracking-wide text-white"
+        className="relative block h-full w-full tracking-wide text-white"
         style={{
           maskImage:
             'linear-gradient(-75deg,rgba(16,185,129,1) calc(var(--x) + 20%),transparent calc(var(--x) + 30%),rgba(16,185,129,1) calc(var(--x) + 100%))',

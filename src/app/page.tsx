@@ -4,14 +4,15 @@ import About from '@/components/About'
 import Contact from '@/components/Contact'
 import ExtraServices from '@/components/ExtraServices'
 import Footer from '@/components/Footer'
+import Hairdressers from '@/components/Hairdressers'
 import Landing from '@/components/landing/Landing'
 import OurWorks from '@/components/OurWorks'
 import Transition from '@/components/Transition'
 
 export const metadata: Metadata = {
-  title: 'Botanic Beauty Hajszalon',
+  title: 'Botanic Beauty Hajszalon | Fenntartható Szépségápolás Újpesten',
   description:
-    'Újpesti hajszalon, ahol fenntarthatóság és minőség találkozik. Vegán, állatkísérlet-mentes termékekkel dolgozom, hogy elképzeléseid megvalósuljanak környezetbarát módon.',
+    'Fedezd fel a Botanic Beauty Hajszalont, ahol fenntartható és vegán termékekkel varázsolom újjá a frizurád. Kényelmes, zöld környezetben, minőségi és megfizethető szolgáltatásokkal várlak.',
   keywords: [
     'Fodrászat Budapest',
     'Fodrászat Újpest',
@@ -25,8 +26,10 @@ export const metadata: Metadata = {
     'Női fodrászat Újpest',
     'Női hajszalon Budapest',
     'Női hajszalon Újpest',
+    'Férfi fodrász',
     'Férfi fodrász Budapest',
     'Férfi fodrász Újpest',
+    'Férfi fodrászat',
     'Férfi fodrászat Budapest',
     'Férfi fodrászar Újpest',
     'Férfi hajszalon Budapest',
@@ -35,6 +38,7 @@ export const metadata: Metadata = {
     'Hajfestés Újpest',
     'Színes hajfestés Budapest',
     'Színes hajfestés Újpest',
+    'Vegán fodrászat',
     'Vegán fodrászat Budapest',
     'Vegán fodrászat Újpest',
     'Vegán hajszalon Budapest',
@@ -47,6 +51,7 @@ export const metadata: Metadata = {
     'Környezetbarát hajszalon Újpest',
     'Állatbarát fodrászat Budapest',
     'Állatbarát fodrászat Újpest',
+    'Állatbarát hajszalon',
     'Állatbarát hajszalon Budapest',
     'Állatbarát hajszalon Újpest',
     'Fenntartható szépségápolás Budapest',
@@ -57,13 +62,19 @@ export const metadata: Metadata = {
     'Hajápolás és tanácsadás Újpest',
     'Hajfestés és hajápolás Budapest',
     'Hajfestés és hajápolás Újpest',
+    'Fenntartható hajápolás',
+    'Környezetbarát hajfestés',
+    'Hajápolás és tanácsadás',
+    'Minőségi hajápolás Újpesten',
+    'Zöld szépségápolás',
+    'Hajformázás Újpest',
   ],
   openGraph: {
     url: 'https://botanic-beauty.hu',
     type: 'website',
-    title: 'Botanic Beauty Hajszalon',
+    title: 'Botanic Beauty Hajszalon - Fenntartható Szépségápolás Újpesten',
     description:
-      'botanic-beauty.hu -  A szalon koncepcióját, fenntarthatóság iránti elkötelezettséggel hoztam létre , ezért vegán, állatkísérlet mentes termékekkel dolgozom. Ebben a szalonban minden a te elképzelésedről és a minőségi, de megfizethető és környezetbarát anyagok használatáról szól.',
+      'Látogass el a Botanic Beauty Hajszalonba, ahol a fenntarthatóság és a minőség találkozik. Frizurád megalkotásához vegán, állatkísérlet-mentes termékeket használok.',
     images: [
       {
         url: 'https://botanic-beauty.hu/logo-google-square.png',
@@ -88,7 +99,7 @@ export default async function Home() {
         <Landing />
         <ExtraServices />
         <About />
-        {/* <Hairdressers /> */}
+        <Hairdressers />
         <Contact />
         <OurWorks />
       </main>

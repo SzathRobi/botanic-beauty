@@ -2,18 +2,11 @@ import './globals.css'
 
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import Image from 'next/image'
 import { Toaster } from 'react-hot-toast'
 
 import Header from '@/components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
-
-// export const metadata: Metadata = {
-//   title: "Botanic Beauty",
-//   description:
-//     "Lépj be a fenntartható és egyéni hajápolás világába a Botanic Beauty-nál! A természet és az egyéniséged ihlette fodrászat Újpesten.",
-// };
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -130,26 +123,6 @@ export const metadata: Metadata = {
       {
         url: '/apple-icon-180x180.png',
         sizes: '180x180',
-        type: 'image/png',
-      },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
-        type: 'image/png',
-      },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
-        type: 'image/png',
-      },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
-        type: 'image/png',
-      },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
         type: 'image/png',
       },
     ],

@@ -22,31 +22,30 @@ const About = () => {
           <div className="flex flex-col-reverse items-center justify-center gap-8 lg:flex-row lg:items-start">
             <p className="min-w-min text-lg lg:min-w-[400px]">
               <span className="mb-8 block">
-                Timi vagyok, a szalon tulajdonosa, és nagy szenvedéllyel
-                törekszem arra, hogy együtt alkossuk meg a vendéggel a tökéletes
-                frizurát. A szalon koncepcióját, fenntarthatóság iránti
-                elkötelezettséggel hoztam létre , ezért vegán, állatkísérlet
-                mentes termékekkel dolgozom.
+                Újpesti hajszalonomban, az a célom, hogy a vendégeimnek egyedi
+                és személyre szabott frizurákat kínáljak. A szalon koncepciója a
+                fenntarthatóság iránti elkötelezettségemre épül, ezért kizárólag
+                vegán és állatkísérlet-mentes termékekkel dolgozom.
               </span>
               <span className="mb-8 block">
-                Ebben a szalonban minden a te elképzelésedről és a minőségi, de
-                megfizethető és környezetbarát anyagok használatáról szól.
+                Minden szolgáltatásom a vendég elképzeléseire és a minőségi,
+                megfizethető, környezetbarát anyagok használatára összpontosít.
                 Hiszek abban, hogy a legjobb eredményeket a vendég egyéniségéhez
-                és igényeihez igazodó, közös munka és kommunikáció révén
-                érhetjük el. A cél, hogy a frizurád tökéletesen tükrözze a
-                személyiséged és a hétköznapokon, otthon is könnyen kezelni
-                tudd, és megtanuld helyesen ápolni.
+                és igényeihez igazodó közös munka és kommunikáció révén érhetjük
+                el. Célom, hogy a frizurád tökéletesen tükrözze a személyiséged,
+                és hogy a mindennapokban, otthon is könnyen kezelni tudd azt.
               </span>
               <span>
-                Amíg a hajad elkészül, zöldövezeti, nyugodt oázisban pihenhetsz
-                Újpesten . Számomra fontos, hogy ne csak gyönyörű frizurával,
-                hanem kívűl-belűl megújulva hagyd el a szalont.
+                Amíg a hajad készül, zöldövezeti, nyugodt oázisomban pihenhetsz,
+                ahol a nyugalom és a harmónia biztosítja a tökéletes élményt.
+                Fontos számomra, hogy ne csak gyönyörű frizurával, hanem
+                kívül-belül megújulva távozz a szalonból.
               </span>
             </p>
 
             <Image
               src="/about.png"
-              alt="Botanic Beauty Hajszalon"
+              alt="Botanic Beauty Hajszalon belső tere, Újpest, 4. kerület"
               width={508}
               height={576}
               className="rounded-md object-cover"

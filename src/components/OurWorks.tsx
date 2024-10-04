@@ -10,7 +10,7 @@ import Title from './Title'
 
 const OurWorks = () => {
   return (
-    <section className="relative">
+    <section className="relative mb-40 px-2 sm:px-0">
       <Image
         alt="Botanic Beauty Hajszalon növény"
         src="/contact-plant.png"
@@ -28,70 +28,70 @@ const OurWorks = () => {
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 1"
+                alt="Botanic Beauty Hajszalon - színes hajfestés"
                 src="/our-works-1.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 2"
+                alt="Botanic Beauty Hajszalon - női hajvágás"
                 src="/our-works-2.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 3"
+                alt="Botanic Beauty Hajszalon - női hajvágás"
                 src="/our-works-3.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 4"
+                alt="Botanic Beauty Hajszalon - női hajfestés"
                 src="/our-works-4.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 5"
+                alt="Botanic Beauty Hajszalon - szőke hajfestés"
                 src="/our-works-5.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 6"
+                alt="Botanic Beauty Hajszalon - színes hajfestés és vágás"
                 src="/our-works-6.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 7"
+                alt="Botanic Beauty Hajszalon - női hajvágás"
                 src="/our-works-7.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 8"
+                alt="Botanic Beauty Hajszalon - Színes hajfestés"
                 src="/our-works-8.png"
                 className="max-h-[354px] rounded object-cover"
               />
               <Image
                 width={300}
                 height={424}
-                alt="Botanic Beauty szalonban készult haj 9"
+                alt="Botanic Beauty Hajszalon - férfi hajvágás"
                 src="/our-works-9.png"
                 className="max-h-[354px] rounded object-cover"
               />
             </div>
             <Link
               href={OUR_WORKS_ROUTE}
-              className="float-right mb-4 flex items-center justify-start gap-2 text-lg"
+              className="float-right mb-4 flex items-center justify-start gap-2 text-lg transition-colors hover:text-emerald-600"
             >
               <span>Még több</span>
               <FaLongArrowAltRight />
