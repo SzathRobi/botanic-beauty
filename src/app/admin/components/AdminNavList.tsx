@@ -73,7 +73,7 @@ const navElementsMobile = [
           <DropdownMenuItem>
             <Link
               href="/admin/kepfeltoltes"
-              className="px-1 py-2 text-center text-xs hover:bg-green-500/20 sm:px-4 md:w-full md:text-base"
+              className="px-1 py-2 text-center text-xs hover:bg-emerald-500/20 sm:px-4 md:w-full md:text-base"
             >
               <ImageUp />
               Képfeltöltés
@@ -83,7 +83,7 @@ const navElementsMobile = [
           <DropdownMenuItem>
             <Link
               href="/admin/analitika"
-              className="px-1 py-2 text-center text-xs hover:bg-green-500/20 sm:px-4 md:w-full md:text-base"
+              className="px-1 py-2 text-center text-xs hover:bg-emerald-500/20 sm:px-4 md:w-full md:text-base"
             >
               <ChartColumnDecreasing />
               Analitika
@@ -118,7 +118,7 @@ const AdminNavList = () => {
             >
               <Link
                 href={element.href}
-                className="px-1 py-2 text-center text-xs hover:bg-green-500/20 sm:px-4 md:w-full md:text-base"
+                className="px-1 py-2 text-center text-xs hover:bg-emerald-500/20 sm:px-4 md:w-full md:text-base"
               >
                 {element.icon}
                 {element.title}
@@ -138,7 +138,7 @@ const AdminNavList = () => {
           >
             <Link
               href={element.href}
-              className="px-1 py-2 text-center text-xs hover:bg-green-500/20 sm:px-4 md:w-full md:text-base"
+              className="px-1 py-2 text-center text-xs hover:bg-emerald-500/20 sm:px-4 md:w-full md:text-base"
             >
               {element.icon}
               {element.title}

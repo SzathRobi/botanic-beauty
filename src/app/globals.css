@@ -20,26 +20,16 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 .rdp-button {
   transition: background-color 0.2s ease-in-out;
 }
 
 .rdp-day_selected {
-  background-color: #21954c !important;
+  background-color: #059669 !important;
 }
 
 .rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
-  background-color: #21954c66 !important;
+  background-color: #05966966 !important;
 }
 
 @layer utilities {

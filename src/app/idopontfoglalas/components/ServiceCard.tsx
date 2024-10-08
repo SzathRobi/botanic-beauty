@@ -62,14 +62,14 @@ const ServiceCard = ({
   return (
     <div
       className={`${
-        isSelected ? 'bg-green-600/30' : 'bg-black/30'
+        isSelected ? 'bg-emerald-600/30' : 'bg-black/30'
       } mb-4 rounded-md transition-colors`}
     >
       <label
         key={index}
         className="mb-2 flex cursor-pointer items-center gap-4 rounded-md px-4 py-2"
       >
-        <div className="rounded-full bg-green-600 p-2">
+        <div className="rounded-full bg-emerald-600 p-2">
           {geServiceIcon(service.category)}
         </div>
         <div className="flex-1">

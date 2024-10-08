@@ -3,42 +3,44 @@ import Link from 'next/link'
 
 import { BOOKING_ROUTE } from '@/constants/routes.constants'
 
+import landingBg from '../../../public/landing-bg.png'
 import BackgroundBlur from '../BackgroundBlur'
-import { Button } from '../Button'
-import styles from './Landing.module.css'
+import { LanidngWeaveSvg } from './LandingWaveSvg'
+import ShinyButton from './ShinyButton'
 
 const Landing = async () => {
   return (
-    <section className="h-screen">
-      <Image
-        alt="Botanic Beauty Hajszalon"
-        src="/landing-bg.png"
-        width={1920}
-        height={1080}
-        priority={true}
-        className="absolute -z-10 object-cover md:-top-24"
-      />
+    <section className="relative h-screen">
+      <div>
+        <Image
+          alt="Botanic Beauty Hajszalon belső tere, Újpest, 4. kerület"
+          src={landingBg}
+          priority={true}
+          fill
+          quality={100}
+          sizes="100vw"
+          placeholder="blur"
+          className="absolute -z-10 object-cover"
+        />
+
+        <LanidngWeaveSvg />
+      </div>
       <div className="flex h-full w-full flex-col items-center justify-center px-2 sm:px-0">
-        <BackgroundBlur className="mb-24 mt-16 flex flex-col items-center justify-center gap-4">
-          <h1 className="mb-2 text-center text-xl md:text-2xl 2xl:text-3xl">
-            Lépj be a fenntartható és személyre szabott hajápolás világába a
-            Botanic Beauty hajszalonnál!
+        <BackgroundBlur className="mb-24 mt-16 flex flex-col items-center justify-center gap-4 bg-black/60">
+          <h1 className="-mb-2 text-center text-xl md:text-2xl 2xl:text-4xl">
+            Tökéletes haj, fenntartható alapanyagokkal.
           </h1>
 
-          <h2 className="text-md mb-12 text-center opacity-75 md:text-xl">
-            A természet és az egyéniséged ihlette hajszalon Újpesten.
+          <h2 className="mb-3 text-center text-xl md:text-2xl 2xl:text-4xl">
+            Lépj ki tőlünk gyönyörű hajjal és új önbizalommal!
           </h2>
 
-          <Link
-            href={BOOKING_ROUTE}
-            // className="green-glow glow-spin rounded-md bg-green-700 px-4 py-2 text-xl text-white shadow-green-700 transition"
-          >
-            <Button
-              size="lg"
-              className={`${styles['glow-shadow-spin']} text-xl`}
-            >
-              Időpontfoglalás
-            </Button>
+          <h3 className="text-md mb-12 text-center opacity-75 md:text-xl 2xl:text-2xl">
+            A természet és az egyéniséged ihlette hajszalon, Újpesten.
+          </h3>
+
+          <Link href={BOOKING_ROUTE}>
+            <ShinyButton className="2xl:text-xl">Foglalj időpontot</ShinyButton>
           </Link>
         </BackgroundBlur>
       </div>

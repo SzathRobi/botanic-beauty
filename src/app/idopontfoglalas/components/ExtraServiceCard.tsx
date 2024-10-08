@@ -30,11 +30,11 @@ const ExtraServiceCard = ({ selectExtraService }: ExtraServiceCardProps) => {
   return (
     <div
       className={`${
-        isExtraServiceSelected ? 'bg-green-600/10' : 'bg-black/30'
+        isExtraServiceSelected ? 'bg-emerald-600/10' : 'bg-black/30'
       } mb-4 rounded-md transition-colors`}
     >
       <label className="mb-2 flex cursor-pointer items-center gap-4 rounded-md px-4 py-2 pl-16">
-        <div className="rounded-full bg-green-600 p-2">
+        <div className="rounded-full bg-emerald-600 p-2">
           <PiScissors size={ICON_SIZE / 2} />
         </div>
         <div className="flex-1">

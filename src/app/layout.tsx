@@ -2,18 +2,11 @@ import './globals.css'
 
 import type { Metadata, Viewport } from 'next'
 import { Inter } from 'next/font/google'
-import Image from 'next/image'
 import { Toaster } from 'react-hot-toast'
 
 import Header from '@/components/Header'
 
 const inter = Inter({ subsets: ['latin'] })
-
-// export const metadata: Metadata = {
-//   title: "Botanic Beauty",
-//   description:
-//     "Lépj be a fenntartható és egyéni hajápolás világába a Botanic Beauty-nál! A természet és az egyéniséged ihlette fodrászat Újpesten.",
-// };
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -132,26 +125,6 @@ export const metadata: Metadata = {
         sizes: '180x180',
         type: 'image/png',
       },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
-        type: 'image/png',
-      },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
-        type: 'image/png',
-      },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
-        type: 'image/png',
-      },
-      {
-        url: '/apple-icon-60x60.png',
-        sizes: '60x60',
-        type: 'image/png',
-      },
     ],
   },
 }
@@ -163,19 +136,19 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} bg-[#0F1E14]`}>
         <Header />
         <Toaster />
-        <div className="fixed left-0 top-0 -z-10 h-screen w-screen object-cover">
-          <Image
+        {/* <div className="fixed left-0 top-0 -z-10 h-screen w-screen object-cover"> */}
+        {/* {<Image
             priority
             alt="Botanic Beauty hajszalon"
             src="/site-bg.png"
             fill
             className="object-cover"
-          />
-        </div>
-        {children}
+          />} */}
+        {/* </div> */}
+        <div>{children}</div>
 
         <script
           type="application/ld+json"

@@ -43,7 +43,9 @@ const BigCalendarDay = ({
   const endTime = format(end!, 'HH:mm')
 
   const eventColor =
-    calendarEvent.event.hairdresser === 'Timi' ? 'bg-green-600' : 'bg-blue-600'
+    calendarEvent.event.hairdresser === 'Timi'
+      ? 'bg-emerald-600'
+      : 'bg-blue-600'
 
   const [isLoading, setIsLoading] = useState(false)
 
