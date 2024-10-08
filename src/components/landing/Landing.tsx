@@ -36,7 +36,7 @@ const Landing = async () => {
           </h2>
 
           <h3 className="text-md mb-12 text-center opacity-75 md:text-xl 2xl:text-2xl">
-            A természet és az egyéniséged ihlette stílus, Újpesten.
+            A természet és az egyéniséged ihlette hajszalon, Újpesten.
           </h3>
 
           <Link href={BOOKING_ROUTE}>

@@ -52,7 +52,7 @@ const ExtraServices = () => {
 
             <FadeInView delay={0.2}>
               <ServiceCard
-                description="A hajápolás fenntarthatóságáért: kizárólag vegán, természetes összetevőkből készült fodrászati termékeket használok, hogy a hajad a legjobbat kapja."
+                description="A hajápolás fenntarthatóságáért: kizárólag vegán, állatokon nem tesztelt, professzionális fodrászati termékeket használok, hogy a hajad ragyogó és egészséges legyen."
                 icon={<Vegan size={64} />}
                 title="Vegán termékek"
               />

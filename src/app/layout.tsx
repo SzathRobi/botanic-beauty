@@ -136,7 +136,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="hu">
-      <body className={`${inter.className} bg-[#101914]`}>
+      <body className={`${inter.className} bg-[#0F1E14]`}>
         <Header />
         <Toaster />
         {/* <div className="fixed left-0 top-0 -z-10 h-screen w-screen object-cover"> */}

@@ -22,10 +22,12 @@ const About = () => {
           <div className="flex flex-col-reverse items-center justify-center gap-8 lg:flex-row lg:items-start">
             <p className="min-w-min text-lg lg:min-w-[400px]">
               <span className="mb-8 block">
-                Újpesti hajszalonomban, az a célom, hogy a vendégeimnek egyedi
-                és személyre szabott frizurákat kínáljak. A szalon koncepciója a
-                fenntarthatóság iránti elkötelezettségemre épül, ezért kizárólag
-                vegán és állatkísérlet-mentes termékekkel dolgozom.
+                Újpesti hajszalonomban a célom, hogy vendégeimnek egyedi és
+                személyre szabott frizurákat kínáljak. A szalon koncepciója a
+                fenntarthatóság iránti elkötelezettségemre épül, amiben az
+                Eleven Australia professzionális, vegán és állatkísérlet-mentes
+                termékei segítenek, hogy a hajápolás egyszerre legyen
+                környezettudatos és minőségi.
               </span>
               <span className="mb-8 block">
                 Minden szolgáltatásom a vendég elképzeléseire és a minőségi,
