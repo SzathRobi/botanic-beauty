@@ -1,0 +1,12 @@
+export type SearchParamService =
+  | 'noi-hajvagas'
+  | 'ferfi-hajvagas'
+  | 'hajfestes'
+  | 'ombre-hajfestes'
+  | 'balayage-hajfestes'
+  | 'hajapolas'
+  | 'keratinos-hajkezeles'
+  | 'szokites'
+  | 'hajkiegyenesites'
+  | 'hajgondorites'
+  | 'frufru-vagas'

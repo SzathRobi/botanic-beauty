@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { ReactNode, useState } from 'react'
 
 import BackgroundBlur from '@/components/BackgroundBlur'
+import { SERVICES } from '@/constants/services.constants'
 
 import { mapMultistepFormDataToBooking } from '../mappers/mapMultistepFormdataToBooking.mapper'
 import AvailableDatesForm from './AvailableDatesForm'
@@ -31,11 +32,22 @@ const FadeIn = ({ children }: FadeInProps) => (
 type MultiStepFormProps = {
   schedule: Schedule | null
   bookings: Booking[]
+  serviceId: `${number}` | null
 }
 
-const MultiStepForm = ({ bookings, schedule }: MultiStepFormProps) => {
-  const [activeStep, setActiveStep] = useState(0)
-  const [selectedService, setSelectedService] = useState<TService | null>(null)
+const MultiStepForm = ({
+  bookings,
+  schedule,
+  serviceId,
+}: MultiStepFormProps) => {
+  const preSelectedService = SERVICES.find(
+    (service) => service.id === serviceId
+  )
+
+  const [activeStep, setActiveStep] = useState(serviceId ? 2 : 0)
+  const [selectedService, setSelectedService] = useState<TService | null>(
+    preSelectedService || null
+  )
   const [selectedExtraService, setSelectedExtraService] =
     useState<TService | null>(null)
   const [selectedHairdresser, setSelectedHairdresser] = useState<
