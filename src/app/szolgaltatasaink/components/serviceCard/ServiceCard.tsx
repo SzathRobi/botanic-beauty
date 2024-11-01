@@ -23,7 +23,7 @@ type ServiceCardProps = {
 const ServiceCard = ({ service, index }: ServiceCardProps) => {
   return (
     <Card
-      className={`mb-8 items-start gap-4 lg:flex lg:p-4 ${index % 2 === 0 ? 'lg:flex-row-reverse' : 'flex-row'}`}
+      className={`mb-8 items-start gap-4 border-none bg-black/0 lg:flex lg:p-4 ${index % 2 === 0 ? 'lg:flex-row-reverse' : 'flex-row'}`}
     >
       <Image
         src={service.image}
@@ -44,11 +44,11 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
           <CardDescription>{service.shortDescription}</CardDescription>
         </CardHeader>
 
-        <CardContent className="mb-12">
+        <CardContent className="mb-12 min-h-44">
           <p>{service.longDescription}</p>
         </CardContent>
 
-        <CardFooter className="mb-0 mt-auto">
+        <CardFooter>
           <Button asChild className="text-white">
             <Link href={`${BOOKING_ROUTE}?${service.queryParam}`}>
               Foglalj időpontot
