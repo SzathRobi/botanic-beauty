@@ -134,7 +134,7 @@ const PricinggPage = async () => {
 
             <p>
               <span className="text-red-400">
-                Extra sok, vagy extra hosszú haj esetén +10 % felárat számolunk
+                Extra sok, vagy extra hosszú haj esetén +20 % felárat számolunk
                 fel!
               </span>{' '}
               Csak magánszemélyeknek állítunk ki számlát!{' '}
