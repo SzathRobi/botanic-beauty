@@ -1,115 +1,103 @@
-import randomImage from '../../../../public/our-works-2.png'
+import balayageImage from '../../../../public/services/service-balayage-min.png'
+import ferfiHajvagasImage from '../../../../public/services/service-ferfi-hajvagas-min.png'
+import hajfestesImage from '../../../../public/services/service-hajfestes-min.png'
+import hajgondoritesImage from '../../../../public/services/service-hajgondorites-min.png'
+import noiHajvagasImage from '../../../../public/services/service-noi-hajvagas-min.png'
+import szinfelfrissitesImage from '../../../../public/services/service-szinfelfrissites-min.png'
+import szinkorrekcioImage from '../../../../public/services/service-szinkorrekcio-min.png'
+import tofestesImage from '../../../../public/services/service-tofestes-min.png'
+import toszokitesImage from '../../../../public/services/service-toszokites-min.png'
 import { Service } from '../types/service.type'
 
 export const SERVICES: Service[] = [
   {
-    duration: 60,
+    duration: 75,
     name: 'Női Hajvágás',
     shortDescription:
-      'Stílusos női hajvágás, amely kiemeli egyéni szépséged és harmonizál egyéniségeddel.',
+      'Stílusos női hajvágás, amely kiemeli ,és harmonizál egyéniségeddel.',
     longDescription:
-      'Női hajvágásainkat a legújabb divatirányzatok inspirálják, ugyanakkor figyelembe vesszük arcformád, hajtípusod és személyes stílusod, hogy a végeredmény tökéletesen passzoljon hozzád. Akár rövidebb frizurát, akár hosszú, réteges vágást szeretnél, profi csapatunk segít elérni álmaid haját.',
-    image: randomImage,
+      'Női hajvágásainkat a legújabb divatirányzatok inspirálják, ugyanakkor figyelembe vesszük arcformád, hajtípusod és személyes stílusod, hogy a végeredmény tökéletesen passzoljon hozzád. Akár rövidebb, frissítő hajvágást szeretnél vagy egy teljesen új hajforma váltást, esetleg egy fru-frut, szalonunkba minden elképzelést kivitelezünk közösen.',
+    image: noiHajvagasImage,
     queryParam: 'szolgaltatas=noi-hajvagas',
   },
   {
     duration: 45,
     name: 'Férfi Hajvágás',
     shortDescription:
-      'Professzionális férfi hajvágás, modern vagy klasszikus stílusban, hogy a legjobb formádat hozd.',
+      'Professzionális férfi hajvágás modern vagy klasszikus stílusban, hajvágógéppel, ollóval.',
     longDescription:
-      'A férfi hajvágás nem csupán a stílusról, hanem az egyszerű kezelhetőségről és az egyéni megjelenésről is szól. Legyen szó klasszikus vagy trendi stílusról, célunk, hogy olyan frizurát kapj, amelyet könnyű fenntartani, és amely magabiztossá tesz a mindennapokban. Frissítsd megjelenésed, és élvezd a professzionális ápolást!',
-    image: randomImage,
+      'A szalonban a frizurát az arc és fej formádhoz igazítjuk a könnyen kezelhetőség érdekében. A hajvágás nem csupán a stílusról, hanem az egyéni megjelenésről és a mindennapi praktikumról is szól. Célunk, hogy magabiztosan érezd magad a mindennapokban és neked a lehető legkevesebb dolgod legyen vele a hétköznapokon.',
+    image: ferfiHajvagasImage,
     queryParam: 'szolgaltatas=ferfi-hajvagas',
   },
   {
-    duration: 150,
-    name: 'Hajfestés',
-    shortDescription:
-      'Természetes és tartós hajszín, amely új életet visz a frizurádba, egyéniségedhez igazítva.',
-    longDescription:
-      'Hajfestés szolgáltatásunkkal személyre szabott, hosszan tartó és vibráló színeket érhetünk el. A legújabb technikákat alkalmazva biztosítjuk, hogy hajad egészséges maradjon, miközben tökéletesen harmonizál stílusoddal és egyéniségeddel. Bízd ránk a megjelenésed frissítését, és élvezd az új színek adta energiát.',
-    image: randomImage,
-    queryParam: 'szolgaltatas=hajfestes',
-  },
-  {
-    duration: 240,
-    name: 'Ombre Hajfestés',
-    shortDescription:
-      'Lágy színátmenet a hajvégeken, amely stílusosan és természetesen kiemeli a hajszínt.',
-    longDescription:
-      'Az ombre hajfestés egy igazán divatos technika, ahol a hajvégek színe fokozatosan világosodik, természetes átmenetet képezve. Ez a stílus ideális választás, ha finom változásra vágysz, ami kiegészíti természetes hajszíned, és feldobja a megjelenésed anélkül, hogy túl drámai lenne.',
-    image: randomImage,
-    queryParam: 'szolgaltatas=ombre-hajfestes',
-  },
-  {
-    duration: 240,
-    name: 'Balayage Hajfestés',
-    shortDescription:
-      'Lágy, természetes hatású hajfestés, amely gyönyörű színátmenetet biztosít.',
-    longDescription:
-      'A balayage egy kézzel festett technika, mely során a hajra természetes, napcsókolta hatást keltő színeket viszünk fel. Ez a színátmenet időtálló, és kiemeli a haj textúráját, így ideális választás minden hajtípusra. Könnyen karbantartható és hosszan tartó eredményt biztosít.',
-    image: randomImage,
-    queryParam: 'szolgaltatas=balayage-hajfestes',
-  },
-  {
     duration: 30,
-    name: 'Hajápolás',
-    shortDescription:
-      'Tápláló hajápolás, amely erősíti és ragyogóvá teszi a hajat.',
-    longDescription:
-      'Hajápolási kezeléseink célja a haj vitalitásának visszaállítása és a sérült hajszálak regenerálása. Speciális maszkokkal és szérumokkal tápláljuk és hidratáljuk a hajszálakat, amelyek erősebbek, egészségesebbek és fényesebbek lesznek. Érezd a különbséget már az első kezelés után!',
-    image: randomImage,
-    queryParam: 'szolgaltatas=hajapolas',
-  },
-  {
-    duration: 240,
-    name: 'Keratinos Hajkezelés',
-    shortDescription:
-      'Kezelés, amely táplálja és regenerálja a hajszálakat, selymes és egészséges hatást nyújtva.',
-    longDescription:
-      'A keratinos hajkezelés tökéletes megoldás a száraz, töredezett haj újjáélesztésére. Ezzel a kezeléssel keratin kerül a hajszálakba, így azok erősebbek, selymesebbek és fényesebbek lesznek. Ideális választás azoknak, akik gyakran formázzák a hajukat, és szeretnék visszaállítani annak egészségét.',
-    image: randomImage,
-    queryParam: 'szolgaltatas=keratinos-hajkezeles',
-  },
-  {
-    duration: 240,
-    name: 'Szőkítés',
-    shortDescription:
-      'Professzionális szőkítés, amely világosítja és kiemeli a természetes színeket.',
-    longDescription:
-      'Szőkítési szolgáltatásunkkal természetes, fényes és ragyogó szőke hajat varázsolunk. Akár teljes szőkítést, akár világosítást szeretnél, tapasztalt fodrászaink biztonságosan és kíméletesen érnek el lenyűgöző eredményeket, amelyek természetesnek és egészségesnek tűnnek.',
-    image: randomImage,
-    queryParam: 'szolgaltatas=szokites',
-  },
-  {
-    duration: 60,
-    name: 'Hajkiegyenesítés',
-    shortDescription:
-      'Gyors és hatékony hajkiegyenesítés, hogy a haj sima és egyenes maradjon.',
-    longDescription:
-      'A hajkiegyenesítés szolgáltatásunkat azoknak ajánljuk, akik egyenes és fényes hajat szeretnének. Professzionális eszközökkel és technikákkal segítünk, hogy hajad tartósan sima és egyenes maradjon, amit könnyű kezelni és formázni.',
-    image: randomImage,
-    queryParam: 'szolgaltatas=hajkiegyenesites',
-  },
-  {
-    duration: 60,
     name: 'Hajgöndörítés',
     shortDescription:
-      'Tartós göndörítés a természetes, laza hullámokért és a bouncy hatásért.',
+      'Tartós göndörítés hajformázóval a természetes, laza hullámokért és a nagyobb volumenért, eseményre vagy akár csak a hétköznapokra.',
     longDescription:
-      'A hajgöndörítés szolgáltatásunkkal varázslatos, tartós hullámokat vagy göndörséget adunk hajadnak, amely könnyed, természetes és látványos. Akár finom hullámokra, akár erős göndörségre vágysz, profi technikánk segít elérni a kívánt hatást, amitől hajad élettel teli lesz.',
-    image: randomImage,
+      'A hajgöndörítés szolgáltatásunkkal varázslatos, tartós hullámokat vagy göndörséget adunk hajadnak, amely könnyed, természetes és látványos. Akár finom hullámokra, akár erős göndörségre vágysz, profi technikáink és eszközeink segítenek elérni a kívánt hatást.',
+    image: hajgondoritesImage,
     queryParam: 'szolgaltatas=hajgondorites',
   },
   {
-    duration: 15,
-    name: 'Frufru Vágás',
+    duration: 90,
+    name: 'Tőfestés',
     shortDescription:
-      'Divatos frufru vágás, amely tökéletesen keretezi arcodat és kiemeli egyedi stílusodat.',
+      'Személyre szabott, egységes hajtőszín, amely élénk, fényes hatást kölcsönöz, és tökéletesen elfedi az ősz hajszálakat.',
     longDescription:
-      'A frufru remek módja annak, hogy karaktert adj frizurádnak, és kiemeld arcvonásaidat. Legyen szó klasszikus, egyenes frufruról, vagy lágyabb, oldalt elhelyezkedő stílusról, segítünk megtalálni az arcformádhoz leginkább illőt. Gyere el, és újíts be egy trendi frufruval!',
-    image: randomImage,
-    queryParam: 'szolgaltatas=frufru-vagas',
+      'Tőfestési szolgáltatásunkkal a lenőtt natúr hajtő színét tökéletesen igazítjuk a meglévő festett hajszínhez, így egységes, friss megjelenést biztosítunk. A professzionális, természetes alapanyagú festékek fényt adnak a hajnak, felfrissítik a kopott hajhossz színét, és szükség esetén elfedik az ősz hajszálakat, hogy hajad egészséges, élénk és ragyogó maradjon.',
+    image: tofestesImage,
+    queryParam: 'szolgaltatas=tofestes',
+  },
+  {
+    duration: 150,
+    name: 'Tőszőkités (árnyalással)',
+    shortDescription:
+      'A lenőtt hajtő világosítása és árnyalása a már szőkített hajhosszhoz illeszkedve, egységes és természetes szőke megjelenésért.',
+    longDescription:
+      'A lenőtt, natúr hajtövek szőkítése és árnyalása segít abban, hogy egységes, ragyogó szőke árnyalatot kapjunk, amely tökéletesen illeszkedik a korábban szőkített hajhosszhoz. Ez a technika ideális azok számára, akik szeretnék felfrissíteni szőke hajszínüket, és egységes, harmonikus megjelenést kívánnak elérni.',
+    image: toszokitesImage,
+    queryParam: 'szolgaltatas=toszokites',
+  },
+  {
+    duration: 150,
+    name: 'Hajfestés, teljes hajhosszon',
+    shortDescription:
+      'Természetes, és tartós hajszín, amely új életet visz a frizurádba, egyéniségedhez igazítva.',
+    longDescription:
+      'Professzionális, természetes alapú festékeinkkel új életet viszünk frizurádba, feltöltjük és fényessé tesszük a hajad, miközben tartós, egyéniségedhez és igényeidhez illeszkedő színt biztosítunk. Hajfestés szolgáltatásunkkal a legújabb technikákat alkalmazva elérjük, hogy az ősz hajszálak is tökéletes fedést kapjanak, hajad pedig egészséges, vibráló maradjon. Bízd ránk a megjelenésed megújítását, és élvezd az új színek magabiztosságot adó frissességét',
+    image: hajfestesImage,
+    queryParam: 'szolgaltatas=hajfestes',
+  },
+  {
+    duration: 60,
+    name: 'Színfelfrissítés, árnyalás',
+    shortDescription:
+      'Az árnyalás frissíti a kifakult hajszínt, visszaadva a haj eredeti, ragyogó tónusát és természetes fényét.',
+    longDescription:
+      'Az árnyalás egy professzionális színfrissítő technika, amely a hajhossz kifakult színeit újra életre kelti. Kiváló megoldás, ha szeretnéd felfrissíteni a hajszínt anélkül, hogy teljes hajfestésre lenne szükséged. Az árnyalás során tonizáljuk a hajat, így a korábban szőkített vagy festett hajszín visszanyeri vibráló, természetes árnyalatát, miközben fényt és ápolást kap.',
+    image: szinfelfrissitesImage,
+    queryParam: 'szolgaltatas=szinfelfrissites',
+  },
+  {
+    duration: 240,
+    name: 'Balayage és Ombre festés',
+    shortDescription:
+      'Az ombre és balayage hajfestés egyedi, természetes hatású melír technikák, amelyek lágy színátmenetet adnak a hajnak.',
+    longDescription:
+      'Az ombre határozottabb, fokozatos átmenetet képez, ahol a hajvégek világosabbak, míg a tövek sötétebbek maradnak, így a színek kontrasztosabbak. Ezzel szemben a balayage természetes, napszítta hatást kelt, tőhöz közel világosítva finom átmenettel, lágy színekkel, amelyek kiemelik a haj textúráját. Mindkét technika hosszan tartó, könnyen karbantartható megoldás, tökéletes választás a friss, természetes megjelenésért.',
+    image: balayageImage,
+    queryParam: 'szolgaltatas=balayage-ombre',
+  },
+  {
+    duration: 240,
+    name: 'Szőkítés és Színkorrekció',
+    shortDescription:
+      'Természetes, fényes szőke árnyalatok, kíméletes világosítási eljárással, amely egészséges és ragyogó megjelenést biztosít a hajnak.',
+    longDescription:
+      'Szőkítési és színkorrekciós szolgáltatásunk célja, hogy a hajad egységes és ragyogó megjelenést kapjon, különösen, ha korábban otthoni festés, vagy foltos színezés után kell helyreállítani. A színkorrekció során javítjuk az elrontott, egyenetlen színeket és foltokat, míg a teljes szőkítés során a hajad egészen a hajtőtől a végekig, világos és egységes szőke árnyalatot kap. A természetes alapanyagú professzionális termékeinkel garantáljuk, hogy a hajad egészségesen fénylő és élettel teli marad a folyamat végén is.',
+    image: szinkorrekcioImage,
+    queryParam: 'szolgaltatas=szokites-szinkorrekcio',
   },
 ]

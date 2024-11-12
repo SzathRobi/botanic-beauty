@@ -44,7 +44,7 @@ const MultiStepForm = ({
     (service) => service.id === serviceId
   )
 
-  const [activeStep, setActiveStep] = useState(serviceId ? 2 : 0)
+  const [activeStep, setActiveStep] = useState(0)
   const [selectedService, setSelectedService] = useState<TService | null>(
     preSelectedService || null
   )

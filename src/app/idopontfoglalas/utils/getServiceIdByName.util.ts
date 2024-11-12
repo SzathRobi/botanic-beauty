@@ -1,6 +1,5 @@
 import { SearchParamService } from '../types/searchParamService.type'
 
-// TODO: mindet ellenőrizni
 export const getServiceIdByName = (
   name: SearchParamService
 ): null | `${number}` => {
@@ -8,24 +7,19 @@ export const getServiceIdByName = (
 
   if (name === 'ferfi-hajvagas') return '8'
 
+  if (name === 'hajgondorites') return '4'
+
+  if (name === 'tofestes') return '13'
+
+  if (name === 'toszokites') return '14'
+
   if (name === 'hajfestes') return '15'
 
-  if (name === 'ombre-hajfestes') return '18'
+  if (name === 'szinfelfrissites') return '16'
 
-  if (name === 'balayage-hajfestes') return '18'
+  if (name === 'balayage-ombre') return '18'
 
-  // TODO: ez tuti rossz
-  if (name === 'hajapolas') return '16'
-
-  if (name === 'keratinos-hajkezeles') return '17'
-
-  if (name === 'szokites') return '19'
-
-  if (name === 'hajkiegyenesites') return '3'
-
-  if (name === 'hajgondorites') return '3'
-
-  if (name === 'frufru-vagas') return '7'
+  if (name === 'szokites-szinkorrekcio') return '21'
 
   return null
 }
