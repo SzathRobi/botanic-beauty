@@ -122,13 +122,6 @@ const COLORING_SERVICES: TService[] = [
     duration: 60,
   },
   {
-    id: '17',
-    category: 'Festések',
-    name: 'Teljes hajhossz  világosítása',
-    price: 25000,
-    duration: 240,
-  },
-  {
     id: '18',
     category: 'Festések',
     name: 'Balayage, ombre, babylights, (természetes hatású, átmenetes melírok, fóliával vagy szabad levegőn)',
@@ -148,6 +141,13 @@ const COLORING_SERVICES: TService[] = [
     name: 'Fóliás Melír (részlegesen melírozva)',
     price: 22000,
     duration: 180,
+  },
+  {
+    id: '17',
+    category: 'Festések',
+    name: 'Teljes hajhossz  világosítása',
+    price: 25000,
+    duration: 240,
   },
   {
     id: '21',

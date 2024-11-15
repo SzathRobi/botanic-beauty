@@ -7,7 +7,7 @@ export const getServiceIdByName = (
 
   if (name === 'ferfi-hajvagas') return '8'
 
-  if (name === 'hajgondorites') return '4'
+  if (name === 'hajgondorites') return '3'
 
   if (name === 'tofestes') return '13'
 
