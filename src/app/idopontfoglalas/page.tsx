@@ -8,6 +8,8 @@ import { getSchedule } from '@/actions/schedule'
 import Footer from '@/components/Footer'
 
 import MultiStepForm from './components/MultiStepForm'
+import { SearchParamService } from './types/searchParamService.type'
+import { getServiceIdByName } from './utils/getServiceIdByName.util'
 
 export const metadata: Metadata = {
   title: 'Botanic Beauty Hajszalon | Időpontfoglalás',
@@ -46,10 +48,18 @@ export const metadata: Metadata = {
   },
 }
 
-const BookingPage = async () => {
+type BookingPageProps = {
+  searchParams: {
+    szolgaltatas: SearchParamService
+  }
+}
+
+const BookingPage = async ({ searchParams }: BookingPageProps) => {
   const schedule = await getSchedule()
 
   const bookings = await getBookings()
+
+  const serviceId = getServiceIdByName(searchParams.szolgaltatas)
 
   return (
     <>
@@ -62,7 +72,11 @@ const BookingPage = async () => {
           className="absolute left-0 top-0 -z-10 rotate-[25deg] object-cover"
         />
 
-        <MultiStepForm schedule={schedule} bookings={bookings || []} />
+        <MultiStepForm
+          schedule={schedule}
+          bookings={bookings || []}
+          serviceId={serviceId}
+        />
       </section>
 
       <Footer />

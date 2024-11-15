@@ -11,6 +11,7 @@ import {
   HOME_ROUTE,
   OUR_WORKS_ROUTE,
   PRICES_ROUTE,
+  SERVICES_ROUTE,
 } from '@/constants/routes.constants'
 
 type HamburgerMenuProps = {
@@ -53,15 +54,23 @@ const HamburgerMenu = ({ user }: HamburgerMenuProps) => {
                 <li className="shadow transition hover:text-emerald-700">
                   <Link href={HOME_ROUTE}>Főoldal</Link>
                 </li>
+
                 <li className="shadow transition hover:text-emerald-700">
                   <Link href={BOOKING_ROUTE}>Időpontfoglalás</Link>
                 </li>
+
                 <li className="shadow transition hover:text-emerald-700">
                   <Link href={PRICES_ROUTE}>Árlista</Link>
                 </li>
+
+                <li className="shadow transition hover:text-emerald-700">
+                  <Link href={SERVICES_ROUTE}>Szolgáltatásaink</Link>
+                </li>
+
                 <li className="shadow transition hover:text-emerald-700">
                   <Link href={OUR_WORKS_ROUTE}>Munkáink</Link>
                 </li>
+
                 {user && (
                   <li className="shadow transition hover:text-emerald-700">
                     <Link href="/admin">Admin</Link>

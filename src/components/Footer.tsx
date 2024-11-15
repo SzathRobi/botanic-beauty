@@ -8,6 +8,7 @@ import {
   OUR_WORKS_ROUTE,
   PRICES_ROUTE,
   PRIVACY_POLICY_ROUTE,
+  SERVICES_ROUTE,
   TERMS_OF_USE_ROUTE,
 } from '@/constants/routes.constants'
 
@@ -49,6 +50,10 @@ const Footer = () => {
 
             <li className="mb-4">
               <Link href={PRICES_ROUTE}>Árlista</Link>
+            </li>
+
+            <li className="mb-4">
+              <Link href={SERVICES_ROUTE}>Szolgáltatásaink</Link>
             </li>
 
             <li className="mb-8">

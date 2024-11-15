@@ -1,7 +1,7 @@
 'use client'
 
 import { TService } from '@prisma/client'
-import { ChangeEvent } from 'react'
+import { ChangeEvent, useEffect, useRef } from 'react'
 import { IoColorPaletteOutline } from 'react-icons/io5'
 import { PiHairDryer, PiScissors } from 'react-icons/pi'
 
@@ -34,6 +34,8 @@ const ServiceCard = ({
   selectedService,
   selectExtraService,
 }: ServiceCardProps) => {
+  const cardRef = useRef<HTMLDivElement>(null)
+
   const handleRadioChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       selectService(service)
@@ -59,8 +61,15 @@ const ServiceCard = ({
 
   const isSelected = selectedService?.name === service.name
 
+  useEffect(() => {
+    if (selectedService?.name === service.name && cardRef.current) {
+      cardRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' })
+    }
+  }, [selectedService, service])
+
   return (
     <div
+      ref={cardRef}
       className={`${
         isSelected ? 'bg-emerald-600/30' : 'bg-black/30'
       } mb-4 rounded-md transition-colors`}
