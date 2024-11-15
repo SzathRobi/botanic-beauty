@@ -26,20 +26,20 @@ export const metadata: Metadata = {
     'állatbarát fodrászat időpont',
   ],
   openGraph: {
-    url: 'https://botanic-beauty.hu/idopontfoglalas',
+    url: 'https://www.botanic-beauty.hu/idopontfoglalas',
     type: 'website',
     title: 'Botanic Beauty Hajszalon | Időpontfoglalás',
     description:
       'Foglalj időpontot a Botanic Beauty szalonba online! Gyors és kényelmes időpontfoglalási rendszerünk segítségével egyszerűen választhatsz időpontot.',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',

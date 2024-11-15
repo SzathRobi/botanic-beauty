@@ -30,20 +30,20 @@ export const metadata: Metadata = {
     'állatbarát fodrász munkák',
   ],
   openGraph: {
-    url: 'https://botanic-beauty.hu/munkaink',
+    url: 'https://www.botanic-beauty.hu/munkaink',
     type: 'website',
     title: 'Botanic Beauty Hajszalon | Munkáink',
     description:
       'Tekintsd meg a Botanic Beauty szalon korábbi munkáit! Inspirálódj kreatív hajfestéseinkből és hajvágásainkból, mind vegán és környezetbarát termékekkel.',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',

@@ -16,20 +16,20 @@ export const viewport: Viewport = {
 
 // TODO: check whats 'verification' prop does
 export const metadata: Metadata = {
-  metadataBase: new URL('https://botanic-beauty.hu'),
+  metadataBase: new URL('https://www.botanic-beauty.hu'),
   openGraph: {
     siteName: 'Botanic Beauty',
     type: 'website',
     locale: 'hu_HU',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',
@@ -159,8 +159,8 @@ export default function RootLayout({
               name: 'Botanic Beauty',
               image:
                 'https://github.com/SzathRobi/botanic-beauty/blob/main/public/logo-with-bg.png?raw=true',
-              '@id': 'https://botanic-beauty.hu',
-              url: 'https://botanic-beauty.hu',
+              '@id': 'https://www.botanic-beauty.hu',
+              url: 'https://www.botanic-beauty.hu',
               telephone: '',
               priceRange: '2000Ft - 30000Ft',
               address: {

@@ -27,20 +27,20 @@ export const metadata: Metadata = {
     'hajfestés árak',
   ],
   openGraph: {
-    url: 'https://botanic-beauty.hu/arlista',
+    url: 'https://www.botanic-beauty.hu/arlista',
     type: 'website',
     title: 'Botanic Beauty Hajszalon | Árlista',
     description:
       'Fedezd fel a Botanic Beauty árlistáját! Kínálatunkban megtalálod a hajvágás, hajfestés és egyéb szolgáltatások árait, mind vegán és környezetbarát termékekkel.',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',

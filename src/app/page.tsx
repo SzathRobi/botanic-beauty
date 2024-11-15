@@ -70,20 +70,20 @@ export const metadata: Metadata = {
     'Hajformázás Újpest',
   ],
   openGraph: {
-    url: 'https://botanic-beauty.hu',
+    url: 'https://www.botanic-beauty.hu',
     type: 'website',
     title: 'Botanic Beauty Hajszalon - Fenntartható Szépségápolás Újpesten',
     description:
       'Látogass el a Botanic Beauty Hajszalonba, ahol a fenntarthatóság és a minőség találkozik. Frizurád megalkotásához vegán, állatkísérlet-mentes termékeket használok.',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',

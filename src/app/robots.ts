@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: ['/'],
       disallow: ['/search?q=', '/admin/'],
     },
-    sitemap: ['https://botanic-beauty.hu/sitemap.xml'],
+    sitemap: ['https://www.botanic-beauty.hu/sitemap.xml'],
   }
 }
