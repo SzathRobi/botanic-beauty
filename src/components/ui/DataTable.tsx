@@ -2,8 +2,10 @@
 
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  getFilteredRowModel,
   getSortedRowModel,
   SortingState,
   useReactTable,
@@ -11,6 +13,7 @@ import {
 import { useState } from 'react'
 
 import { Button } from '../Button'
+import { Input } from './Input'
 import {
   Table,
   TableBody,
@@ -34,6 +37,7 @@ export function DataTable<T>({
   onDeleteSelectedRows,
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [rowSelection, setRowSelection] = useState({})
   const [isDeleteLoading, setIsDeleteLoading] = useState(false)
 
@@ -44,9 +48,12 @@ export function DataTable<T>({
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: setRowSelection,
+    onColumnFiltersChange: setColumnFilters,
+    getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       rowSelection,
+      columnFilters,
     },
   })
 
@@ -69,15 +76,26 @@ export function DataTable<T>({
 
   return (
     <div>
-      {!!onDeleteSelectedRows && (
-        <Button
-          isLoading={isDeleteLoading}
-          variant="outline"
-          onClick={deleteAllSelectedRows}
-        >
-          Delete selected rows
-        </Button>
-      )}
+      <div className="flex items-center gap-4 py-4">
+        <Input
+          placeholder="Név kereső..."
+          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          onChange={(event) =>
+            table.getColumn('name')?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+
+        {!!onDeleteSelectedRows && (
+          <Button
+            isLoading={isDeleteLoading}
+            variant="outline"
+            onClick={deleteAllSelectedRows}
+          >
+            Kiválasztott sorok törlése
+          </Button>
+        )}
+      </div>
 
       <div className="rounded-md border">
         <Table>

@@ -296,18 +296,18 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
 
       <Dialog open={isCustomerFormOpen} onOpenChange={onDialogOpenChange}>
         <DialogTrigger asChild>
-          <Button variant="outline" className="mb-8">
-            Add customer
+          <Button variant="secondary" className="mb-8">
+            Ügyfél hozzáadása
             <UserPlus className="ml-2 size-4 text-primary" />
           </Button>
         </DialogTrigger>
-        <DialogContent className="dark">
+        <DialogContent className="dark text-white">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-start gap-2">
-              Add customer
+              Ügyfél hozzáadása
             </DialogTitle>
             <DialogDescription>
-              Add a new customer to your salon.
+              Adjon hozzá egy új ügyfelt a szalonjához.
             </DialogDescription>
           </DialogHeader>
 
@@ -320,7 +320,7 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
       </Dialog>
 
       <BackgroundBlur className="!w-full !max-w-none">
-        <Input
+        {/* <Input
           type="file"
           className="mb-8 max-w-72 bg-primary text-primary-foreground file:text-primary-foreground"
           accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
@@ -328,7 +328,7 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
             const file = e.target.files?.[0]
             readExcel(file)
           }}
-        />
+        /> */}
 
         <DataTable
           columns={columns(openCustomerForm)}
