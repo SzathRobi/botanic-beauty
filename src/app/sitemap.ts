@@ -32,18 +32,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'yearly',
       priority: 0.6,
     },
-    {
-      url: 'https://www.botanic-beauty.hu/adatvedelmi-nyilatkozat',
-      lastModified: new Date().toISOString(),
-      changeFrequency: 'yearly',
-      priority: 0.1,
-    },
-    {
-      url: 'https://www.botanic-beauty.hu/felhasznalasi-feltetelek',
-      lastModified: new Date().toISOString(),
-      changeFrequency: 'yearly',
-      priority: 0.1,
-    },
   ]
 
   const sitemap = [...defaultPages]
