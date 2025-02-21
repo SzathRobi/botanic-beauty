@@ -61,7 +61,7 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                     marginBottom: 48,
                   }}
                 >
-                  Köszönjük a foglalásod , sikeresen rögzítetük.
+                  Köszönjük a foglalásod, sikeresen rögzítetük.
                 </Heading>
 
                 <Text style={paragraph}>Foglalás részletei:</Text>
@@ -78,7 +78,7 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                 </Text>
 
                 <Text style={paragraph}>
-                  Ha mégse jó az időpont kérlek jelezd a következő emailen /
+                  Ha mégse jó az időpont, kérlek jelezd a következő emailen /
                   telefonon:
                 </Text>
                 <Text>
@@ -86,21 +86,21 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                 </Text>
               </Column>
             </Row>
-          </Section>
 
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 12,
-              color: 'rgb(0,0,0, 0.7)',
-            }}
-          >
-            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{' '}
-            <Link href="https://www.botanic-beauty.hu">
-              www.botanic-beauty.hu
-            </Link>{' '}
-            | {CONTACT_PHONE}
-          </Text>
+            <Text
+              style={{
+                textAlign: 'center',
+                fontSize: 12,
+                color: 'rgb(0,0,0, 0.7)',
+              }}
+            >
+              Botanic Beauty Szalon, {CONTACT_ADDRESS}|{' '}
+              <Link href="https://www.botanic-beauty.hu">
+                www.botanic-beauty.hu
+              </Link>{' '}
+              | {CONTACT_PHONE}
+            </Text>
+          </Section>
         </Container>
       </Body>
     </Html>

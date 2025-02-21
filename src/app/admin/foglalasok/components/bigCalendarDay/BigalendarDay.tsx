@@ -10,6 +10,7 @@ import { mapEventToBooking } from '@/app/admin/mappers/mapEventToBooking.mapper'
 import { Button } from '@/components/Button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog'
+import { useRemovePointerEvents } from '@/hooks'
 
 import { CalendarEvent } from '../../../types/calendarEvent.type'
 import BigCalendarEventForm from '../bigCalendarEventForm/BigCalendarEventForm'
@@ -24,6 +25,8 @@ const BigCalendarDay = ({
   setCalendarEvents,
 }: BigCalendarDayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+  useRemovePointerEvents(isDialogOpen)
 
   const {
     event: {
@@ -108,7 +111,7 @@ const BigCalendarDay = ({
                 <p className="hidden md:block">{contactInfo.name}</p>
               </div>
             </PopoverTrigger>
-            <PopoverContent side="right" className="max-w-60 bg-white">
+            <PopoverContent side="right" className="dark max-w-60">
               <p>Foglalási adatok:</p>
               {/* ${eventColor} */}
               <div className={`h-full text-sm`}>
@@ -133,7 +136,7 @@ const BigCalendarDay = ({
                 {contactInfo.otherInfo && <p>{contactInfo.otherInfo}</p>}
               </div>
 
-              <div>
+              <div className="flex items-center gap-2">
                 <Button
                   size="sm"
                   variant="destructive"
@@ -151,7 +154,7 @@ const BigCalendarDay = ({
               </div>
             </PopoverContent>
 
-            <DialogContent>
+            <DialogContent className="dark">
               <BigCalendarEventForm
                 calendarEvent={calendarEvent}
                 setCalendarEvents={setCalendarEvents}

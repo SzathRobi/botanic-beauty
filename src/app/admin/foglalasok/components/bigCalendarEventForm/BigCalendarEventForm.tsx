@@ -35,7 +35,15 @@ import {
   FormMessage,
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/Select'
 import { Separator } from '@/components/ui/Separator'
+import { SERVICES } from '@/constants/services.constants'
 
 import { eventFormSchema } from '../../schemas/eventFormSchema'
 
@@ -52,10 +60,13 @@ const BigCalendarEventForm = ({
 }: BigCalendarEventFormProps) => {
   const booking = mapEventToBooking(calendarEvent.event)
 
+  console.log(booking)
+
   const [isLoading, setIsLoading] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(
     new Date(booking.selectedDate)
   )
+  const [selectedService, setSelectedService] = useState(booking.service)
 
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
@@ -89,6 +100,21 @@ const BigCalendarEventForm = ({
     }
 
     form.setValue('endTime', format(endDateTime, 'HH:mm'))
+  }
+
+  const onServiceSelectChange = (serviceName: string) => {
+    const service =
+      SERVICES.find((service) => service.name === serviceName) || SERVICES[0]
+
+    form.setValue('service', service)
+    setSelectedService(service)
+
+    const newEndDateTime = addMinutes(
+      parse(form.getValues('startTime'), 'HH:mm', new Date()),
+      service.duration
+    )
+
+    form.setValue('endTime', format(newEndDateTime, 'HH:mm'))
   }
 
   const handleSelect = (day: Date | undefined) => {
@@ -131,29 +157,29 @@ const BigCalendarEventForm = ({
     return await emailResponse.json()
   }
 
-  const scheduleReminderEmail = async (booking: Partial<Booking>) => {
-    const emailDelayInMiliseconds = getSecondsToDate(booking as Booking) * 1000
+  // const scheduleReminderEmail = async (booking: Partial<Booking>) => {
+  //   const emailDelayInMiliseconds = getSecondsToDate(booking as Booking) * 1000
 
-    const emailScheduleResponse = await fetch('/api/email/schedule', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        booking: {
-          ...booking,
-          selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
-        },
-        emailDelayInMiliseconds,
-      }),
-    })
+  //   const emailScheduleResponse = await fetch('/api/email/schedule', {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({
+  //       booking: {
+  //         ...booking,
+  //         selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
+  //       },
+  //       emailDelayInMiliseconds,
+  //     }),
+  //   })
 
-    if (!emailScheduleResponse.ok) {
-      toast.error('Az emlékeztető email nem ment ki')
-    }
+  //   if (!emailScheduleResponse.ok) {
+  //     toast.error('Az emlékeztető email nem ment ki')
+  //   }
 
-    return await emailScheduleResponse.json()
-  }
+  //   return await emailScheduleResponse.json()
+  // }
 
   const deleteBookingData = async (id: string) => {
     const response = await fetch(`/api/booking/${id}`, {
@@ -187,6 +213,7 @@ const BigCalendarEventForm = ({
       },
       selectedDate: selectedDate.toString(),
       selectedTimeSlot,
+      service: selectedService,
     }
 
     if (!booking.selectedDate || !booking.selectedTimeSlot) {
@@ -215,21 +242,25 @@ const BigCalendarEventForm = ({
 
     if (
       !isSameDay(booking.selectedDate!, originalBooking.selectedDate) ||
-      booking.selectedTimeSlot !== originalBooking.selectedTimeSlot
+      booking.selectedTimeSlot !== originalBooking.selectedTimeSlot ||
+      booking.service?.name !== originalBooking.service.name
     ) {
-      const [modificationResult, scheduleResult] = await Promise.all([
+      const [modificationResult] = await Promise.all([
         sendModifierEmail(booking),
-        scheduleReminderEmail(booking),
       ])
+      // const [modificationResult, scheduleResult] = await Promise.all([
+      //   sendModifierEmail(booking),
+      //   scheduleReminderEmail(booking),
+      // ])
 
       if (!modificationResult) {
         deleteBookingData(bookingData.id)
         return
       }
 
-      if (!scheduleResult) {
-        toast.error('Az emlekeztető email beütemezés sikertelen volt')
-      }
+      // if (!scheduleResult) {
+      //   toast.error('Az emlekeztető email beütemezés sikertelen volt')
+      // }
     }
 
     setCalendarEvents((prevCalendarEvents: CalendarEvent[]) => {
@@ -255,6 +286,8 @@ const BigCalendarEventForm = ({
             ...event,
             start: updatedStartDate,
             end: updatedEndDate,
+            service: selectedService,
+            title: selectedService.name,
             contactInfo: {
               name: values.name,
               email: values.email,
@@ -280,19 +313,18 @@ const BigCalendarEventForm = ({
   }
 
   return (
-    <div>
+    <div className="dark text-white">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormItem>
-            <FormLabel className="text-black">Dátum</FormLabel>
+            <FormLabel>Dátum</FormLabel>
 
             <FormControl>
               <DayPicker
-                className="dayPicker text-sm text-gray-900 sm:text-base md:text-lg"
+                className="dayPicker text-sm text-white sm:text-base md:text-lg"
                 mode="single"
                 selected={new Date(selectedDate)}
-                // TODO / high: change to selectedDate
-                defaultMonth={new Date('2024-08-01')}
+                defaultMonth={new Date(selectedDate)}
                 weekStartsOn={1}
                 locale={hu}
                 disabled={(date) =>
@@ -313,7 +345,7 @@ const BigCalendarEventForm = ({
               name="startTime"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Időpont kezdete</FormLabel>
+                  <FormLabel>Időpont kezdete</FormLabel>
 
                   <FormControl>
                     <Input
@@ -335,7 +367,7 @@ const BigCalendarEventForm = ({
               name="endTime"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-black">Időpont vége</FormLabel>
+                  <FormLabel>Időpont vége</FormLabel>
 
                   <FormControl>
                     <Input type="time" {...field} disabled readOnly />
@@ -351,6 +383,43 @@ const BigCalendarEventForm = ({
 
           <FormField
             control={form.control}
+            name="service"
+            render={({ field }) => (
+              <>
+                <FormItem>
+                  {/* <FormLabel>name</FormLabel> */}
+
+                  <Select
+                    onValueChange={onServiceSelectChange}
+                    defaultValue={field.value.name}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a verified email to display" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {SERVICES.map((service) => (
+                        <SelectItem key={service.name} value={service.name}>
+                          <div className="flex items-center gap-2">
+                            {service.name}
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <FormMessage />
+                </FormItem>
+                <FormItem>
+                  <FormLabel>Szolgáltalás időtartama (perc)</FormLabel>
+                  <Input disabled value={field.value.duration} />
+                </FormItem>
+              </>
+            )}
+          />
+          {/* <FormField
+            control={form.control}
             name="service.name"
             render={({ field }) => (
               <FormItem>
@@ -363,25 +432,7 @@ const BigCalendarEventForm = ({
                 <FormMessage />
               </FormItem>
             )}
-          />
-
-          <FormField
-            control={form.control}
-            name="service.duration"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-black">
-                  Szolgáltalás időtartama (perc)
-                </FormLabel>
-
-                <FormControl>
-                  <Input {...field} disabled readOnly />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          /> */}
 
           <Separator className="my-4" />
 
@@ -390,7 +441,7 @@ const BigCalendarEventForm = ({
             name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Név</FormLabel>
+                <FormLabel>Név</FormLabel>
 
                 <FormControl>
                   <Input {...field} />
@@ -406,7 +457,7 @@ const BigCalendarEventForm = ({
             name="email"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Email</FormLabel>
+                <FormLabel>Email</FormLabel>
 
                 <FormControl>
                   <Input {...field} />
@@ -422,7 +473,7 @@ const BigCalendarEventForm = ({
             name="phone"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Telefonszám</FormLabel>
+                <FormLabel>Telefonszám</FormLabel>
 
                 <FormControl>
                   <Input {...field} />
@@ -438,7 +489,7 @@ const BigCalendarEventForm = ({
             name="otherInfo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-black">Egyéb infó</FormLabel>
+                <FormLabel>Egyéb infó</FormLabel>
                 <FormControl>
                   <Input {...field} value={field.value || ''} />
                 </FormControl>

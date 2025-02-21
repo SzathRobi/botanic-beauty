@@ -15,7 +15,10 @@ export async function POST(request: NextRequest) {
 
   try {
     await resend.emails.send({
-      from: EMAIL_SENDER,
+      from:
+        process.env.NODE_ENV === 'production'
+          ? EMAIL_SENDER
+          : 'Acme <onboarding@resend.dev>',
       to: booking.contactInfo.email,
       subject: 'Emlékeztető',
       react: ReminderEmail({ booking }),

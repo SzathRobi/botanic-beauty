@@ -15,7 +15,8 @@ export async function PATCH(request: NextRequest, { params }: any) {
 
   const id = await params.id
 
-  const { contactInfo, selectedDate, selectedTimeSlot } = await request.json()
+  const { contactInfo, selectedDate, selectedTimeSlot, service } =
+    await request.json()
 
   if (!contactInfo || !selectedDate || !selectedTimeSlot) {
     return NextResponse.json(
@@ -64,6 +65,7 @@ export async function PATCH(request: NextRequest, { params }: any) {
         contactInfo,
         selectedDate,
         selectedTimeSlot,
+        service,
       },
     })
 

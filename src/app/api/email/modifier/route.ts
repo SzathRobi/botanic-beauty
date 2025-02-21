@@ -31,8 +31,13 @@ export async function POST(request: Request) {
   }
 
   try {
+    console.log('booking.contactInfo.email:', booking.contactInfo.email)
+
     await resend.emails.send({
-      from: EMAIL_SENDER,
+      from:
+        process.env.NODE_ENV === 'production'
+          ? EMAIL_SENDER
+          : 'Acme <onboarding@resend.dev>',
       to: booking.contactInfo.email,
       subject: 'Foglalás módosulása',
       react: ModifierEmail({ booking }),
