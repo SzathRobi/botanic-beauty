@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 
+import { getCustomers } from '@/actions/customer.action'
 import { auth } from '@/auth'
-import prisma from '@/lib/db'
 
 import CustomersContainer from './components/CustomersContainer'
 
@@ -11,7 +11,7 @@ const CustomersPage = async () => {
   if (!session?.user)
     redirect('/admin/bejelentkezes?callbackUrl=/admin/ugyfelek')
 
-  const customers = await prisma.customer.findMany()
+  const customers = await getCustomers()
 
   return (
     <div className="mb-10">
