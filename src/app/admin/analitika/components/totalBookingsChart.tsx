@@ -17,7 +17,7 @@ import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from '@/components/ui/chart'
+} from '@/components/ui/Chart'
 
 import { TimeRange } from '../types/timeRange.type'
 import { getMaxYAxisTickCount } from '../utils/getMaxYAxisTickCount.util'
