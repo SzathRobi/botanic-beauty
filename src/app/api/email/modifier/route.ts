@@ -22,7 +22,8 @@ export async function POST(request: Request) {
   if (
     !booking.contactInfo.email ||
     !booking.selectedDate ||
-    !booking.selectedTimeSlot
+    !booking.selectedTimeSlot ||
+    !booking.service
   ) {
     return NextResponse.json(
       { error: true, message: 'Invalid data' },
@@ -31,8 +32,6 @@ export async function POST(request: Request) {
   }
 
   try {
-    console.log('booking.contactInfo.email:', booking.contactInfo.email)
-
     await resend.emails.send({
       from:
         process.env.NODE_ENV === 'production'

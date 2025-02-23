@@ -4,6 +4,8 @@ import { Resend } from 'resend'
 import { CONTACT_EMAIL, EMAIL_SENDER } from '@/constants/contact.constants'
 import { VerificationEmail } from '@/emails/VerificationEmail'
 
+import { generateGoogleCalendarLink } from '../utils/generateGoogleCalendarLink.util'
+
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: Request) {
@@ -16,6 +18,8 @@ export async function POST(request: Request) {
     )
   }
 
+  const googleCalendarLink = generateGoogleCalendarLink(booking)
+
   try {
     await resend.emails.send({
       from:
@@ -24,7 +28,7 @@ export async function POST(request: Request) {
           : 'Acme <onboarding@resend.dev>',
       to: booking.contactInfo.email,
       subject: 'Visszaigazolás',
-      react: VerificationEmail({ booking }),
+      react: VerificationEmail({ booking, googleCalendarLink }),
       reply_to: CONTACT_EMAIL,
     })
 

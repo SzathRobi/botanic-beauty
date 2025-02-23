@@ -15,17 +15,19 @@ import {
 } from '@react-email/components'
 import * as React from 'react'
 
-import {
-  CONTACT_ADDRESS,
-  CONTACT_EMAIL,
-  CONTACT_PHONE,
-} from '@/constants/contact.constants'
+import { CONTACT_EMAIL, CONTACT_PHONE } from '@/constants/contact.constants'
+
+import EmailFooter from './EmailFooter'
 
 interface VerificationEmailProps {
   booking: Booking
+  googleCalendarLink: string
 }
 
-export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
+export const VerificationEmail = ({
+  booking,
+  googleCalendarLink,
+}: VerificationEmailProps) => {
   return (
     <Html>
       <Head />
@@ -73,9 +75,13 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
                   </b>
                 </Text>
 
-                <Text style={{ marginBottom: 48 }}>
+                <Text style={{ marginBottom: 24 }}>
                   Szolgáltatás: <b>{booking.service.name}</b>
                 </Text>
+
+                <Link href={googleCalendarLink} style={{ marginBottom: 48 }}>
+                  Esemény felvétele a Google Naptárba
+                </Link>
 
                 <Text style={paragraph}>
                   Ha mégse jó az időpont, kérlek jelezd a következő emailen /
@@ -87,19 +93,7 @@ export const VerificationEmail = ({ booking }: VerificationEmailProps) => {
               </Column>
             </Row>
 
-            <Text
-              style={{
-                textAlign: 'center',
-                fontSize: 12,
-                color: 'rgb(0,0,0, 0.7)',
-              }}
-            >
-              Botanic Beauty Szalon, {CONTACT_ADDRESS}|{' '}
-              <Link href="https://www.botanic-beauty.hu">
-                www.botanic-beauty.hu
-              </Link>{' '}
-              | {CONTACT_PHONE}
-            </Text>
+            <EmailFooter />
           </Section>
         </Container>
       </Body>
