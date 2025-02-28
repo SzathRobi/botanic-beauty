@@ -2,11 +2,9 @@
 
 import { Booking, Schedule, TService } from '@prisma/client'
 import { motion } from 'framer-motion'
-import { Info } from 'lucide-react'
 import { ReactNode, useState } from 'react'
 
 import BackgroundBlur from '@/components/BackgroundBlur'
-import { Alert, AlertDescription } from '@/components/ui/Alert'
 import { SERVICES } from '@/constants/services.constants'
 
 import { mapMultistepFormDataToBooking } from '../mappers/mapMultistepFormdataToBooking.mapper'
@@ -139,15 +137,6 @@ const MultiStepForm = ({
     <div className="w-full sm:w-auto">
       <BackgroundBlur className="mx-auto flex min-h-[75vh] w-full min-w-[75vw] flex-col">
         <Stepper activeStep={activeStep} />
-
-        <Alert className="dark -translate-y-20 transform" variant="info">
-          <Info className="h-4 w-4 !text-blue-500" />
-          <AlertDescription>
-            Ha extrém hajszínt szeretnél (kék, zöld, lila, rózsaszín stb.),
-            kérlek vedd fel a kapcsolatot a fodrásszal előzetes konzultáció
-            céljából.
-          </AlertDescription>
-        </Alert>
 
         <div className="flex flex-1 flex-col">
           {activeStep === 0 && (
