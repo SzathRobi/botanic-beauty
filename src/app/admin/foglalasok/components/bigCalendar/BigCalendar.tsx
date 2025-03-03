@@ -58,7 +58,7 @@ const BigCalendar = ({
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
-    19
+    20
   )
 
   const eventStyleGetter = (calendarEvent: CalendarEvent) => {
