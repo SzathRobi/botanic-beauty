@@ -60,8 +60,6 @@ const BigCalendarEventForm = ({
 }: BigCalendarEventFormProps) => {
   const booking = mapEventToBooking(calendarEvent.event)
 
-  console.log(booking)
-
   const [isLoading, setIsLoading] = useState(false)
   const [selectedDate, setSelectedDate] = useState<Date>(
     new Date(booking.selectedDate)

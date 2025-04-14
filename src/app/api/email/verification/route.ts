@@ -4,12 +4,17 @@ import { Resend } from 'resend'
 import { CONTACT_EMAIL, EMAIL_SENDER } from '@/constants/contact.constants'
 import { VerificationEmail } from '@/emails/VerificationEmail'
 
-import { generateGoogleCalendarLink } from '../utils/generateGoogleCalendarLink.util'
-
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: Request) {
-  const { booking } = await request.json()
+  const { booking, googleCalendarLink } = await request.json()
+
+  if (!googleCalendarLink) {
+    return NextResponse.json({
+      error: true,
+      message: 'no google calendar link',
+    })
+  }
 
   if (!booking.contactInfo.email || !booking.service) {
     return NextResponse.json(
@@ -17,8 +22,6 @@ export async function POST(request: Request) {
       { status: 400 }
     )
   }
-
-  const googleCalendarLink = generateGoogleCalendarLink(booking)
 
   try {
     await resend.emails.send({

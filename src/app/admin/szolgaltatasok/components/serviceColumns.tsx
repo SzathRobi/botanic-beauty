@@ -28,7 +28,7 @@ const deleteService = async (id: string) => {
       body: JSON.stringify({ id }),
     })
   } catch (error) {
-    console.log(error)
+    console.error(error)
   }
 }
 

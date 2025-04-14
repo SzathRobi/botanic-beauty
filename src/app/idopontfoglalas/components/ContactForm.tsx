@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
 
+import { generateGoogleCalendarLink } from '@/app/api/email/utils/generateGoogleCalendarLink.util'
 import { Button } from '@/components/Button'
 import {
   Form,
@@ -60,12 +61,17 @@ const ContactForm = ({
     }
 
     try {
+      const googleCalendarLink = generateGoogleCalendarLink(booking as Booking)
+
       const response = await fetch('/api/email/verification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ booking: bookingWithFormattedDate }),
+        body: JSON.stringify({
+          booking: bookingWithFormattedDate,
+          googleCalendarLink,
+        }),
       })
 
       const data = await response.json()
