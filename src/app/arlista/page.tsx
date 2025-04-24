@@ -102,6 +102,19 @@ const PricinggPage = async () => {
                       </div>
                     </li>
                   ))}
+                  {/* TODO: kiszervezni a SERVICE_GROUPS -ba */}
+                  {servicegGroup.name === 'Szárítás - Styling' && (
+                    <li className="mb-6 flex justify-between">
+                      <p className="max-w-md">
+                        Miracle Booster - szerkezetjavító kezelés (csak más
+                        szolgáltatás mellé)
+                      </p>
+                      <div className="flex min-w-fit gap-2">
+                        <p>4200 Ft</p>
+                        <p>{servicegGroup.pricePostfix}</p>
+                      </div>
+                    </li>
+                  )}
                 </ul>
               </div>
             ))}
