@@ -125,13 +125,6 @@ const PricinggPage = async () => {
               minimálisan eltérhet!
             </p>
 
-            <p className="text-sm">
-              (átlag anyag használati példák: tőfestés kb. 40-60 g = +4800 -
-              7200 Ft anyagár, teljes festés kb. 70-100g = +8400 - 12000 Ft
-              anyagár, balayage, melírok, kb. 30 - 50g szőkitő por + 30 - 40g
-              árnyaló festék = 6600 - 7800 Ft.)
-            </p>
-
             <p>
               <span className="text-red-400">
                 Extra sok, vagy extra hosszú haj esetén +20 % felárat számolunk
