@@ -8,7 +8,7 @@ datasource db {
 }
 
 enum Hairdresser {
-  Timi 
+  Timi
   nem_Timi
 }
 
@@ -43,7 +43,7 @@ type TContactInfo {
 model Booking {
   id                String      @id @default(uuid()) @map("_id")
   service           TService
-  extraService      TService?
+  extraServices      TService[]
   hairdresser       Hairdresser
   selectedDate      String
   selectedTimeSlot  String

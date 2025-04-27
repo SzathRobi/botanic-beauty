@@ -4,11 +4,11 @@ import { TService } from '@prisma/client'
 import { ChangeEvent, useState } from 'react'
 import { PiScissors } from 'react-icons/pi'
 
-import { EXTRA_SERVICE } from '@/constants/services.constants'
+import { EXTRA_SERVICE_HAIRCUT } from '@/constants/services.constants'
 import { formatDuration } from '@/lib/utils'
 
 type ExtraServiceCardProps = {
-  selectExtraService: (service: TService | null) => void
+  selectExtraService: (service: TService) => void
 }
 
 const ICON_SIZE = 32
@@ -20,11 +20,12 @@ const ExtraServiceCard = ({ selectExtraService }: ExtraServiceCardProps) => {
     setIsExtraServiceSelected(event.target.checked)
 
     if (event.target.checked) {
-      selectExtraService(EXTRA_SERVICE)
+      selectExtraService(EXTRA_SERVICE_HAIRCUT)
       return
     }
 
-    selectExtraService(null)
+    // TODO: itt majd ki kell nullázni az extra service-t
+    // selectExtraService(null)
   }
 
   return (
@@ -38,7 +39,7 @@ const ExtraServiceCard = ({ selectExtraService }: ExtraServiceCardProps) => {
           <PiScissors size={ICON_SIZE / 2} />
         </div>
         <div className="flex-1">
-          <h3>{EXTRA_SERVICE.name}</h3>
+          <h3>{EXTRA_SERVICE_HAIRCUT.name}</h3>
           <p className="text-sm text-gray-400">{formatDuration(30)}</p>
         </div>
         <input

@@ -35,7 +35,7 @@ type AvailableDatesFormProps = {
   selectedTimeSlot: string | null
   setSelectedTimeSlot: (timeSlot: string | null) => void
   selectedService: TService
-  selectedExtraService: TService | null
+  selectedExtraServices: TService[]
   selectedHairdresser: 'Timi' | 'nem_Timi'
   schedule: Schedule
   incrementActiveStep: () => void
@@ -58,7 +58,7 @@ const AvailableDatesForm = ({
   selectedTimeSlot,
   setSelectedTimeSlot,
   selectedService,
-  selectedExtraService,
+  selectedExtraServices,
   selectedHairdresser,
   schedule,
   decrementActiveStep,
@@ -66,8 +66,9 @@ const AvailableDatesForm = ({
 }: AvailableDatesFormProps) => {
   const now = new Date()
   const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120))
-  const serviceDuration = selectedExtraService
-    ? selectedExtraService.duration + selectedService.duration
+  // TODO: ide kell majd az új extra service is
+  const serviceDuration = selectedExtraServices
+    ? selectedExtraServices[0].duration + selectedService.duration
     : selectedService.duration
 
   const [

@@ -19,7 +19,7 @@ type SummaryFormProps = {
     otherInfo: string
   }
   selectedService: TService
-  selectedExtraService: TService | null
+  selectedExtraServices: TService[]
   selectedHairdresser: 'Timi' | 'nem_Timi' | null
   selectedDate: Date
   selectedTimeSlot: string | null
@@ -32,7 +32,7 @@ const SummaryForm = ({
   contactInfo,
   selectedHairdresser,
   selectedService,
-  selectedExtraService,
+  selectedExtraServices,
   selectedDate,
   selectedTimeSlot,
   resetForm,
@@ -95,14 +95,16 @@ const SummaryForm = ({
             </div>
           </div>
 
-          {selectedExtraService && (
+          {selectedExtraServices.length > 0 && (
             <div className="flex gap-4">
-              {geServiceIconByCategory(selectedExtraService.category)}
+              {/* TODO ide is kell majd az uj extra service (miracle booster) */}
+              {geServiceIconByCategory(selectedExtraServices[0].category)}
               <div>
                 <p>Extra Szolgáltatás:</p>
                 <p className="mb-2 max-w-xs text-lg font-medium">
-                  {selectedExtraService.name} ({selectedExtraService.duration}{' '}
-                  perc)
+                  {/* TODO ide is kell majd az uj extra service (miracle booster) */}
+                  {selectedExtraServices[0].name} (
+                  {selectedExtraServices[0].duration} perc)
                 </p>
               </div>
             </div>

@@ -48,8 +48,9 @@ const MultiStepForm = ({
   const [selectedService, setSelectedService] = useState<TService | null>(
     preSelectedService || null
   )
-  const [selectedExtraService, setSelectedExtraService] =
-    useState<TService | null>(null)
+  const [selectedExtraServices, setSelectedExtraServices] = useState<
+    TService[]
+  >([])
   const [selectedHairdresser, setSelectedHairdresser] = useState<
     'Timi' | 'nem_Timi' | null
   >('Timi')
@@ -63,12 +64,12 @@ const MultiStepForm = ({
   })
 
   const selectService = (service: TService) => {
-    setSelectedExtraService(null)
+    setSelectedExtraServices([])
     setSelectedService(service)
   }
 
-  const selectExtraService = (service: TService | null) => {
-    setSelectedExtraService(service)
+  const selectExtraService = (service: TService) => {
+    setSelectedExtraServices([service])
   }
 
   const selectHairdresser = (hairdresser: 'Timi' | 'nem_Timi') => {
@@ -95,7 +96,7 @@ const MultiStepForm = ({
         mapMultistepFormDataToBooking({
           selectedHairdresser,
           selectedService,
-          selectedExtraService,
+          selectedExtraServices,
           contactInfo,
           selectedDate,
           selectedTimeSlot,
@@ -121,7 +122,7 @@ const MultiStepForm = ({
   const resetForm = () => {
     setActiveStep(0)
     setSelectedService(null)
-    setSelectedExtraService(null)
+    setSelectedExtraServices([])
     setSelectedHairdresser('Timi')
     setSelectedDate(new Date(Date.now()))
     setSelectedTimeSlot(null)
@@ -174,7 +175,7 @@ const MultiStepForm = ({
                 selectedTimeSlot={selectedTimeSlot}
                 setSelectedTimeSlot={setSelectedTimeSlot}
                 selectedService={selectedService}
-                selectedExtraService={selectedExtraService}
+                selectedExtraServices={selectedExtraServices}
                 selectedHairdresser={selectedHairdresser!}
                 schedule={schedule}
                 incrementActiveStep={incrementActiveStep}
@@ -197,7 +198,7 @@ const MultiStepForm = ({
                   booking={mapMultistepFormDataToBooking({
                     selectedHairdresser,
                     selectedService,
-                    selectedExtraService,
+                    selectedExtraServices,
                     contactInfo,
                     selectedDate,
                     selectedTimeSlot,
@@ -211,7 +212,7 @@ const MultiStepForm = ({
               <SummaryForm
                 contactInfo={contactInfo}
                 selectedService={selectedService}
-                selectedExtraService={selectedExtraService}
+                selectedExtraServices={selectedExtraServices}
                 selectedHairdresser={selectedHairdresser}
                 selectedDate={selectedDate}
                 selectedTimeSlot={selectedTimeSlot}

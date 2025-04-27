@@ -13,7 +13,7 @@ export type CalendarEvent = Event & {
   hairdresser: Hairdresser
   contactInfo: CalendarEventContactInfo
   service: TService
-  extraService: TService | null
+  extraServices: TService[]
   createdAt: Date
   updatedAt: Date
   isLoaderEvent?: boolean

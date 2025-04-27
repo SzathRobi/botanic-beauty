@@ -17,7 +17,7 @@ type ServiceFormProps = {
   selectService: (service: TService) => void
   selectedService: TService | null
   incrementActiveStep: () => void
-  selectExtraService: (service: TService | null) => void
+  selectExtraService: (service: TService) => void
 }
 
 const ServicesForm = ({

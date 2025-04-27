@@ -31,7 +31,7 @@ const BigCalendarDay = ({
   const {
     event: {
       contactInfo,
-      extraService,
+      extraServices,
       hairdresser,
       service,
       start,
@@ -121,7 +121,8 @@ const BigCalendarDay = ({
 
                 <p className="mb-2">{title}</p>
 
-                {extraService && (
+                {/* // TODO ezt kiegészíteni a másik service is lehet itt már (miracle boostert) */}
+                {extraServices.length > 0 && (
                   <p className="mb-2 font-medium">Extra hajvágással</p>
                 )}
               </div>

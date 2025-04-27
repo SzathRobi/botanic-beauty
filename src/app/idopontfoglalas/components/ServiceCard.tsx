@@ -18,7 +18,7 @@ type ServiceCardProps = {
   index: number
   selectService: (service: TService) => void
   selectedService: TService | null
-  selectExtraService: (service: TService | null) => void
+  selectExtraService: (service: TService) => void
 }
 
 const ICON_SIZE = 32

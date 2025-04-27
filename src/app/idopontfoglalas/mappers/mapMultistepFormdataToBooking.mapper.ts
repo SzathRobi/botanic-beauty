@@ -2,7 +2,7 @@ import { Booking, TContactInfo, TService } from '@prisma/client'
 
 type MultistepFormdata = {
   selectedService: TService
-  selectedExtraService: TService | null
+  selectedExtraServices: TService[]
   selectedHairdresser: 'Timi' | 'nem_Timi'
   selectedDate: Date
   selectedTimeSlot: string
@@ -12,13 +12,13 @@ type MultistepFormdata = {
 export const mapMultistepFormDataToBooking = ({
   selectedHairdresser,
   selectedService,
-  selectedExtraService,
+  selectedExtraServices,
   contactInfo,
   selectedDate,
   selectedTimeSlot,
 }: MultistepFormdata): Omit<Booking, 'id' | 'createdAt' | 'updatedAt'> => ({
   service: selectedService,
-  extraService: selectedExtraService,
+  extraServices: selectedExtraServices,
   hairdresser: selectedHairdresser!,
   selectedDate: new Date(
     selectedDate.getFullYear(),
