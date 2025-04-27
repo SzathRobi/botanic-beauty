@@ -4,6 +4,15 @@ import { auth } from '@/auth'
 import prisma from '@/lib/db'
 
 export async function PATCH(request: NextRequest, { params }: any) {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
+  if (!isBookingAvailable) {
+    return NextResponse.json(
+      { error: true, message: 'Booking is not available' },
+      { status: 503 }
+    )
+  }
+
   const session = await auth()
 
   if (!session?.user) {
@@ -79,6 +88,15 @@ export async function PATCH(request: NextRequest, { params }: any) {
 }
 
 export async function DELETE(_: NextRequest, { params }: any) {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
+  if (!isBookingAvailable) {
+    return NextResponse.json(
+      { error: true, message: 'Booking is not available' },
+      { status: 503 }
+    )
+  }
+
   const session = await auth()
 
   if (!session?.user) {

@@ -15,6 +15,8 @@ import {
 import ShinyButton from './landing/ShinyButton'
 
 const Footer = () => {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
   return (
     <footer className="w-full rounded-t-3xl bg-black/70 px-4 py-16 text-white backdrop-blur-md md:px-16 md:py-24">
       <div className="relative z-10">
@@ -44,9 +46,11 @@ const Footer = () => {
               <Link href={HOME_ROUTE}>Főoldal</Link>
             </li>
 
-            <li className="mb-4">
-              <Link href={BOOKING_ROUTE}>Időpontfoglalás</Link>
-            </li>
+            {isBookingAvailable && (
+              <li className="mb-4">
+                <Link href={BOOKING_ROUTE}>Időpontfoglalás</Link>
+              </li>
+            )}
 
             <li className="mb-4">
               <Link href={PRICES_ROUTE}>Árlista</Link>

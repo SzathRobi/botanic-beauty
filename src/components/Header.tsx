@@ -15,6 +15,7 @@ import HamburgerMenu from './HamburgerMenu'
 
 const Header = async () => {
   const session = await auth()
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
 
   return (
     <header className="fixed top-0 z-50 flex w-full items-center justify-between bg-black/70 p-4 text-white backdrop-blur-md md:px-16">
@@ -37,9 +38,11 @@ const Header = async () => {
             <Link href={HOME_ROUTE}>Főoldal</Link>
           </li>
 
-          <li className="shadow transition hover:text-emerald-700">
-            <Link href={BOOKING_ROUTE}>Időpontfoglalás</Link>
-          </li>
+          {isBookingAvailable && (
+            <li className="shadow transition hover:text-emerald-700">
+              <Link href={BOOKING_ROUTE}>Időpontfoglalás</Link>
+            </li>
+          )}
 
           <li className="shadow transition hover:text-emerald-700">
             <Link href={PRICES_ROUTE}>Árlista</Link>

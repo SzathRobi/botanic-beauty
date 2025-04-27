@@ -4,6 +4,15 @@ import { auth } from '@/auth'
 import prisma from '@/lib/db'
 
 export async function POST(request: NextRequest) {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
+  if (!isBookingAvailable) {
+    return NextResponse.json(
+      { error: true, message: 'Booking is not available' },
+      { status: 503 }
+    )
+  }
+
   const {
     extraServices,
     service,
@@ -71,6 +80,15 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PATCH(request: NextRequest, nextResponse: NextResponse) {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
+  if (!isBookingAvailable) {
+    return NextResponse.json(
+      { error: true, message: 'Booking is not available' },
+      { status: 503 }
+    )
+  }
+
   const session = await auth()
 
   if (!session?.user) {
