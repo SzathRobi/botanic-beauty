@@ -7,7 +7,6 @@ import {
   Heading,
   Html,
   Img,
-  Link,
   Preview,
   Row,
   Section,
@@ -15,7 +14,7 @@ import {
 } from '@react-email/components'
 import * as React from 'react'
 
-import { CONTACT_ADDRESS, CONTACT_PHONE } from '@/constants/contact.constants'
+import EmailFooter from './EmailFooter'
 
 interface ModifierEmailProps {
   booking: Booking
@@ -50,7 +49,11 @@ export const ModifierEmail = ({ booking }: ModifierEmailProps) => {
                 </Heading>
 
                 <Text style={{ marginBottom: 48 }}>
-                  Az időpontodat módosítottuk a következőre:{' '}
+                  Az időpontodat módosítottuk a következőre:
+                  <br />
+                  Szolgáltalás: <b>{booking.service.name}</b>
+                  <br />
+                  Időpont:{' '}
                   <b>
                     {booking.selectedDate.split('T')[0]}{' '}
                     {booking.selectedTimeSlot}
@@ -63,21 +66,9 @@ export const ModifierEmail = ({ booking }: ModifierEmailProps) => {
                 </Text>
               </Column>
             </Row>
-          </Section>
 
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 12,
-              color: 'rgb(0,0,0, 0.7)',
-            }}
-          >
-            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{' '}
-            <Link href="https://www.botanic-beauty.hu">
-              www.botanic-beauty.hu
-            </Link>{' '}
-            | {CONTACT_PHONE}
-          </Text>
+            <EmailFooter />
+          </Section>
         </Container>
       </Body>
     </Html>
@@ -91,6 +82,9 @@ ModifierEmail.PreviewProps = {
     },
     selectedDate: '2022-10-10',
     selectedTimeSlot: '10:00 - 11:00',
+    service: {
+      name: 'Hajvágás gépi egyhossz',
+    },
   },
 } as ModifierEmailProps
 

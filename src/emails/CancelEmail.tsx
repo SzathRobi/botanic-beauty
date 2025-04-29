@@ -7,7 +7,6 @@ import {
   Heading,
   Html,
   Img,
-  Link,
   Preview,
   Row,
   Section,
@@ -15,7 +14,7 @@ import {
 } from '@react-email/components'
 import * as React from 'react'
 
-import { CONTACT_ADDRESS, CONTACT_PHONE } from '@/constants/contact.constants'
+import EmailFooter from './EmailFooter'
 
 interface CancelEmailProps {
   booking: Booking
@@ -63,21 +62,9 @@ export const CancelEmail = ({ booking }: CancelEmailProps) => {
                 </Text>
               </Column>
             </Row>
-          </Section>
 
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 12,
-              color: 'rgb(0,0,0, 0.7)',
-            }}
-          >
-            © 2024 | Botanic Beauty Szalon, {CONTACT_ADDRESS}|{' '}
-            <Link href="https://www.botanic-beauty.hu">
-              www.botanic-beauty.hu
-            </Link>{' '}
-            | {CONTACT_PHONE}
-          </Text>
+            <EmailFooter />
+          </Section>
         </Container>
       </Body>
     </Html>

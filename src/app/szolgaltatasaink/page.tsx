@@ -35,20 +35,20 @@ export const metadata: Metadata = {
     'színkorrekció',
   ],
   openGraph: {
-    url: 'https://botanic-beauty.hu/szolgaltatasaink',
+    url: 'https://www.botanic-beauty.hu/szolgaltatasaink',
     type: 'website',
     title: 'Botanic Beauty Hajszalon | Szolgáltatásaink',
     description:
       'Fedezd fel szolgáltatásainkat, melyekhez vegán és környezetbarát termékeket használunk!',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',

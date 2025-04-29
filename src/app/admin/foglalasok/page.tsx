@@ -7,19 +7,27 @@ import { getSchedule } from '@/actions/schedule'
 import { auth } from '@/auth'
 import BackgroundBlur from '@/components/BackgroundBlur'
 
+// import { MOCK_BOOKING } from '@/mocks/booking.mock'
+// import { MOCK_SCHEDULE } from '@/mocks/schedule.mock'
+// import { MOCK_USER } from '@/mocks/user.mock'
 import { mapBookingToEvent } from '../mappers/mapBookingToEvent.mapper'
 import BigCalendarContainer from './components/bigCalendarContainer/BigCalendarContainer'
 
 const BookingPage = async () => {
   const session = await auth()
+  // const session = {
+  //   user: MOCK_USER,
+  // }
 
   if (!session?.user) {
     redirect('/admin/bejelentkezes')
   }
 
   const schedule = await getSchedule()
+  // const schedule = MOCK_SCHEDULE
 
   const bookings = await getBookings()
+  // const bookings = [MOCK_BOOKING]
 
   const calendarEvents = bookings?.map(mapBookingToEvent) ?? []
 

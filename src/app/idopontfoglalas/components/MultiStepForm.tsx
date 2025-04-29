@@ -2,7 +2,7 @@
 
 import { Booking, Schedule, TService } from '@prisma/client'
 import { motion } from 'framer-motion'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 import BackgroundBlur from '@/components/BackgroundBlur'
 import { SERVICES } from '@/constants/services.constants'
@@ -48,8 +48,9 @@ const MultiStepForm = ({
   const [selectedService, setSelectedService] = useState<TService | null>(
     preSelectedService || null
   )
-  const [selectedExtraService, setSelectedExtraService] =
-    useState<TService | null>(null)
+  const [selectedExtraServices, setSelectedExtraServices] = useState<
+    TService[]
+  >([])
   const [selectedHairdresser, setSelectedHairdresser] = useState<
     'Timi' | 'nem_Timi' | null
   >('Timi')
@@ -62,13 +63,23 @@ const MultiStepForm = ({
     otherInfo: '',
   })
 
+  useEffect(() => {
+    console.log('selectedExtraServices', selectedExtraServices)
+  }, [selectedExtraServices])
+
   const selectService = (service: TService) => {
-    setSelectedExtraService(null)
+    setSelectedExtraServices([])
     setSelectedService(service)
   }
 
-  const selectExtraService = (service: TService | null) => {
-    setSelectedExtraService(service)
+  const selectExtraService = (service: TService) => {
+    setSelectedExtraServices((prev) => [...prev, service])
+  }
+
+  const removeExtraService = (service: TService) => {
+    setSelectedExtraServices((prev) =>
+      prev.filter((item) => item.id !== service.id)
+    )
   }
 
   const selectHairdresser = (hairdresser: 'Timi' | 'nem_Timi') => {
@@ -95,7 +106,7 @@ const MultiStepForm = ({
         mapMultistepFormDataToBooking({
           selectedHairdresser,
           selectedService,
-          selectedExtraService,
+          selectedExtraServices,
           contactInfo,
           selectedDate,
           selectedTimeSlot,
@@ -121,7 +132,7 @@ const MultiStepForm = ({
   const resetForm = () => {
     setActiveStep(0)
     setSelectedService(null)
-    setSelectedExtraService(null)
+    setSelectedExtraServices([])
     setSelectedHairdresser('Timi')
     setSelectedDate(new Date(Date.now()))
     setSelectedTimeSlot(null)
@@ -149,6 +160,7 @@ const MultiStepForm = ({
                 selectService={selectService}
                 selectedService={selectedService}
                 selectExtraService={selectExtraService}
+                removeExtraService={removeExtraService}
                 incrementActiveStep={incrementActiveStep}
               />
             </FadeIn>
@@ -174,7 +186,7 @@ const MultiStepForm = ({
                 selectedTimeSlot={selectedTimeSlot}
                 setSelectedTimeSlot={setSelectedTimeSlot}
                 selectedService={selectedService}
-                selectedExtraService={selectedExtraService}
+                selectedExtraServices={selectedExtraServices}
                 selectedHairdresser={selectedHairdresser!}
                 schedule={schedule}
                 incrementActiveStep={incrementActiveStep}
@@ -197,7 +209,7 @@ const MultiStepForm = ({
                   booking={mapMultistepFormDataToBooking({
                     selectedHairdresser,
                     selectedService,
-                    selectedExtraService,
+                    selectedExtraServices,
                     contactInfo,
                     selectedDate,
                     selectedTimeSlot,
@@ -211,7 +223,7 @@ const MultiStepForm = ({
               <SummaryForm
                 contactInfo={contactInfo}
                 selectedService={selectedService}
-                selectedExtraService={selectedExtraService}
+                selectedExtraServices={selectedExtraServices}
                 selectedHairdresser={selectedHairdresser}
                 selectedDate={selectedDate}
                 selectedTimeSlot={selectedTimeSlot}

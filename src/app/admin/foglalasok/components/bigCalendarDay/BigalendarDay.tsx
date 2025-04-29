@@ -10,6 +10,8 @@ import { mapEventToBooking } from '@/app/admin/mappers/mapEventToBooking.mapper'
 import { Button } from '@/components/Button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog'
+import { Separator } from '@/components/ui/Separator'
+import { useRemovePointerEvents } from '@/hooks'
 
 import { CalendarEvent } from '../../../types/calendarEvent.type'
 import BigCalendarEventForm from '../bigCalendarEventForm/BigCalendarEventForm'
@@ -25,10 +27,12 @@ const BigCalendarDay = ({
 }: BigCalendarDayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
+  useRemovePointerEvents(isDialogOpen)
+
   const {
     event: {
       contactInfo,
-      extraService,
+      extraServices,
       hairdresser,
       service,
       start,
@@ -108,9 +112,11 @@ const BigCalendarDay = ({
                 <p className="hidden md:block">{contactInfo.name}</p>
               </div>
             </PopoverTrigger>
-            <PopoverContent side="right" className="max-w-60 bg-white">
-              <p>Foglalási adatok:</p>
-              {/* ${eventColor} */}
+            <PopoverContent side="right" className="dark max-w-60">
+              <p className="mb-2">Foglalási adatok:</p>
+
+              <Separator className="mb-2" />
+
               <div className={`h-full text-sm`}>
                 <p className="mb-2">
                   {startTime} - {endTime}
@@ -118,10 +124,17 @@ const BigCalendarDay = ({
 
                 <p className="mb-2">{title}</p>
 
-                {extraService && (
-                  <p className="mb-2 font-medium">Extra hajvágással</p>
-                )}
+                <Separator className="mb-2" />
+
+                {extraServices.length > 0 &&
+                  extraServices.map((extraService) => (
+                    <p className="mb-2 font-medium" key={extraService.id}>
+                      {extraService.name}
+                    </p>
+                  ))}
               </div>
+
+              <Separator className="mb-2" />
 
               <div className="mb-8 space-y-1 text-sm">
                 <p>{contactInfo.name}</p>
@@ -133,7 +146,7 @@ const BigCalendarDay = ({
                 {contactInfo.otherInfo && <p>{contactInfo.otherInfo}</p>}
               </div>
 
-              <div>
+              <div className="flex items-center gap-2">
                 <Button
                   size="sm"
                   variant="destructive"
@@ -151,7 +164,7 @@ const BigCalendarDay = ({
               </div>
             </PopoverContent>
 
-            <DialogContent>
+            <DialogContent className="dark">
               <BigCalendarEventForm
                 calendarEvent={calendarEvent}
                 setCalendarEvents={setCalendarEvents}

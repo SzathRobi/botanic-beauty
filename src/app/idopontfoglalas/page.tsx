@@ -2,10 +2,12 @@ import 'react-day-picker/dist/style.css'
 
 import { Metadata } from 'next'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 
 import { getBookings } from '@/actions/booking'
 import { getSchedule } from '@/actions/schedule'
 import Footer from '@/components/Footer'
+import { HOME_ROUTE } from '@/constants/routes.constants'
 
 import MultiStepForm from './components/MultiStepForm'
 import { SearchParamService } from './types/searchParamService.type'
@@ -26,20 +28,20 @@ export const metadata: Metadata = {
     'állatbarát fodrászat időpont',
   ],
   openGraph: {
-    url: 'https://botanic-beauty.hu/idopontfoglalas',
+    url: 'https://www.botanic-beauty.hu/idopontfoglalas',
     type: 'website',
     title: 'Botanic Beauty Hajszalon | Időpontfoglalás',
     description:
       'Foglalj időpontot a Botanic Beauty szalonba online! Gyors és kényelmes időpontfoglalási rendszerünk segítségével egyszerűen választhatsz időpontot.',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',
@@ -55,6 +57,12 @@ type BookingPageProps = {
 }
 
 const BookingPage = async ({ searchParams }: BookingPageProps) => {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
+  if (!isBookingAvailable) {
+    return redirect(HOME_ROUTE)
+  }
+
   const schedule = await getSchedule()
 
   const bookings = await getBookings()

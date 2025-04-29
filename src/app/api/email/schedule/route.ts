@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
   try {
     const response = await nextcron.publish({
       topic: 'reminder',
-      target: 'https://botanic-beauty.vercel.app/api/email/reminder',
+      target: 'https://www.botanic-beauty.vercel.app/api/email/reminder',
       method: 'POST',
       data: booking,
       options: {

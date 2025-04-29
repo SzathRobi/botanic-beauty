@@ -22,7 +22,8 @@ export async function POST(request: Request) {
   if (
     !booking.contactInfo.email ||
     !booking.selectedDate ||
-    !booking.selectedTimeSlot
+    !booking.selectedTimeSlot ||
+    !booking.service
   ) {
     return NextResponse.json(
       { error: true, message: 'Invalid data' },
@@ -32,7 +33,10 @@ export async function POST(request: Request) {
 
   try {
     await resend.emails.send({
-      from: EMAIL_SENDER,
+      from:
+        process.env.NODE_ENV === 'production'
+          ? EMAIL_SENDER
+          : 'Acme <onboarding@resend.dev>',
       to: booking.contactInfo.email,
       subject: 'Foglalás módosulása',
       react: ModifierEmail({ booking }),

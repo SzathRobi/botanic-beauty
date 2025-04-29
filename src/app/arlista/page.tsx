@@ -27,20 +27,20 @@ export const metadata: Metadata = {
     'hajfestés árak',
   ],
   openGraph: {
-    url: 'https://botanic-beauty.hu/arlista',
+    url: 'https://www.botanic-beauty.hu/arlista',
     type: 'website',
     title: 'Botanic Beauty Hajszalon | Árlista',
     description:
       'Fedezd fel a Botanic Beauty árlistáját! Kínálatunkban megtalálod a hajvágás, hajfestés és egyéb szolgáltatások árait, mind vegán és környezetbarát termékekkel.',
     images: [
       {
-        url: 'https://botanic-beauty.hu/logo-google-square.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-square.png',
         width: 1200,
         height: 1200,
         alt: 'Botanic Beauty Logo',
       },
       {
-        url: 'https://botanic-beauty.hu/logo-google-wide.png',
+        url: 'https://www.botanic-beauty.hu/logo-google-wide.png',
         width: 1200,
         height: 630,
         alt: 'Botanic Beauty Logo',
@@ -102,6 +102,19 @@ const PricinggPage = async () => {
                       </div>
                     </li>
                   ))}
+                  {/* TODO: kiszervezni a SERVICE_GROUPS -ba */}
+                  {servicegGroup.name === 'Szárítás - Styling' && (
+                    <li className="mb-6 flex justify-between">
+                      <p className="max-w-md">
+                        Miracle Booster - szerkezetjavító kezelés (csak más
+                        szolgáltatás mellé)
+                      </p>
+                      <div className="flex min-w-fit gap-2">
+                        <p>4200 Ft</p>
+                        <p>{servicegGroup.pricePostfix}</p>
+                      </div>
+                    </li>
+                  )}
                 </ul>
               </div>
             ))}
@@ -123,13 +136,6 @@ const PricinggPage = async () => {
             <p>
               Az anyag használat a haj mennyiségétől függ, így az ár egyénenként
               minimálisan eltérhet!
-            </p>
-
-            <p className="text-sm">
-              (átlag anyag használati példák: tőfestés kb. 40-60 g = +4800 -
-              7200 Ft anyagár, teljes festés kb. 70-100g = +8400 - 12000 Ft
-              anyagár, balayage, melírok, kb. 30 - 50g szőkitő por + 30 - 40g
-              árnyaló festék = 6600 - 7800 Ft.)
             </p>
 
             <p>

@@ -63,8 +63,6 @@ const ServiceForm = () => {
       if (data.error) {
         setRequestError(data.message)
       }
-
-      console.log(data)
     } catch (error: any) {
       setRequestError(error.message)
     } finally {

@@ -131,13 +131,16 @@ const CustomerForm = ({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-8 text-white"
+      >
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name*</FormLabel>
+              <FormLabel>Név*</FormLabel>
 
               <FormControl>
                 <Input {...field} />
@@ -169,7 +172,7 @@ const CustomerForm = ({
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Phone</FormLabel>
+              <FormLabel>Telefon</FormLabel>
 
               <FormControl>
                 <Input type="tel" {...field} />
@@ -185,7 +188,7 @@ const CustomerForm = ({
           name="otherInfo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Other info</FormLabel>
+              <FormLabel>Egyéb infó</FormLabel>
 
               <FormControl>
                 <Textarea {...field} />
@@ -197,7 +200,7 @@ const CustomerForm = ({
         />
 
         <Button type="submit" isLoading={isLoading} disabled={isLoading}>
-          Submit
+          Hozzáadás
         </Button>
       </form>
     </Form>

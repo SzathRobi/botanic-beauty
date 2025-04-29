@@ -10,6 +10,7 @@ import { LanidngWeaveSvg } from './LandingWaveSvg'
 import ShinyButton from './ShinyButton'
 
 const Landing = async () => {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
   const isMaintenanceModeOn = process.env.IS_MAINTENANCE_MODE_ON === 'true'
 
   return (
@@ -45,9 +46,13 @@ const Landing = async () => {
             A természet és az egyéniséged ihlette hajszalon, Újpesten.
           </h3>
 
-          <Link href={BOOKING_ROUTE}>
-            <ShinyButton className="2xl:text-xl">Foglalj időpontot</ShinyButton>
-          </Link>
+          {isBookingAvailable && (
+            <Link href={BOOKING_ROUTE}>
+              <ShinyButton className="2xl:text-xl">
+                Foglalj időpontot
+              </ShinyButton>
+            </Link>
+          )}
         </BackgroundBlur>
       </div>
     </section>
