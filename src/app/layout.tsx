@@ -139,15 +139,6 @@ export default function RootLayout({
       <body className={`${inter.className} bg-[#0F1E14]`}>
         <Header />
         <Toaster />
-        {/* <div className="fixed left-0 top-0 -z-10 h-screen w-screen object-cover"> */}
-        {/* {<Image
-            priority
-            alt="Botanic Beauty hajszalon"
-            src="/site-bg.png"
-            fill
-            className="object-cover"
-          />} */}
-        {/* </div> */}
         <div>{children}</div>
 
         <script
