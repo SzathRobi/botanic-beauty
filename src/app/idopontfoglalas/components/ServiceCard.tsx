@@ -5,6 +5,10 @@ import { ChangeEvent, useEffect, useRef } from 'react'
 import { IoColorPaletteOutline } from 'react-icons/io5'
 import { PiHairDryer, PiScissors } from 'react-icons/pi'
 
+import {
+  EXTRA_SERVICE_HAIRCUT,
+  EXTRA_SERVICE_MIRACLE_BOOSTER,
+} from '@/constants/services.constants'
 import { formatDuration } from '@/lib/utils'
 
 import ExtraServiceCard from './ExtraServiceCard'
@@ -19,6 +23,7 @@ type ServiceCardProps = {
   selectService: (service: TService) => void
   selectedService: TService | null
   selectExtraService: (service: TService) => void
+  removeExtraService: (service: TService) => void
 }
 
 const ICON_SIZE = 32
@@ -33,6 +38,7 @@ const ServiceCard = ({
   selectService,
   selectedService,
   selectExtraService,
+  removeExtraService,
 }: ServiceCardProps) => {
   const cardRef = useRef<HTMLDivElement>(null)
 
@@ -96,8 +102,20 @@ const ServiceCard = ({
         />
       </label>
 
+      {isSelected && (
+        <ExtraServiceCard
+          extraService={EXTRA_SERVICE_MIRACLE_BOOSTER}
+          selectExtraService={selectExtraService}
+          removeExtraService={removeExtraService}
+        />
+      )}
+
       {isSelected && service.category === 'Festések' && (
-        <ExtraServiceCard selectExtraService={selectExtraService} />
+        <ExtraServiceCard
+          extraService={EXTRA_SERVICE_HAIRCUT}
+          selectExtraService={selectExtraService}
+          removeExtraService={removeExtraService}
+        />
       )}
     </div>
   )

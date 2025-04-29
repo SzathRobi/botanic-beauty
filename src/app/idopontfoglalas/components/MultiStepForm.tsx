@@ -2,7 +2,7 @@
 
 import { Booking, Schedule, TService } from '@prisma/client'
 import { motion } from 'framer-motion'
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 import BackgroundBlur from '@/components/BackgroundBlur'
 import { SERVICES } from '@/constants/services.constants'
@@ -63,13 +63,23 @@ const MultiStepForm = ({
     otherInfo: '',
   })
 
+  useEffect(() => {
+    console.log('selectedExtraServices', selectedExtraServices)
+  }, [selectedExtraServices])
+
   const selectService = (service: TService) => {
     setSelectedExtraServices([])
     setSelectedService(service)
   }
 
   const selectExtraService = (service: TService) => {
-    setSelectedExtraServices([service])
+    setSelectedExtraServices((prev) => [...prev, service])
+  }
+
+  const removeExtraService = (service: TService) => {
+    setSelectedExtraServices((prev) =>
+      prev.filter((item) => item.id !== service.id)
+    )
   }
 
   const selectHairdresser = (hairdresser: 'Timi' | 'nem_Timi') => {
@@ -150,6 +160,7 @@ const MultiStepForm = ({
                 selectService={selectService}
                 selectedService={selectedService}
                 selectExtraService={selectExtraService}
+                removeExtraService={removeExtraService}
                 incrementActiveStep={incrementActiveStep}
               />
             </FadeIn>

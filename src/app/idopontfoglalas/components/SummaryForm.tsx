@@ -1,7 +1,7 @@
 'use client'
 
 import { TService } from '@prisma/client'
-import { Calendar, User } from 'lucide-react'
+import { Calendar, HandHeart, User } from 'lucide-react'
 import Link from 'next/link'
 import { useEffect } from 'react'
 import { IoColorPaletteOutline } from 'react-icons/io5'
@@ -37,6 +37,16 @@ const SummaryForm = ({
   selectedTimeSlot,
   resetForm,
 }: SummaryFormProps) => {
+  const getExtraServiceIconByName = (name: string) => {
+    if (name === 'Hajvágás festéshez') {
+      return <PiScissors size={32} className="text-emerald-600" />
+    }
+
+    if (name === 'Miracle Booster hajkezelés') {
+      return <HandHeart size={32} className="text-emerald-600" />
+    }
+  }
+
   const geServiceIconByCategory = (category: string) => {
     if (category === 'Hajvágás' || category === 'extra') {
       return (
@@ -83,9 +93,9 @@ const SummaryForm = ({
         Az időpontodat sikeresen felvettük!
       </p>
 
-      <div className="mb-24 flex flex-col items-start justify-evenly gap-8 md:flex-row">
+      <div className="mb-8 flex flex-col items-start justify-evenly gap-8 md:flex-row">
         <div>
-          <div className="mb-4 flex gap-4">
+          <div className="flex gap-4">
             {geServiceIconByCategory(selectedService.category)}
             <div>
               <p>Szolgáltatás:</p>
@@ -94,21 +104,6 @@ const SummaryForm = ({
               </p>
             </div>
           </div>
-
-          {selectedExtraServices.length > 0 && (
-            <div className="flex gap-4">
-              {/* TODO ide is kell majd az uj extra service (miracle booster) */}
-              {geServiceIconByCategory(selectedExtraServices[0].category)}
-              <div>
-                <p>Extra Szolgáltatás:</p>
-                <p className="mb-2 max-w-xs text-lg font-medium">
-                  {/* TODO ide is kell majd az uj extra service (miracle booster) */}
-                  {selectedExtraServices[0].name} (
-                  {selectedExtraServices[0].duration} perc)
-                </p>
-              </div>
-            </div>
-          )}
         </div>
 
         <div className="flex gap-4">
@@ -129,6 +124,26 @@ const SummaryForm = ({
           </div>
         </div>
       </div>
+
+      {selectedExtraServices.length > 0 && (
+        <div className="mb-20 px-2">
+          <p className="mb-4">Extra Szolgáltatás(ok):</p>
+          {selectedExtraServices.map((selectedExtraService) => (
+            <div className="mb-2 flex gap-4" key={selectedExtraService.id}>
+              {getExtraServiceIconByName(selectedExtraService.name)}
+              <div>
+                <p className="mb-2 max-w-sm font-medium">
+                  {selectedExtraService.name} (
+                  {selectedExtraService.name === 'Miracle Booster hajkezelés'
+                    ? 10
+                    : selectedExtraService.duration}{' '}
+                  perc)
+                </p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       <div className="mb-24 flex flex-col items-center justify-center gap-4">
         <p className="text-center">

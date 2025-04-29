@@ -191,9 +191,9 @@ export const EXTRA_SERVICE_HAIRCUT: TService = {
 export const EXTRA_SERVICE_MIRACLE_BOOSTER: TService = {
   id: '2',
   category: 'extra',
-  name: 'Hajvágás festéshez',
+  name: 'Miracle Booster hajkezelés',
   price: 0,
-  duration: 30,
+  duration: 0,
 } as const
 
 export const EXTRA_SERVICES: TService[] = [
