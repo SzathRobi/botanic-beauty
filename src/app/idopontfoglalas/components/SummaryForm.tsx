@@ -10,6 +10,10 @@ import { PiHairDryer, PiScissors } from 'react-icons/pi'
 import { Button } from '@/components/Button'
 import { CONTACT_PHONE } from '@/constants/contact.constants'
 import { HOME_ROUTE } from '@/constants/routes.constants'
+import {
+  EXTRA_SERVICE_HAIRCUT,
+  EXTRA_SERVICE_MIRACLE_BOOSTER,
+} from '@/constants/services.constants'
 
 type SummaryFormProps = {
   contactInfo: {
@@ -38,11 +42,11 @@ const SummaryForm = ({
   resetForm,
 }: SummaryFormProps) => {
   const getExtraServiceIconByName = (name: string) => {
-    if (name === 'Hajvágás festéshez') {
+    if (name === EXTRA_SERVICE_HAIRCUT.name) {
       return <PiScissors size={32} className="text-emerald-600" />
     }
 
-    if (name === 'Miracle Booster hajkezelés') {
+    if (name === EXTRA_SERVICE_MIRACLE_BOOSTER.name) {
       return <HandHeart size={32} className="text-emerald-600" />
     }
   }
@@ -134,7 +138,8 @@ const SummaryForm = ({
               <div>
                 <p className="mb-2 max-w-sm font-medium">
                   {selectedExtraService.name} (
-                  {selectedExtraService.name === 'Miracle Booster hajkezelés'
+                  {selectedExtraService.name ===
+                  EXTRA_SERVICE_MIRACLE_BOOSTER.name
                     ? 10
                     : selectedExtraService.duration}{' '}
                   perc)
