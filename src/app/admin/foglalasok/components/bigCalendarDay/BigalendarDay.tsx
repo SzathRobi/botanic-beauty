@@ -18,11 +18,13 @@ import BigCalendarEventForm from '../bigCalendarEventForm/BigCalendarEventForm'
 
 type BigCalendarDayProps = {
   calendarEvent: EventProps<CalendarEvent>
+  discountProgression: string
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>
 }
 
 const BigCalendarDay = ({
   calendarEvent,
+  discountProgression,
   setCalendarEvents,
 }: BigCalendarDayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -109,7 +111,9 @@ const BigCalendarDay = ({
                   {startTime} - {endTime}
                 </p>
                 <p className="mb-2 hidden md:block">{title}</p>
-                <p className="hidden md:block">{contactInfo.name}</p>
+                <p className="hidden md:block">
+                  {contactInfo.name} ({discountProgression})
+                </p>
               </div>
             </PopoverTrigger>
             <PopoverContent side="right" className="dark max-w-60">
@@ -137,7 +141,9 @@ const BigCalendarDay = ({
               <Separator className="mb-2" />
 
               <div className="mb-8 space-y-1 text-sm">
-                <p>{contactInfo.name}</p>
+                <p>
+                  {contactInfo.name} {discountProgression}
+                </p>
 
                 <p>{contactInfo.email}</p>
 

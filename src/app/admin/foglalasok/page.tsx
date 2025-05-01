@@ -12,6 +12,8 @@ import BackgroundBlur from '@/components/BackgroundBlur'
 // import { MOCK_USER } from '@/mocks/user.mock'
 import { mapBookingToEvent } from '../mappers/mapBookingToEvent.mapper'
 import BigCalendarContainer from './components/bigCalendarContainer/BigCalendarContainer'
+import { countBookingsByEmail } from './utils/countBookingsByEmail.util'
+import { filterBookingsFrom2025 } from './utils/filterBookingsFrom2025.util'
 
 const BookingPage = async () => {
   const session = await auth()
@@ -31,6 +33,10 @@ const BookingPage = async () => {
 
   const calendarEvents = bookings?.map(mapBookingToEvent) ?? []
 
+  const bookingsFrom2025 = filterBookingsFrom2025(bookings)
+
+  const bookingsByEmail = countBookingsByEmail(bookingsFrom2025)
+
   return (
     <div className="min-h-screen w-full">
       <BackgroundBlur className="mb-8 !max-w-full">
@@ -39,6 +45,7 @@ const BookingPage = async () => {
         <BigCalendarContainer
           events={calendarEvents}
           offDays={schedule?.offDays ?? []}
+          bookingsByEmail={bookingsByEmail}
         />
       </BackgroundBlur>
     </div>

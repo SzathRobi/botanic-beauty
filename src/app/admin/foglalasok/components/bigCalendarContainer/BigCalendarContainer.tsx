@@ -16,6 +16,7 @@ import BigCalendar from '../bigCalendar/BigCalendar'
 type BigCalendarContainerProps = {
   events: CalendarEvent[]
   offDays: TOffDay[]
+  bookingsByEmail: Record<string, number>
 }
 
 export type SelectedHairdresser = 'all' | 'Timi' | 'nem_Timi'
@@ -23,6 +24,7 @@ export type SelectedHairdresser = 'all' | 'Timi' | 'nem_Timi'
 const BigCalendarContainer = ({
   events,
   offDays,
+  bookingsByEmail,
 }: BigCalendarContainerProps) => {
   const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>(events)
   const [calendarEventsBackup, setCalendarEventsBackup] =
@@ -201,6 +203,7 @@ const BigCalendarContainer = ({
         onEventDrop={onEventDrop}
         offDays={offDays}
         selectedHairdresser={selectedHairdresser}
+        bookingsByEmail={bookingsByEmail}
       />
     </div>
   )

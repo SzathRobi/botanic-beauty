@@ -43,7 +43,7 @@ type TContactInfo {
 model Booking {
   id                String      @id @default(uuid()) @map("_id")
   service           TService
-  extraServices      TService[]
+  extraServices     TService[]
   hairdresser       Hairdresser
   selectedDate      String
   selectedTimeSlot  String

@@ -20,6 +20,7 @@ import withDragAndDrop, {
 } from 'react-big-calendar/lib/addons/dragAndDrop'
 
 import { CalendarEvent } from '../../../types/calendarEvent.type'
+import { getProgressString } from '../../utils/getProgressionString.util'
 import { isOffDayOfNemTimi, isOffDayOfTimi } from '../../utils/offDay'
 import { SelectedHairdresser } from '../bigCalendarContainer/BigCalendarContainer'
 import BigCalendarDay from '../bigCalendarDay/BigalendarDay'
@@ -28,6 +29,7 @@ import BigCalendarToolbar from '../bigCalendarToolbar/BigCalendarToolbar'
 const localizer = momentLocalizer(moment)
 
 type BigCalendarProps = {
+  bookingsByEmail: Record<string, number>
   calendarEvents: CalendarEvent[]
   onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void
   offDays: TOffDay[]
@@ -38,6 +40,7 @@ type BigCalendarProps = {
 const DndCalendar = withDragAndDrop<CalendarEvent>(Calendar)
 
 const BigCalendar = ({
+  bookingsByEmail,
   calendarEvents,
   onEventDrop,
   offDays,
@@ -153,6 +156,9 @@ const BigCalendar = ({
         components={{
           event: (eventProps: EventProps<CalendarEvent>) => (
             <BigCalendarDay
+              discountProgression={getProgressString(
+                bookingsByEmail[eventProps.event.contactInfo.email] ?? 0
+              )}
               calendarEvent={eventProps}
               setCalendarEvents={setCalendarEvents}
             />
