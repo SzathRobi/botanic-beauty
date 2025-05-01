@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react'
 import { DayPicker } from 'react-day-picker'
 
 import { Button } from '@/components/Button'
+import { EXTRA_SERVICES_IDS_WITHOUT_DURATION } from '@/constants/services.constants'
 
 import {
   CLOSING_HOUR,
@@ -67,9 +68,19 @@ const AvailableDatesForm = ({
   const now = new Date()
   const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120))
   // TODO: ide kell majd az új extra service is
-  const serviceDuration = selectedExtraServices
-    ? selectedExtraServices[0].duration + selectedService.duration
-    : selectedService.duration
+  // const serviceDuration = selectedExtraServices
+  //   ? selectedExtraServices[0].duration + selectedService.duration
+  //   : selectedService.duration
+
+  const servicesWithDuration = selectedExtraServices.filter(
+    (extraservice) =>
+      !EXTRA_SERVICES_IDS_WITHOUT_DURATION.includes(extraservice.id)
+  )
+
+  const serviceDuration = servicesWithDuration.reduce(
+    (acc, extraservice) => acc + extraservice.duration,
+    selectedService.duration
+  )
 
   const [
     datesWithNoTimeForSelectedService,

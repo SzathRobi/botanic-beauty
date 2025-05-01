@@ -191,7 +191,7 @@ export const EXTRA_SERVICE_HAIRCUT: TService = {
 export const EXTRA_SERVICE_MIRACLE_BOOSTER: TService = {
   id: '2',
   category: 'extra',
-  name: 'Miracle Booster hajkezelés',
+  name: 'Hajszerkezet regeneráló kezelés',
   price: 0,
   duration: 0,
 } as const
@@ -200,5 +200,9 @@ export const EXTRA_SERVICES: TService[] = [
   EXTRA_SERVICE_HAIRCUT,
   EXTRA_SERVICE_MIRACLE_BOOSTER,
 ] as const
+
+export const EXTRA_SERVICES_IDS_WITHOUT_DURATION: string[] = [
+  EXTRA_SERVICE_MIRACLE_BOOSTER.id,
+]
 
 export const SERVICE_NAMES = SERVICES.map((service) => service.name)
