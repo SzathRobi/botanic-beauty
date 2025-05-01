@@ -2,10 +2,12 @@ import 'react-day-picker/dist/style.css'
 
 import { Metadata } from 'next'
 import Image from 'next/image'
+import { redirect } from 'next/navigation'
 
 import { getBookings } from '@/actions/booking'
 import { getSchedule } from '@/actions/schedule'
 import Footer from '@/components/Footer'
+import { HOME_ROUTE } from '@/constants/routes.constants'
 
 import MultiStepForm from './components/MultiStepForm'
 import { SearchParamService } from './types/searchParamService.type'
@@ -55,6 +57,12 @@ type BookingPageProps = {
 }
 
 const BookingPage = async ({ searchParams }: BookingPageProps) => {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
+  if (!isBookingAvailable) {
+    return redirect(HOME_ROUTE)
+  }
+
   const schedule = await getSchedule()
 
   const bookings = await getBookings()

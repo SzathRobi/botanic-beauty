@@ -93,6 +93,52 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
+  // const bookings = await prisma.booking.findMany()
+
+  // const newBookings: Booking[] = bookings.map((booking): Booking => {
+  //   if (
+  //     booking.extraService ||
+  //     (!booking.extraService && !booking.extraServices)
+  //   ) {
+  //     return {
+  //       contactInfo: booking.contactInfo,
+  //       createdAt: booking.createdAt,
+  //       extraServices: [],
+  //       hairdresser: booking.hairdresser,
+  //       id: booking.id,
+  //       selectedDate: booking.selectedDate,
+  //       selectedTimeSlot: booking.selectedTimeSlot,
+  //       service: booking.service,
+  //       updatedAt: booking.updatedAt,
+  //     }
+  //   }
+
+  //   return booking
+  // })
+
+  // await prisma.booking.deleteMany()
+  // await prisma.booking.createMany({
+  //   data: newBookings,
+  // })
+
+  // console.log('NEW Bookings', newBookings)
+  // console.log('NEW Bookings length', newBookings.length)
+
+  // for (const booking of bookings) {
+  //   // Ha extraService létezik és nem tömb
+  //   //@ts-ignore
+  //   if (booking.extraService && !Array.isArray(booking.extraService)) {
+  //     await prisma.booking.update({
+  //       where: { id: booking.id },
+  //       data: {
+  //         //@ts-ignore
+  //         extraService: [booking.extraService], // egy elemű listává alakítjuk
+  //       },
+  //     })
+  //     console.log(`Booking ${booking.id} updated`)
+  //   }
+  // }
+
   return (
     <Transition>
       <main className="relative flex min-h-screen flex-col items-center justify-center overflow-x-hidden">

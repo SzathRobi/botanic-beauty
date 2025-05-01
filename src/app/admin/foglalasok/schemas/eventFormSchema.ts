@@ -8,12 +8,12 @@ export const eventFormSchema = z.object({
     name: z.string(),
     duration: z.number(),
   }),
-  extraService: z
-    .object({
+  extraServices: z.array(
+    z.object({
       name: z.string(),
       duration: z.number(),
     })
-    .nullable(),
+  ),
   startTime: z.string().min(1, { message: 'A mező kitöltése kötelező' }),
   endTime: z.string().min(1, { message: 'A mező kitöltése kötelező' }),
   name: z.string().min(1, { message: 'A mező kitöltése kötelező' }),

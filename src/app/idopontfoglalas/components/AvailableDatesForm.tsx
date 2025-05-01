@@ -20,6 +20,7 @@ import { useEffect, useState } from 'react'
 import { DayPicker } from 'react-day-picker'
 
 import { Button } from '@/components/Button'
+import { EXTRA_SERVICES_IDS_WITHOUT_DURATION } from '@/constants/services.constants'
 
 import {
   CLOSING_HOUR,
@@ -35,7 +36,7 @@ type AvailableDatesFormProps = {
   selectedTimeSlot: string | null
   setSelectedTimeSlot: (timeSlot: string | null) => void
   selectedService: TService
-  selectedExtraService: TService | null
+  selectedExtraServices: TService[]
   selectedHairdresser: 'Timi' | 'nem_Timi'
   schedule: Schedule
   incrementActiveStep: () => void
@@ -58,7 +59,7 @@ const AvailableDatesForm = ({
   selectedTimeSlot,
   setSelectedTimeSlot,
   selectedService,
-  selectedExtraService,
+  selectedExtraServices,
   selectedHairdresser,
   schedule,
   decrementActiveStep,
@@ -66,9 +67,20 @@ const AvailableDatesForm = ({
 }: AvailableDatesFormProps) => {
   const now = new Date()
   const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120))
-  const serviceDuration = selectedExtraService
-    ? selectedExtraService.duration + selectedService.duration
-    : selectedService.duration
+  // TODO: ide kell majd az új extra service is
+  // const serviceDuration = selectedExtraServices
+  //   ? selectedExtraServices[0].duration + selectedService.duration
+  //   : selectedService.duration
+
+  const servicesWithDuration = selectedExtraServices.filter(
+    (extraservice) =>
+      !EXTRA_SERVICES_IDS_WITHOUT_DURATION.includes(extraservice.id)
+  )
+
+  const serviceDuration = servicesWithDuration.reduce(
+    (acc, extraservice) => acc + extraservice.duration,
+    selectedService.duration
+  )
 
   const [
     datesWithNoTimeForSelectedService,

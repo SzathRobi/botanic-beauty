@@ -21,13 +21,15 @@ type ServiceCardProps = {
 }
 
 const ServiceCard = ({ service, index }: ServiceCardProps) => {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+
   return (
     <Card
       className={`mb-8 items-start gap-4 border-none bg-black/0 lg:flex lg:p-4 ${index % 2 === 0 ? 'lg:flex-row-reverse' : 'flex-row'}`}
     >
       <Image
         src={service.image}
-        className="w-full rounded-lg object-cover lg:max-h-[400px] lg:w-auto"
+        className="mt-6 w-full rounded-lg object-cover lg:max-h-[400px] lg:w-auto"
         alt={service.name}
         width={320}
         height={320}
@@ -44,16 +46,18 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => {
           <CardDescription>{service.shortDescription}</CardDescription>
         </CardHeader>
 
-        <CardContent className="mb-12 min-h-44">
+        <CardContent>
           <p>{service.longDescription}</p>
         </CardContent>
 
         <CardFooter>
-          <Button asChild className="text-white">
-            <Link href={`${BOOKING_ROUTE}?${service.queryParam}`}>
-              Foglalj időpontot
-            </Link>
-          </Button>
+          {isBookingAvailable && (
+            <Button asChild className="text-white">
+              <Link href={`${BOOKING_ROUTE}?${service.queryParam}`}>
+                Foglalj időpontot
+              </Link>
+            </Button>
+          )}
         </CardFooter>
       </div>
     </Card>

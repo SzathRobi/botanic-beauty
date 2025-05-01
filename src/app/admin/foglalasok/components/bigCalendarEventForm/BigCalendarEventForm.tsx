@@ -73,7 +73,7 @@ const BigCalendarEventForm = ({
       startTime: booking.selectedTimeSlot.split(' - ')[0],
       endTime: booking.selectedTimeSlot.split(' - ')[1],
       service: calendarEvent.event.service,
-      extraService: calendarEvent.event.extraService,
+      extraServices: calendarEvent.event.extraServices,
       name: calendarEvent.event.contactInfo.name,
       email: calendarEvent.event.contactInfo.email,
       phone: calendarEvent.event.contactInfo.phone,
@@ -91,10 +91,11 @@ const BigCalendarEventForm = ({
 
     let endDateTime = addMinutes(startDateTime, service.duration)
 
-    const extraService = form.getValues('extraService')
+    const extraServices = form.getValues('extraServices')
 
-    if (extraService) {
-      endDateTime = addMinutes(endDateTime, extraService.duration)
+    if (extraServices.length > 0) {
+      // TODO: kell az uj extra service is (miracle booster)
+      endDateTime = addMinutes(endDateTime, extraServices[0].duration)
     }
 
     form.setValue('endTime', format(endDateTime, 'HH:mm'))

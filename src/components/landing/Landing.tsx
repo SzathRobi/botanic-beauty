@@ -5,12 +5,19 @@ import { BOOKING_ROUTE } from '@/constants/routes.constants'
 
 import landingBg from '../../../public/landing-bg.png'
 import BackgroundBlur from '../BackgroundBlur'
+import Maintenance from '../Maintenance'
 import { LanidngWeaveSvg } from './LandingWaveSvg'
 import ShinyButton from './ShinyButton'
 
 const Landing = async () => {
+  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+  const isMaintenanceModeOn = process.env.IS_MAINTENANCE_MODE_ON === 'true'
+
   return (
     <section className="relative h-screen">
+      {isMaintenanceModeOn && (
+        <Maintenance text="Az online foglaló karbantartások miatt nem lesz elérhető 05.01-jén 10 és 11 óra között" />
+      )}
       <div>
         <Image
           alt="Botanic Beauty Hajszalon belső tere, Újpest, 4. kerület"
@@ -39,9 +46,13 @@ const Landing = async () => {
             A természet és az egyéniséged ihlette hajszalon, Újpesten.
           </h3>
 
-          <Link href={BOOKING_ROUTE}>
-            <ShinyButton className="2xl:text-xl">Foglalj időpontot</ShinyButton>
-          </Link>
+          {isBookingAvailable && (
+            <Link href={BOOKING_ROUTE}>
+              <ShinyButton className="2xl:text-xl">
+                Foglalj időpontot
+              </ShinyButton>
+            </Link>
+          )}
         </BackgroundBlur>
       </div>
     </section>

@@ -19,7 +19,7 @@ export const MOCK_BOOKING: Booking = {
   contactInfo: MOCK_BOOKING_CONTACT_INFO,
   hairdresser: 'Timi',
   createdAt: new Date(),
-  extraService: null,
+  extraServices: [],
   id: '1',
   service: MOCK_BOOKING_SERVICE,
   selectedDate: new Date().toString(),
