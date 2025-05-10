@@ -105,6 +105,7 @@ const AvailableDatesForm = ({
 
     while (
       isSunday(firstAvailableDate) ||
+      isSaturday(firstAvailableDate) ||
       hairdresserOffDays.some(
         (offDay) =>
           isSameDay(offDay, firstAvailableDate) ||
