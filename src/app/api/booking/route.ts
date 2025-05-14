@@ -69,6 +69,10 @@ export async function POST(request: NextRequest) {
         selectedDate,
         selectedTimeSlot,
         contactInfo,
+        isFinanceDone: false,
+        bleachMaterialUsage: 0,
+        dyeMaterialUsage: 0,
+        finalPrice: 0,
       },
     })
 

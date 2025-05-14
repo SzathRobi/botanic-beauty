@@ -4,6 +4,7 @@ import {
   Album,
   CalendarDays,
   ChartColumnDecreasing,
+  DollarSign,
   Ellipsis,
   ImageUp,
   Users,
@@ -28,6 +29,11 @@ const navElements = [
     title: 'Foglalások',
     href: '/admin/foglalasok',
     icon: <Album className="mx-auto mb-1" />,
+  },
+  {
+    title: 'Pénzügyek',
+    href: '/admin/penzugyek',
+    icon: <DollarSign className="mx-auto mb-1" />,
   },
   {
     title: 'Ügyfelek',
@@ -56,6 +62,11 @@ const navElementsMobile = [
     title: 'Foglalások',
     href: '/admin/foglalasok',
     icon: <Album className="mx-auto mb-1" />,
+  },
+  {
+    title: 'Pénzügyek',
+    href: '/admin/penzugyek',
+    icon: <DollarSign className="mx-auto mb-1" />,
   },
   {
     title: 'Ügyfelek',

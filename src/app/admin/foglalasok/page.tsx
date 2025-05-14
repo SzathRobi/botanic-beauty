@@ -13,7 +13,7 @@ import BackgroundBlur from '@/components/BackgroundBlur'
 import { mapBookingToEvent } from '../mappers/mapBookingToEvent.mapper'
 import BigCalendarContainer from './components/bigCalendarContainer/BigCalendarContainer'
 import { countBookingsByEmail } from './utils/countBookingsByEmail.util'
-import { filterBookingsFrom2025 } from './utils/filterBookingsFrom2025.util'
+import { filterBookingsFromYear } from './utils/filterBookingsFromYear.util'
 
 const BookingPage = async () => {
   const session = await auth()
@@ -33,7 +33,7 @@ const BookingPage = async () => {
 
   const calendarEvents = bookings?.map(mapBookingToEvent) ?? []
 
-  const bookingsFrom2025 = filterBookingsFrom2025(bookings)
+  const bookingsFrom2025 = filterBookingsFromYear(bookings, 2025)
 
   const bookingsByEmail = countBookingsByEmail(bookingsFrom2025)
 
