@@ -27,4 +27,10 @@ export const mapMultistepFormDataToBooking = ({
   ).toString(),
   selectedTimeSlot: selectedTimeSlot!,
   contactInfo,
+  finalPrice: 0,
+  dyeMaterialUsage: 0,
+  bleachMaterialUsage: 0,
+  extraHaircutPrice: 0,
+  miracleBoosterPrice: 0,
+  isFinanceDone: false,
 })

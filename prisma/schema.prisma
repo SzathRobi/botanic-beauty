@@ -41,15 +41,21 @@ type TContactInfo {
 }
 
 model Booking {
-  id                String      @id @default(uuid()) @map("_id")
-  service           TService
-  extraServices     TService[]
-  hairdresser       Hairdresser
-  selectedDate      String
-  selectedTimeSlot  String
-  contactInfo       TContactInfo
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  id                    String      @id @default(uuid()) @map("_id")
+  service               TService
+  extraServices         TService[]
+  hairdresser           Hairdresser
+  selectedDate          String
+  selectedTimeSlot      String
+  contactInfo           TContactInfo
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+  dyeMaterialUsage      Int?
+  bleachMaterialUsage   Int?
+  finalPrice            Int?
+  extraHaircutPrice     Int?
+  miracleBoosterPrice   Int?
+  isFinanceDone         Boolean?
 }
 
 model Customer {

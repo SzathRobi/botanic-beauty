@@ -26,6 +26,12 @@ export const mapEventToBooking = ({
   extraServices,
   selectedTimeSlot: `${format(start!, 'HH:mm')} - ${format(end!, 'HH:mm')}`,
   id,
+  finalPrice: 0,
+  dyeMaterialUsage: 0,
+  bleachMaterialUsage: 0,
+  extraHaircutPrice: 0,
+  miracleBoosterPrice: 0,
+  isFinanceDone: false,
   createdAt: createdAt,
   updatedAt: updatedAt,
 })

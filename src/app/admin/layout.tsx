@@ -8,7 +8,6 @@ type AdminLayoutProps = {
   children: ReactNode
 }
 
-// TODO / highest: modify bookings
 const AdminLayout = ({ children }: AdminLayoutProps) => {
   return (
     <div className="dark flex min-h-screen flex-col-reverse gap-4 pb-10 pt-20 sm:gap-0 md:flex-row md:pb-0 md:pt-16">

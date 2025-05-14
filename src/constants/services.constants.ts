@@ -184,7 +184,7 @@ export const EXTRA_SERVICE_HAIRCUT: TService = {
   id: '1',
   category: 'extra',
   name: 'Hajvágás festéshez',
-  price: 0,
+  price: 4000,
   duration: 30,
 } as const
 
@@ -192,7 +192,7 @@ export const EXTRA_SERVICE_MIRACLE_BOOSTER: TService = {
   id: '2',
   category: 'extra',
   name: 'Hajszerkezet regeneráló kezelés',
-  price: 0,
+  price: 3000,
   duration: 0,
 } as const
 
