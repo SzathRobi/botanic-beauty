@@ -4,7 +4,7 @@ import { Booking } from '@prisma/client'
 import { InfoIcon } from 'lucide-react'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import toast from 'react-hot-toast'
 import * as z from 'zod'
 
 import { Button } from '@/components/Button'
@@ -270,9 +270,23 @@ export default function FinanceForm({
           <p>Összesen: {finalPrice}Ft</p>
         </div>
 
-        <Button type="submit" className="text-white" isLoading={isFormLoading}>
-          Mentés
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            className="flex-1"
+            variant="secondary"
+            type="button"
+            onClick={() => setIsDialogOpen(false)}
+          >
+            Mégse
+          </Button>
+          <Button
+            type="submit"
+            className="flex-1 text-white"
+            isLoading={isFormLoading}
+          >
+            Mentés
+          </Button>
+        </div>
       </form>
     </Form>
   )
