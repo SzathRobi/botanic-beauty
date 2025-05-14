@@ -20,6 +20,8 @@ const FinancePage = async () => {
     filterBookingsFromDate(bookings, 2025, 5, 14)
   )
 
+  const bookingsFromDateInOrder = sortBookingsByDate(bookingsFromDate)
+
   return (
     <div className="sm:container">
       <FinanceTabs bookings={bookingsFromDateInOrder} />
