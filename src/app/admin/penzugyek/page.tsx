@@ -16,9 +16,7 @@ const FinancePage = async () => {
 
   const bookings = await prisma.booking.findMany()
 
-  const bookingsFromDateInOrder = sortBookingsByDate(
-    filterBookingsFromDate(bookings, 2025, 5, 14)
-  )
+  const bookingsFromDate = filterBookingsFromDate(bookings, 2025, 5, 14)
 
   const bookingsFromDateInOrder = sortBookingsByDate(bookingsFromDate)
 
