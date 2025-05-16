@@ -8,6 +8,7 @@ import { SERVICES } from '@/constants/services.constants'
 import { TimeRange } from '../types/timeRange.type'
 import { filterBookingsByTimeRange } from '../utils/filterBookingsByTimeRange.util'
 import ClientGrowthChart from './clientGrowthChart/ClientGrowthChart'
+import MoneyEarnedChart from './moneyEarnedChart/MoneyEarnedChart'
 import NumberOfBookingsChart from './numberOfBookingsChart/NumberOfBookingsChart'
 import NumberOfCustomersChart from './numberOfCustomersChart/NumberOfCustomersChart'
 import NumberOfReturningCustomersChart from './numberOfReturningCustomersChart/NumberOfReturningCustomersChart'
@@ -42,7 +43,9 @@ const AnalyticsContainer = ({
         {/* NOT affected by timerange */}
         <NumberOfCustomersChart numberOfCustomers={customers.length} />
 
-        <div className="col-span-1" />
+        <MoneyEarnedChart
+          filteredBookings={filteredBookings.filter((b) => b.isFinanceDone)}
+        />
 
         <NumberOfReturningCustomersChart
           bookings={filteredBookings}
