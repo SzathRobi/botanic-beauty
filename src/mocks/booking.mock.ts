@@ -12,6 +12,20 @@ const MOCK_BOOKING_CONTACT_INFO: Booking['contactInfo'] = {
   otherInfo: 'Additional info',
 }
 
+const MOCK_BOOKING_OTHER_CONTACT_INFO: Booking['contactInfo'] = {
+  name: 'Jane Doe',
+  email: 'janedoe@me.com',
+  phone: '1111567890',
+  otherInfo: null,
+}
+
+const MOCK_BOOKING_ANOTHER_CONTACT_INFO: Booking['contactInfo'] = {
+  name: 'Jani Doe',
+  email: 'janidoe@me.com',
+  phone: '1111567890',
+  otherInfo: null,
+}
+
 const MOCK_BOOKING_SERVICE: Booking['service'] = {
   category: 'Styling',
   duration: 60,
@@ -41,6 +55,7 @@ export const MOCK_BOOKING: Booking = {
 export const MOCK_BOOKING_WITH_EXTRA_SERVICES: Booking = {
   ...MOCK_BOOKING,
   id: '2',
+  contactInfo: MOCK_BOOKING_OTHER_CONTACT_INFO,
   extraServices: [EXTRA_SERVICE_HAIRCUT, EXTRA_SERVICE_MIRACLE_BOOSTER],
 }
 
@@ -53,6 +68,7 @@ export const MOCK_BOOKINGS_WITH_FINANCE_DONE: Booking = {
   extraHaircutPrice: 0,
   miracleBoosterPrice: 3000,
   isFinanceDone: true,
+  contactInfo: MOCK_BOOKING_ANOTHER_CONTACT_INFO,
 }
 
 export const MOCK_BOOKINGS: Booking[] = [

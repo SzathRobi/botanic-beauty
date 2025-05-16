@@ -1,7 +1,7 @@
 'use client'
 
 import { Booking } from '@prisma/client'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 import {
   Card,
@@ -11,6 +11,8 @@ import {
   CardTitle,
 } from '@/components/ui/Card'
 import { Dialog, DialogContent } from '@/components/ui/Dialog'
+import { Input } from '@/components/ui/Input'
+import { Label } from '@/components/ui/Label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 
 import FinanceForm from './financeForm'
@@ -29,10 +31,46 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
   const [bookingsWithoutFianceDone, setBookingsWithoutFianceDone] = useState<
     Booking[]
   >(allBookings.filter((booking) => !booking.isFinanceDone))
+  const [
+    bookingsWithFinanceDoneSearchValue,
+    setBookingsWithFinanceDoneSearchValue,
+  ] = useState('')
+  const [
+    bookingsWithoutFinanceDoneSearchValue,
+    setBookingsWithoutFinanceDoneSearchValue,
+  ] = useState('')
 
   const openDialog = (booking: Booking) => {
     setSelectedBooking(booking)
     setIsDialogOpen(true)
+  }
+
+  const onSearchInBookingsWithoutFinanceDone = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    setBookingsWithoutFinanceDoneSearchValue(event.target.value)
+    const filteredBookings = allBookings.filter(
+      (booking) =>
+        !booking.isFinanceDone &&
+        booking.contactInfo.name
+          .toLowerCase()
+          .includes(event.target.value.toLowerCase())
+    )
+    setBookingsWithoutFianceDone(filteredBookings)
+  }
+
+  const onSearchInBookingsWithFinanceDone = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    setBookingsWithFinanceDoneSearchValue(event.target.value)
+    const filteredBookings = allBookings.filter(
+      (booking) =>
+        booking.isFinanceDone &&
+        booking.contactInfo.name
+          .toLowerCase()
+          .includes(event.target.value.toLowerCase())
+    )
+    setBookingsWithFianceDone(filteredBookings)
   }
 
   useEffect(() => {
@@ -58,6 +96,16 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
               <CardTitle>Elszámolásra váró foglalások</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="mb-4 max-w-xs">
+                <Label>
+                  <span className="mb-1">Keresés (név)</span>
+                  <Input
+                    value={bookingsWithoutFinanceDoneSearchValue}
+                    onChange={onSearchInBookingsWithoutFinanceDone}
+                  />
+                </Label>
+              </div>
+
               {bookingsWithoutFianceDone.map((booking) => (
                 <button
                   key={booking.id}
@@ -84,6 +132,16 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
               <CardTitle>Elszámolt foglalások</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="mb-4 max-w-xs">
+                <Label>
+                  <span className="mb-1">Keresés (név)</span>
+                  <Input
+                    value={bookingsWithFinanceDoneSearchValue}
+                    onChange={onSearchInBookingsWithFinanceDone}
+                  />
+                </Label>
+              </div>
+
               {bookingsWithFianceDone.map((booking) => (
                 <div
                   key={booking.id}
