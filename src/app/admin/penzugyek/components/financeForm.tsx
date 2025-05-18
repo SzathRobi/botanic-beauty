@@ -29,6 +29,7 @@ const formSchema = z.object({
   bleachMaterialUsage: z.number(),
   miracleBoosterPrice: z.number().optional(),
   extraHaircutPrice: z.number().optional(),
+  discountPercentage: z.number().optional(),
 })
 
 const BLEACH_PRICE_PER_GRAMM = 100
@@ -64,6 +65,7 @@ export default function FinanceForm({
         ? EXTRA_SERVICE_MIRACLE_BOOSTER.price
         : 0,
       extraHaircutPrice: hasExtraHaircuts ? EXTRA_SERVICE_HAIRCUT.price : 0,
+      discountPercentage: 0,
     },
     resolver: zodResolver(formSchema),
   })
@@ -74,10 +76,14 @@ export default function FinanceForm({
     const bleachCost = values.bleachMaterialUsage * BLEACH_PRICE_PER_GRAMM
     const miracleBoosterCost = values.miracleBoosterPrice || 0
     const extraHaircutCost = values.extraHaircutPrice || 0
+    const discountPercentage = values.discountPercentage || 0
 
-    return (
+    const finalPriceWithoutDiscount =
       basePrice + dyeCost + bleachCost + miracleBoosterCost + extraHaircutCost
-    )
+    const discountAmount =
+      (finalPriceWithoutDiscount * discountPercentage) / 100
+
+    return finalPriceWithoutDiscount - discountAmount
   }
 
   useEffect(() => {
@@ -250,6 +256,28 @@ export default function FinanceForm({
           render={({ field }) => (
             <FormItem className="text-white">
               <FormLabel>Miracle Booster ár (Ft)</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder=""
+                  type="number"
+                  {...field}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="discountPercentage"
+          render={({ field }) => (
+            <FormItem className="text-white">
+              <FormLabel>Kedvezmény (%)</FormLabel>
               <FormControl>
                 <Input
                   placeholder=""
