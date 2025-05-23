@@ -128,6 +128,12 @@ const AvailableDatesForm = ({
     setSelectedDate(getFirstAvailableDate())
   }, [])
 
+  useEffect(() => {
+    if (isSaturday(selectedDate)) {
+      setSelectedDate(addDays(selectedDate, 1))
+    }
+  }, [selectedDate])
+
   const getOpeningHour = () => {
     const date = startOfDay(selectedDate)
     return setMinutes(setHours(date, OPENING_HOUR), 0)

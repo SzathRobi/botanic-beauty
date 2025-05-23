@@ -7,7 +7,9 @@ import { SERVICES } from '@/constants/services.constants'
 
 import { TimeRange } from '../types/timeRange.type'
 import { filterBookingsByTimeRange } from '../utils/filterBookingsByTimeRange.util'
+import BleachMaterialUsageChart from './bleachMaterialUsageChart/BleachMaterialUsageChart'
 import ClientGrowthChart from './clientGrowthChart/ClientGrowthChart'
+import DyeMaterialUsageChart from './dyeMaterialUsageChart/DyeMaterialUsageChart'
 import MoneyEarnedChart from './moneyEarnedChart/MoneyEarnedChart'
 import NumberOfBookingsChart from './numberOfBookingsChart/NumberOfBookingsChart'
 import NumberOfCustomersChart from './numberOfCustomersChart/NumberOfCustomersChart'
@@ -46,6 +48,10 @@ const AnalyticsContainer = ({
         <MoneyEarnedChart
           filteredBookings={filteredBookings.filter((b) => b.isFinanceDone)}
         />
+
+        <BleachMaterialUsageChart filteredBookings={filteredBookings} />
+
+        <DyeMaterialUsageChart filteredBookings={filteredBookings} />
 
         <NumberOfReturningCustomersChart
           bookings={filteredBookings}

@@ -25,6 +25,7 @@ import {
 
 const formSchema = z.object({
   price: z.number(),
+  tips: z.number(),
   dyeMaterialUsage: z.number(),
   bleachMaterialUsage: z.number(),
   miracleBoosterPrice: z.number().optional(),
@@ -58,6 +59,7 @@ export default function FinanceForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
+      tips: 0,
       bleachMaterialUsage: 0,
       dyeMaterialUsage: 0,
       price: selectedBooking.service.price,
@@ -77,13 +79,14 @@ export default function FinanceForm({
     const miracleBoosterCost = values.miracleBoosterPrice || 0
     const extraHaircutCost = values.extraHaircutPrice || 0
     const discountPercentage = values.discountPercentage || 0
+    const tips = values.tips || 0
 
     const finalPriceWithoutDiscount =
       basePrice + dyeCost + bleachCost + miracleBoosterCost + extraHaircutCost
     const discountAmount =
       (finalPriceWithoutDiscount * discountPercentage) / 100
 
-    return finalPriceWithoutDiscount - discountAmount
+    return finalPriceWithoutDiscount - discountAmount + tips
   }
 
   useEffect(() => {
@@ -168,6 +171,28 @@ export default function FinanceForm({
           render={({ field }) => (
             <FormItem className="text-white">
               <FormLabel>Ár (Ft)</FormLabel>
+              <FormControl>
+                <Input
+                  placeholder=""
+                  type="number"
+                  {...field}
+                  onChange={(event) =>
+                    field.onChange(event.target.valueAsNumber)
+                  }
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tips"
+          render={({ field }) => (
+            <FormItem className="text-white">
+              <FormLabel>Borravaló (Ft)</FormLabel>
               <FormControl>
                 <Input
                   placeholder=""
