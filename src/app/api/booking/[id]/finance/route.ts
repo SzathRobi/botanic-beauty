@@ -2,19 +2,23 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import prisma from '@/lib/db'
 
-export async function PATCH(request: NextRequest, { params }: any) {
+export async function POST(request: NextRequest, { params }: any) {
   const id = await params.id
 
   const {
     bleachMaterialUsage,
     dyeMaterialUsage,
-    price,
+    finalPrice,
     extraHaircutPrice,
     miracleBoosterPrice,
+    financeComment,
+    isPaidWithCard,
+    tips,
+    discountPercentage,
   } = await request.json()
 
   if (
-    price === null ||
+    finalPrice === null ||
     bleachMaterialUsage === null ||
     dyeMaterialUsage === null
   ) {
@@ -32,10 +36,14 @@ export async function PATCH(request: NextRequest, { params }: any) {
       data: {
         bleachMaterialUsage,
         dyeMaterialUsage,
-        finalPrice: price,
+        finalPrice,
         isFinanceDone: true,
         extraHaircutPrice,
         miracleBoosterPrice,
+        isPaidWithCard,
+        financeComment,
+        tips,
+        discountPercentage,
       },
     })
   } catch (error) {

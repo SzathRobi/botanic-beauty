@@ -33,4 +33,8 @@ export const mapMultistepFormDataToBooking = ({
   extraHaircutPrice: 0,
   miracleBoosterPrice: 0,
   isFinanceDone: false,
+  financeComment: null,
+  isPaidWithCard: null,
+  discountPercentage: null,
+  tips: null,
 })

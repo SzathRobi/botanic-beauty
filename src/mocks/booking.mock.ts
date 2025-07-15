@@ -50,6 +50,10 @@ export const MOCK_BOOKING: Booking = {
   extraHaircutPrice: 0,
   miracleBoosterPrice: 0,
   isFinanceDone: false,
+  financeComment: null,
+  isPaidWithCard: null,
+  discountPercentage: null,
+  tips: null,
 }
 
 export const MOCK_BOOKING_WITH_EXTRA_SERVICES: Booking = {

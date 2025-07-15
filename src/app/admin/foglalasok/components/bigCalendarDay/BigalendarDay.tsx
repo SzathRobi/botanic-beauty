@@ -9,6 +9,7 @@ import toast from 'react-hot-toast'
 import { mapEventToBooking } from '@/app/admin/mappers/mapEventToBooking.mapper'
 import { Button } from '@/components/Button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
+import { Badge } from '@/components/ui/Badge'
 import { Dialog, DialogContent, DialogTrigger } from '@/components/ui/Dialog'
 import { Separator } from '@/components/ui/Separator'
 import { useRemovePointerEvents } from '@/hooks'
@@ -42,6 +43,9 @@ const BigCalendarDay = ({
       title,
       id,
       isLoaderEvent,
+      finalPrice,
+      isPaidWithCard,
+      isFinanceDone,
     },
   } = calendarEvent
 
@@ -140,7 +144,7 @@ const BigCalendarDay = ({
 
               <Separator className="mb-2" />
 
-              <div className="mb-8 space-y-1 text-sm">
+              <div className="mb-2 space-y-1 text-sm">
                 <p>
                   {contactInfo.name} {discountProgression}
                 </p>
@@ -151,6 +155,19 @@ const BigCalendarDay = ({
 
                 {contactInfo.otherInfo && <p>{contactInfo.otherInfo}</p>}
               </div>
+
+              {isFinanceDone && (
+                <div className="mb-6 text-sm">
+                  <div className="flex items-center gap-2">
+                    {isPaidWithCard ? (
+                      <Badge>Kártyás</Badge>
+                    ) : (
+                      <Badge variant="secondary">Kézpénz</Badge>
+                    )}
+                    <p>{finalPrice} Ft</p>
+                  </div>
+                </div>
+              )}
 
               <div className="flex items-center gap-2">
                 <Button

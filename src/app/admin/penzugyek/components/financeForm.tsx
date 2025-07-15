@@ -18,6 +18,8 @@ import {
   FormMessage,
 } from '@/components/ui/Form'
 import { Input } from '@/components/ui/Input'
+import { Switch } from '@/components/ui/Switch'
+import { Textarea } from '@/components/ui/TextArea'
 import {
   EXTRA_SERVICE_HAIRCUT,
   EXTRA_SERVICE_MIRACLE_BOOSTER,
@@ -27,10 +29,12 @@ const formSchema = z.object({
   price: z.number(),
   tips: z.number(),
   dyeMaterialUsage: z.number(),
-  bleachMaterialUsage: z.number(),
+  bleachMaterialUsage: z.number().optional(),
   miracleBoosterPrice: z.number().optional(),
   extraHaircutPrice: z.number().optional(),
   discountPercentage: z.number().optional(),
+  financeComment: z.string().optional(),
+  isPaidWithCard: z.boolean().optional(),
 })
 
 const BLEACH_PRICE_PER_GRAMM = 100
@@ -59,15 +63,20 @@ export default function FinanceForm({
 
   const form = useForm<z.infer<typeof formSchema>>({
     defaultValues: {
-      tips: 0,
-      bleachMaterialUsage: 0,
-      dyeMaterialUsage: 0,
+      tips: selectedBooking.tips || 0,
+      bleachMaterialUsage: selectedBooking.bleachMaterialUsage || 0,
+      dyeMaterialUsage: selectedBooking.dyeMaterialUsage || 0,
       price: selectedBooking.service.price,
       miracleBoosterPrice: hasMiracleBooster
         ? EXTRA_SERVICE_MIRACLE_BOOSTER.price
         : 0,
-      extraHaircutPrice: hasExtraHaircuts ? EXTRA_SERVICE_HAIRCUT.price : 0,
-      discountPercentage: 0,
+      extraHaircutPrice:
+        selectedBooking.extraHaircutPrice || hasExtraHaircuts
+          ? EXTRA_SERVICE_HAIRCUT.price
+          : 0,
+      discountPercentage: selectedBooking.discountPercentage || 0,
+      financeComment: selectedBooking.financeComment || '',
+      isPaidWithCard: selectedBooking.isPaidWithCard || false,
     },
     resolver: zodResolver(formSchema),
   })
@@ -75,7 +84,9 @@ export default function FinanceForm({
   const calculateFinalPrice = (values: z.infer<typeof formSchema>) => {
     const basePrice = values.price || 0
     const dyeCost = values.dyeMaterialUsage * DYE_PRICE_PER_GRAMM
-    const bleachCost = values.bleachMaterialUsage * BLEACH_PRICE_PER_GRAMM
+    const bleachCost = values.bleachMaterialUsage
+      ? values.bleachMaterialUsage * BLEACH_PRICE_PER_GRAMM
+      : 0
     const miracleBoosterCost = values.miracleBoosterPrice || 0
     const extraHaircutCost = values.extraHaircutPrice || 0
     const discountPercentage = values.discountPercentage || 0
@@ -99,11 +110,11 @@ export default function FinanceForm({
     setIsFormLoading(true)
 
     const response = await fetch(`/api/booking/${selectedBooking.id}/finance`, {
-      method: 'PATCH',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...values, price: finalPrice }),
+      body: JSON.stringify({ ...values, finalPrice }),
     })
 
     if (!response.ok) {
@@ -119,11 +130,15 @@ export default function FinanceForm({
           return {
             ...booking,
             isFinanceDone: true,
-            bleachMaterialUsage: values.bleachMaterialUsage,
-            dyeMaterialUsage: values.dyeMaterialUsage,
-            finalPrice: finalPrice,
-            miracleBoosterPrice: values?.miracleBoosterPrice ?? 0,
-            extraHaircutPrice: values?.extraHaircutPrice ?? 0,
+            bleachMaterialUsage: values.bleachMaterialUsage ?? null,
+            dyeMaterialUsage: values.dyeMaterialUsage ?? null,
+            finalPrice,
+            miracleBoosterPrice: values?.miracleBoosterPrice ?? null,
+            extraHaircutPrice: values?.extraHaircutPrice ?? null,
+            discountPercentage: values?.discountPercentage ?? null,
+            financeComment: values?.financeComment ?? null,
+            isPaidWithCard: values?.isPaidWithCard ?? null,
+            tips: values?.tips ?? null,
           }
         }
         return booking
@@ -312,6 +327,39 @@ export default function FinanceForm({
                     field.onChange(event.target.valueAsNumber)
                   }
                 />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="isPaidWithCard"
+          render={({ field }) => (
+            <FormItem className="flex items-center gap-2 space-y-0 text-white">
+              <FormLabel>Kártyás fizetés</FormLabel>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="financeComment"
+          render={({ field }) => (
+            <FormItem className="text-white">
+              <FormLabel>Megjegyzés</FormLabel>
+              <FormControl>
+                <Textarea {...field} />
               </FormControl>
 
               <FormMessage />

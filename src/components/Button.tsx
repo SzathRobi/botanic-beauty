@@ -25,6 +25,7 @@ const buttonVariants = cva(
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
         icon: 'h-10 w-10',
+        iconSmall: 'h-8 w-8',
       },
     },
     defaultVariants: {
@@ -39,7 +40,7 @@ export interface ButtonProps
     VariantProps<typeof buttonVariants> {
   asChild?: boolean
   isLoading?: boolean
-  size?: 'default' | 'sm' | 'lg' | 'icon'
+  size?: 'default' | 'sm' | 'lg' | 'icon' | 'iconSmall'
   variant?:
     | 'default'
     | 'destructive'

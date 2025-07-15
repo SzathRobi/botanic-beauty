@@ -56,6 +56,10 @@ model Booking {
   extraHaircutPrice     Int?
   miracleBoosterPrice   Int?
   isFinanceDone         Boolean?
+  financeComment        String?
+  isPaidWithCard        Boolean?
+  tips                  Int?
+  discountPercentage    Int?
 }
 
 model Customer {

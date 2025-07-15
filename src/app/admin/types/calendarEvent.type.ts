@@ -17,4 +17,14 @@ export type CalendarEvent = Event & {
   createdAt: Date
   updatedAt: Date
   isLoaderEvent?: boolean
+  isFinanceDone?: boolean
+  finalPrice?: number
+  isPaidWithCard?: boolean
+  tips?: number
+  discountPercentage?: number
+  financeComment?: string
+  dyeMaterialUsage?: number
+  bleachMaterialUsage?: number
+  extraHaircutPrice?: number
+  miracleBoosterPrice?: number
 }

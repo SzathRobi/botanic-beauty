@@ -21,7 +21,7 @@ const FinancePage = async () => {
   const bookingsFromDateInOrder = sortBookingsByDate(bookingsFromDate)
 
   return (
-    <div className="sm:container">
+    <div className="max-w-screen md:max-w-[calc(100vw-180px)]">
       <FinanceTabs bookings={bookingsFromDateInOrder} />
     </div>
   )

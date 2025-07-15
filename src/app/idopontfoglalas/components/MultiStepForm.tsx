@@ -63,10 +63,6 @@ const MultiStepForm = ({
     otherInfo: '',
   })
 
-  useEffect(() => {
-    console.log('selectedExtraServices', selectedExtraServices)
-  }, [selectedExtraServices])
-
   const selectService = (service: TService) => {
     setSelectedExtraServices([])
     setSelectedService(service)

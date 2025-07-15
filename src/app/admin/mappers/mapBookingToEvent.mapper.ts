@@ -13,6 +13,16 @@ export const mapBookingToEvent = ({
   extraServices,
   createdAt,
   updatedAt,
+  bleachMaterialUsage,
+  discountPercentage,
+  dyeMaterialUsage,
+  extraHaircutPrice,
+  finalPrice,
+  financeComment,
+  isFinanceDone,
+  isPaidWithCard,
+  miracleBoosterPrice,
+  tips,
 }: Booking): CalendarEvent => {
   const [startTime, endTime] = selectedTimeSlot.split(' - ')
 
@@ -43,5 +53,15 @@ export const mapBookingToEvent = ({
     extraServices,
     createdAt,
     updatedAt,
+    bleachMaterialUsage: bleachMaterialUsage || undefined,
+    discountPercentage: discountPercentage || undefined,
+    dyeMaterialUsage: dyeMaterialUsage || undefined,
+    extraHaircutPrice: extraHaircutPrice || undefined,
+    finalPrice: finalPrice || undefined,
+    financeComment: financeComment || undefined,
+    isFinanceDone: isFinanceDone || undefined,
+    isPaidWithCard: isPaidWithCard || undefined,
+    miracleBoosterPrice: miracleBoosterPrice || undefined,
+    tips: tips || undefined,
   }
 }

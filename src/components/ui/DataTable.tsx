@@ -9,10 +9,18 @@ import {
   getSortedRowModel,
   SortingState,
   useReactTable,
+  VisibilityState,
 } from '@tanstack/react-table'
+import { Eye } from 'lucide-react'
 import { useState } from 'react'
 
 import { Button } from '../Button'
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from './Dropdown'
 import { Input } from './Input'
 import {
   Table,
@@ -27,17 +35,23 @@ interface DataTableProps<T> {
   data: T[]
   columns: ColumnDef<T>[]
   noDataText?: string
+  visibleColumns?: Record<string, boolean>
   onDeleteSelectedRows?: (data: any) => Promise<void>
+  attributeFilter1?: string
 }
 
 export function DataTable<T>({
   data,
   columns,
   noDataText = 'Nincs adat',
+  visibleColumns = {},
   onDeleteSelectedRows,
+  attributeFilter1 = 'name',
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] =
+    useState<VisibilityState>(visibleColumns)
   const [rowSelection, setRowSelection] = useState({})
   const [isDeleteLoading, setIsDeleteLoading] = useState(false)
 
@@ -49,11 +63,13 @@ export function DataTable<T>({
     getSortedRowModel: getSortedRowModel(),
     onRowSelectionChange: setRowSelection,
     onColumnFiltersChange: setColumnFilters,
+    onColumnVisibilityChange: setColumnVisibility,
     getFilteredRowModel: getFilteredRowModel(),
     state: {
       sorting,
       rowSelection,
       columnFilters,
+      columnVisibility,
     },
   })
 
@@ -77,11 +93,43 @@ export function DataTable<T>({
   return (
     <div>
       <div className="flex items-center gap-4 py-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" size="icon">
+              <Eye className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="dark">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => {
+                return (
+                  <DropdownMenuCheckboxItem
+                    key={column.id}
+                    className="capitalize"
+                    checked={column.getIsVisible()}
+                    onCheckedChange={(value) =>
+                      column.toggleVisibility(!!value)
+                    }
+                  >
+                    {column.id}
+                  </DropdownMenuCheckboxItem>
+                )
+              })}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
         <Input
           placeholder="Név kereső..."
-          value={(table.getColumn('name')?.getFilterValue() as string) ?? ''}
+          value={
+            (table.getColumn(attributeFilter1)?.getFilterValue() as string) ??
+            ''
+          }
           onChange={(event) =>
-            table.getColumn('name')?.setFilterValue(event.target.value)
+            table
+              .getColumn(attributeFilter1)
+              ?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
         />
@@ -97,7 +145,7 @@ export function DataTable<T>({
         )}
       </div>
 
-      <div className="rounded-md border">
+      <div>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (

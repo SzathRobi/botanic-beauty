@@ -17,8 +17,6 @@ type BleachMaterialUsageChartProps = {
 const BleachMaterialUsageChart = ({
   filteredBookings,
 }: BleachMaterialUsageChartProps) => {
-  console.log(filteredBookings)
-
   const totalBleachMaterialUsage = filteredBookings.reduce((total, booking) => {
     return total + (booking?.bleachMaterialUsage ?? 0)
   }, 0)
