@@ -60,6 +60,7 @@ model Booking {
   isPaidWithCard        Boolean?
   tips                  Int?
   discountPercentage    Int?
+  remindenEmailJobId    String?
 }
 
 model Customer {

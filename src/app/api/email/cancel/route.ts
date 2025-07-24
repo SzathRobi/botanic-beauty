@@ -6,6 +6,9 @@ import { CONTACT_EMAIL, EMAIL_SENDER } from '@/constants/contact.constants'
 import CancelEmail from '@/emails/CancelEmail'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
+import { Client } from '@upstash/qstash'
+
+const client = new Client({ token: process.env.QSTASH_TOKEN! })
 
 export async function POST(request: Request) {
   const session = await auth()
@@ -37,6 +40,15 @@ export async function POST(request: Request) {
       react: CancelEmail({ booking }),
       reply_to: CONTACT_EMAIL,
     })
+
+    if (booking.remindenEmailJobId) {
+      try {
+        await client.schedules.delete(booking.remindenEmailJobId)
+        console.log('Deleted QStash job:', booking.remindenEmailJobId)
+      } catch (err) {
+        console.warn('Failed to delete QStash job:', err)
+      }
+    }
 
     return NextResponse.json({ success: true })
   } catch (error) {

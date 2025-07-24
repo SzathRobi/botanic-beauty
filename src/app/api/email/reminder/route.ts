@@ -1,4 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { Booking } from '@prisma/client'
+import { verifySignatureAppRouter } from '@upstash/qstash/nextjs'
+import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
 import { CONTACT_EMAIL, EMAIL_SENDER } from '@/constants/contact.constants'
@@ -6,8 +8,8 @@ import ReminderEmail from '@/emails/ReminderEmail'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
 
-export async function POST(request: NextRequest) {
-  const { booking } = await request.json()
+export const POST = verifySignatureAppRouter(async (req: Request) => {
+  const booking: Booking = await req.json()
 
   if (!booking) {
     return NextResponse.json({ error: true, message: 'Invalid data' })
@@ -30,4 +32,4 @@ export async function POST(request: NextRequest) {
     console.log(error)
     return NextResponse.json({ error: true, message: error }, { status: 500 })
   }
-}
+})

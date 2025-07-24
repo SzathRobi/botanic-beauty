@@ -57,6 +57,11 @@ const BigCalendarContainer = ({
   const updateEvent = async (event: CalendarEvent) => {
     const booking = mapEventToBooking(event)
 
+    const bookingWithFormattedDate = {
+      ...booking,
+      selectedDate: format(booking.selectedDate, 'yyyy-MM-dd'),
+    }
+
     try {
       const response = await fetch('/api/booking', {
         method: 'PATCH',
@@ -67,26 +72,8 @@ const BigCalendarContainer = ({
       const emailResponse = await fetch('/api/email/modifier', {
         method: 'POST',
         body: JSON.stringify({
-          booking: {
-            ...booking,
-            selectedDate: format(booking.selectedDate, 'yyyy-MM-dd'),
-          },
-        }),
-      })
-
-      const emailDelayInMiliseconds = getSecondsToDate(booking) * 1000
-
-      const emailScheduleResponse = await fetch('/api/email/schedule', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          booking: {
-            ...booking,
-            selectedDate: format(booking.selectedDate, 'yyyy-MM-dd'),
-          },
-          emailDelayInMiliseconds,
+          booking: bookingWithFormattedDate,
+          emailDelayInSeconds: getSecondsToDate(booking),
         }),
       })
 

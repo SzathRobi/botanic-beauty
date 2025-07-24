@@ -1,10 +1,13 @@
+import { Client } from '@upstash/qstash'
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 
 import { auth } from '@/auth'
 import { CONTACT_EMAIL, EMAIL_SENDER } from '@/constants/contact.constants'
 import ModifierEmail from '@/emails/ModifierEmail'
+import prisma from '@/lib/db'
 
+const client = new Client({ token: process.env.QSTASH_TOKEN! })
 const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: Request) {
@@ -17,7 +20,7 @@ export async function POST(request: Request) {
     )
   }
 
-  const { booking } = await request.json()
+  const { booking, emailDelayInSeconds } = await request.json()
 
   if (
     !booking.contactInfo.email ||
@@ -41,6 +44,21 @@ export async function POST(request: Request) {
       subject: 'Foglalás módosulása',
       react: ModifierEmail({ booking }),
       reply_to: CONTACT_EMAIL,
+    })
+
+    const result = await client.publishJSON({
+      url: `${process.env.VERCEL_URL}/api/email/reminder`,
+      body: booking,
+      delay: 60, //emailDelayInSeconds,
+    })
+
+    await prisma.booking.update({
+      where: {
+        id: booking.id,
+      },
+      data: {
+        remindenEmailJobId: result.messageId,
+      },
     })
 
     return NextResponse.json({ success: true })

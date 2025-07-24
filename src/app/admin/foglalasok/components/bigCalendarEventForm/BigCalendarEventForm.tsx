@@ -137,13 +137,16 @@ const BigCalendarEventForm = ({
   }
 
   const sendModifierEmail = async (booking: Partial<Booking>) => {
+    const bookingWithFormattedDate = {
+      ...booking,
+      selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
+    }
+
     const emailResponse = await fetch('/api/email/modifier', {
       method: 'POST',
       body: JSON.stringify({
-        booking: {
-          ...booking,
-          selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
-        },
+        booking: bookingWithFormattedDate,
+        emailDelayInSeconds: getSecondsToDate(booking as Booking),
       }),
     })
 
@@ -155,30 +158,6 @@ const BigCalendarEventForm = ({
 
     return await emailResponse.json()
   }
-
-  // const scheduleReminderEmail = async (booking: Partial<Booking>) => {
-  //   const emailDelayInMiliseconds = getSecondsToDate(booking as Booking) * 1000
-
-  //   const emailScheduleResponse = await fetch('/api/email/schedule', {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify({
-  //       booking: {
-  //         ...booking,
-  //         selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
-  //       },
-  //       emailDelayInMiliseconds,
-  //     }),
-  //   })
-
-  //   if (!emailScheduleResponse.ok) {
-  //     toast.error('Az emlékeztető email nem ment ki')
-  //   }
-
-  //   return await emailScheduleResponse.json()
-  // }
 
   const deleteBookingData = async (id: string) => {
     const response = await fetch(`/api/booking/${id}`, {
@@ -244,13 +223,7 @@ const BigCalendarEventForm = ({
       booking.selectedTimeSlot !== originalBooking.selectedTimeSlot ||
       booking.service?.name !== originalBooking.service.name
     ) {
-      const [modificationResult] = await Promise.all([
-        sendModifierEmail(booking),
-      ])
-      // const [modificationResult, scheduleResult] = await Promise.all([
-      //   sendModifierEmail(booking),
-      //   scheduleReminderEmail(booking),
-      // ])
+      const modificationResult = await sendModifierEmail(booking)
 
       if (!modificationResult) {
         deleteBookingData(bookingData.id)

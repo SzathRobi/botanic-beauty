@@ -24,6 +24,8 @@ import { Textarea } from '@/components/ui/TextArea'
 import { contactFormSchema } from '../schemas/contactForm.schema'
 import { getSecondsToDate } from '../utils/getSecondsToDate'
 
+const THREE_HOUR_IN_SECONDS = 10800
+
 type ContactFormProps = {
   booking: Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>
   setContactInfo: Dispatch<SetStateAction<any>>
@@ -90,7 +92,9 @@ const ContactForm = ({
   const scheduleReminderEmail = async (
     booking: Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>
   ) => {
-    const emailDelayInMiliseconds = getSecondsToDate(booking) * 1000
+    const emailDelayInSeconds = getSecondsToDate(booking)
+
+    if (emailDelayInSeconds < THREE_HOUR_IN_SECONDS) return null
 
     try {
       const response = await fetch('/api/email/schedule', {
@@ -103,7 +107,7 @@ const ContactForm = ({
             ...booking,
             selectedDate: format(booking.selectedDate, 'yyyy-MM-dd'),
           },
-          emailDelayInMiliseconds,
+          emailDelayInSeconds,
         }),
       })
 
@@ -131,12 +135,15 @@ const ContactForm = ({
     setContactInfo(contactInfo)
 
     try {
-      const [bookingData, verificationResult, scheduleResult] =
-        await Promise.all([
-          sendVerificationEmail(contactInfo),
-          scheduleReminderEmail({ ...booking, contactInfo }),
-          postBookingData(contactInfo),
-        ])
+      let bookingWithId: Booking | null = null
+
+      const [bookingData, verificationResult] = await Promise.all([
+        sendVerificationEmail(contactInfo),
+        postBookingData(contactInfo).then((data) => {
+          bookingWithId = data.data
+          return data
+        }),
+      ])
 
       if (bookingData.message === 'Overlap with existing booking') {
         toast.error(
@@ -157,8 +164,8 @@ const ContactForm = ({
         return
       }
 
-      if (!scheduleResult) {
-        throw new Error('Failed to schedule reminder email')
+      if (bookingWithId) {
+        await scheduleReminderEmail(bookingWithId)
       }
 
       incrementActiveStep()

@@ -54,7 +54,7 @@ export const ReminderEmail = ({ booking }: ReminderEmailProps) => {
                   <b>
                     {booking.selectedDate} {booking.selectedTimeSlot}
                   </b>{' '}
-                  -kor.
+                  -kor, <b>{booking.service.name}</b> szolgáltatásra.
                 </Text>
 
                 <Text>
@@ -77,6 +77,9 @@ ReminderEmail.PreviewProps = {
   booking: {
     contactInfo: {
       name: 'Omamori Himari',
+    },
+    service: {
+      name: 'Tőfestés',
     },
     selectedDate: '2022-10-10',
     selectedTimeSlot: '10:00 - 11:00',
