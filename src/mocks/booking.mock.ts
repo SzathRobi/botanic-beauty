@@ -54,6 +54,7 @@ export const MOCK_BOOKING: Booking = {
   isPaidWithCard: null,
   discountPercentage: null,
   tips: null,
+  remindenEmailJobId: null,
 }
 
 export const MOCK_BOOKING_WITH_EXTRA_SERVICES: Booking = {

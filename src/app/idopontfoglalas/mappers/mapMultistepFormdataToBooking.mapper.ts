@@ -37,4 +37,5 @@ export const mapMultistepFormDataToBooking = ({
   isPaidWithCard: null,
   discountPercentage: null,
   tips: null,
+  remindenEmailJobId: null,
 })

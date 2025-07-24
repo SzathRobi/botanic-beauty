@@ -23,6 +23,7 @@ export const mapEventToBooking = ({
   dyeMaterialUsage,
   extraHaircutPrice,
   miracleBoosterPrice,
+  remindenEmailJobId,
 }: CalendarEvent): Booking => ({
   selectedDate:
     new Date(
@@ -48,4 +49,5 @@ export const mapEventToBooking = ({
   isPaidWithCard: isPaidWithCard ?? null,
   discountPercentage: discountPercentage ?? null,
   tips: tips ?? null,
+  remindenEmailJobId: remindenEmailJobId ?? null,
 })

@@ -27,4 +27,5 @@ export type CalendarEvent = Event & {
   bleachMaterialUsage?: number
   extraHaircutPrice?: number
   miracleBoosterPrice?: number
+  remindenEmailJobId?: string
 }
