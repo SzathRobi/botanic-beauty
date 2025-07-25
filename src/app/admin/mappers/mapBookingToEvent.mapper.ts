@@ -23,6 +23,7 @@ export const mapBookingToEvent = ({
   isPaidWithCard,
   miracleBoosterPrice,
   tips,
+  remindenEmailJobId,
 }: Booking): CalendarEvent => {
   const [startTime, endTime] = selectedTimeSlot.split(' - ')
 
@@ -63,5 +64,6 @@ export const mapBookingToEvent = ({
     isPaidWithCard: isPaidWithCard || undefined,
     miracleBoosterPrice: miracleBoosterPrice || undefined,
     tips: tips || undefined,
+    remindenEmailJobId: remindenEmailJobId || undefined,
   }
 }

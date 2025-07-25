@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   try {
     await resend.emails.send({
       from:
-        process.env.VERCEL_ENV === 'production'
+        process.env.NODE_ENV === 'production'
           ? EMAIL_SENDER
           : 'Acme <onboarding@resend.dev>',
       to: booking.contactInfo.email,
@@ -43,8 +43,7 @@ export async function POST(request: Request) {
 
     if (booking.remindenEmailJobId) {
       try {
-        await client.schedules.delete(booking.remindenEmailJobId)
-        console.log('Deleted QStash job:', booking.remindenEmailJobId)
+        await client.messages.delete(booking.remindenEmailJobId)
       } catch (err) {
         console.warn('Failed to delete QStash job:', err)
       }

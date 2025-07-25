@@ -14,9 +14,9 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await client.publishJSON({
-      url: `https://${process.env.VERCEL_URL}/api/email/reminder`,
+      url: `${process.env.NODE_ENV === 'production' ? `https://botanic-beauty.hu` : 'https://major-candles-fall.loca.lt'}/api/email/reminder`,
       body: booking,
-      delay: 60, //emailDelayInSeconds,
+      delay: emailDelayInSeconds,
     })
 
     await prisma.booking.update({

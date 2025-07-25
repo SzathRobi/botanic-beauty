@@ -183,6 +183,8 @@ const BigCalendarEventForm = ({
     updatedSelectedDate.setHours(startHour, startMinute, 0, 0)
 
     const booking: Partial<Booking> = {
+      id: calendarEvent.event.id,
+      remindenEmailJobId: calendarEvent.event.remindenEmailJobId,
       contactInfo: {
         name: values.name,
         email: values.email,

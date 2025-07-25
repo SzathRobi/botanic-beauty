@@ -37,7 +37,7 @@ export async function POST(request: Request) {
   try {
     await resend.emails.send({
       from:
-        process.env.VERCEL_ENV === 'production'
+        process.env.NODE_ENV === 'production'
           ? EMAIL_SENDER
           : 'Acme <onboarding@resend.dev>',
       to: booking.contactInfo.email,
@@ -46,10 +46,12 @@ export async function POST(request: Request) {
       reply_to: CONTACT_EMAIL,
     })
 
+    await client.messages.delete(booking.remindenEmailJobId)
+
     const result = await client.publishJSON({
-      url: `https://${process.env.VERCEL_URL}/api/email/reminder`,
+      url: `${process.env.NODE_ENV === 'production' ? `https://botanic-beauty.hu` : 'https://major-candles-fall.loca.lt'}/api/email/reminder`,
       body: booking,
-      delay: 60, //emailDelayInSeconds,
+      delay: emailDelayInSeconds,
     })
 
     await prisma.booking.update({

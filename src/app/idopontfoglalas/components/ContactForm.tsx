@@ -24,7 +24,7 @@ import { Textarea } from '@/components/ui/TextArea'
 import { contactFormSchema } from '../schemas/contactForm.schema'
 import { getSecondsToDate } from '../utils/getSecondsToDate'
 
-const THREE_HOUR_IN_SECONDS = 10800
+const FOUR_HOUR_IN_SECONDS = 14400
 
 type ContactFormProps = {
   booking: Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>
@@ -94,7 +94,7 @@ const ContactForm = ({
   ) => {
     const emailDelayInSeconds = getSecondsToDate(booking)
 
-    if (emailDelayInSeconds < THREE_HOUR_IN_SECONDS) return null
+    if (emailDelayInSeconds < FOUR_HOUR_IN_SECONDS) return null
 
     try {
       const response = await fetch('/api/email/schedule', {

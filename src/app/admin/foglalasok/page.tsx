@@ -37,6 +37,12 @@ const BookingPage = async () => {
 
   const bookingsByEmail = countBookingsByEmail(bookingsFrom2025)
 
+  const test = calendarEvents.filter(
+    (calendarEvent) => calendarEvent.remindenEmailJobId
+  )
+
+  console.log('test is', test.length)
+
   return (
     <div className="min-h-screen w-full">
       <BackgroundBlur className="mb-8 !max-w-full">
