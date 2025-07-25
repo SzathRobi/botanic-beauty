@@ -32,7 +32,7 @@ export async function POST(request: Request) {
   try {
     await resend.emails.send({
       from:
-        process.env.NODE_ENV === 'production'
+        process.env.VERCEL_ENV === 'production'
           ? EMAIL_SENDER
           : 'Acme <onboarding@resend.dev>',
       to: booking.contactInfo.email,
