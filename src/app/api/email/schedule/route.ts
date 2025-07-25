@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
 
   try {
     const result = await client.publishJSON({
-      url: `${process.env.VERCEL_URL}/api/email/reminder`,
+      url: `https://${process.env.VERCEL_URL}/api/email/reminder`,
       body: booking,
       delay: 60, //emailDelayInSeconds,
     })
