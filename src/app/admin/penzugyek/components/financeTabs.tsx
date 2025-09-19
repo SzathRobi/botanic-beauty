@@ -176,6 +176,10 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
     bookingsWithoutFinanceDoneSearchValue,
     setBookingsWithoutFinanceDoneSearchValue,
   ] = useState('')
+  const [
+    bookingsWithFinanceDoneSearchValue,
+    setBookingsWithFinanceDoneSearchValue,
+  ] = useState('')
 
   const openDialog = (booking: Booking) => {
     setSelectedBooking(booking)
@@ -194,6 +198,20 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
           .includes(event.target.value.toLowerCase())
     )
     setBookingsWithoutFianceDone(filteredBookings)
+  }
+
+  const onSearchInBookingsWithFinanceDone = (
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
+    setBookingsWithFinanceDoneSearchValue(event.target.value)
+    const filteredBookings = allBookings.filter(
+      (booking) =>
+        !booking.isFinanceDone &&
+        booking.contactInfo.name
+          .toLowerCase()
+          .includes(event.target.value.toLowerCase())
+    )
+    setBookingsWithFianceDone(filteredBookings)
   }
 
   useEffect(() => {
@@ -257,6 +275,16 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
               <CardTitle>Elszámolt foglalások</CardTitle>
             </CardHeader>
             <CardContent>
+              <div className="mb-4 max-w-xs md:hidden">
+                <Label>
+                  <span className="mb-1">Keresés (név)</span>
+                  <Input
+                    value={bookingsWithFinanceDoneSearchValue}
+                    onChange={onSearchInBookingsWithFinanceDone}
+                  />
+                </Label>
+              </div>
+
               <div className="md:hidden">
                 {bookingsWithFianceDone.map((booking) => (
                   <FinanceMobileCard
