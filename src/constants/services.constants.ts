@@ -192,7 +192,7 @@ export const EXTRA_SERVICE_MIRACLE_BOOSTER: TService = {
   id: '2',
   category: 'extra',
   name: 'Hajszerkezet regeneráló kezelés',
-  price: 3000,
+  price: 4200,
   duration: 0,
 } as const
 
