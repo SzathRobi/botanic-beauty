@@ -120,7 +120,7 @@ const ClientGrowthChart = ({
       return weekData
     }
 
-    if (timeRange === '3month') {
+    if (timeRange === 'custom') {
       // Három hónap összes hete
       const threeMonthsWeeks = eachWeekOfInterval({
         start: startOfMonth(addMonths(new Date(), -3)), // Három hónappal korábbi dátum

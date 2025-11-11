@@ -2,6 +2,7 @@
 
 import { Booking, Customer } from '@prisma/client'
 import { useMemo, useState } from 'react'
+import { DateRange } from 'react-day-picker'
 
 import { SERVICES } from '@/constants/services.constants'
 
@@ -28,18 +29,28 @@ const AnalyticsContainer = ({
   customers,
 }: AnalyticsContainerProps) => {
   const [timeRange, setTimeRange] = useState<TimeRange>('day')
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(undefined)
+
+  const onCustomDateRangeChange = (dateRange: DateRange | undefined) => {
+    setDateRange(dateRange)
+  }
 
   const filteredBookings = useMemo(
     () =>
       bookings.filter((booking) =>
-        filterBookingsByTimeRange(booking.selectedDate, timeRange)
+        filterBookingsByTimeRange(booking.selectedDate, timeRange, dateRange)
       ),
-    [timeRange, bookings]
+    [timeRange, bookings, dateRange]
   )
 
   return (
     <div className="mb-12">
-      <TimeRangeRadioGroup timeRange={timeRange} setTimeRange={setTimeRange} />
+      <TimeRangeRadioGroup
+        timeRange={timeRange}
+        setTimeRange={setTimeRange}
+        onSelectDateRange={onCustomDateRangeChange}
+        selectedDateRange={dateRange}
+      />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* NOT affected by timerange */}
@@ -64,6 +75,7 @@ const AnalyticsContainer = ({
           <TotalBookingsChart
             filteredBookings={filteredBookings}
             timeRange={timeRange}
+            selectedDateRange={dateRange}
           />
         </div>
 

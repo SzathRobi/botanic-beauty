@@ -3,12 +3,15 @@
 import { Booking } from '@prisma/client'
 import {
   addMonths,
+  differenceInDays,
   eachWeekOfInterval,
   endOfMonth,
   endOfWeek,
   format,
+  isWithinInterval,
   startOfMonth,
 } from 'date-fns'
+import { DateRange } from 'react-day-picker'
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from 'recharts'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
@@ -32,27 +35,28 @@ const totalBookingsChartConfig = {
 type TotalBookingsChartProps = {
   filteredBookings: Booking[]
   timeRange: TimeRange
+  selectedDateRange: DateRange | undefined
 }
 
 const TotalBookingsChart = ({
   filteredBookings,
   timeRange,
+  selectedDateRange,
 }: TotalBookingsChartProps) => {
   const numberOfBookingsByDayChart = () => {
+    const dayRanges = [
+      '10:00',
+      '11:00',
+      '12:00',
+      '13:00',
+      '14:00',
+      '15:00',
+      '16:00',
+      '17:00',
+      '18:00',
+      '19:00',
+    ]
     if (timeRange === 'day') {
-      const dayRanges = [
-        '10:00',
-        '11:00',
-        '12:00',
-        '13:00',
-        '14:00',
-        '15:00',
-        '16:00',
-        '17:00',
-        '18:00',
-        '19:00',
-      ]
-
       const dayData = dayRanges.map((dayRange) => ({
         time: dayRange,
         count: filteredBookings.filter((booking) =>
@@ -101,14 +105,54 @@ const TotalBookingsChart = ({
       return weekData
     }
 
-    if (timeRange === '3month') {
-      // Három hónap összes hete
-      const threeMonthsWeeks = eachWeekOfInterval({
-        start: startOfMonth(addMonths(new Date(), -3)), // Három hónappal korábbi dátum
-        end: endOfMonth(new Date()),
+    if (timeRange === 'custom') {
+      const daysDifference = differenceInDays(
+        selectedDateRange?.from || startOfMonth(new Date()),
+        selectedDateRange?.to ||
+          selectedDateRange?.from ||
+          endOfMonth(new Date())
+      )
+
+      if (daysDifference === 0) {
+        const dayData = dayRanges.map((dayRange) => ({
+          time: dayRange,
+          count: filteredBookings.filter((booking) =>
+            booking.selectedTimeSlot.includes(dayRange)
+          ).length,
+        }))
+
+        return dayData
+      }
+
+      if (daysDifference < 7 || daysDifference > -7) {
+        const weekRanges = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+
+        const weekData = weekRanges.map((weekRange) => ({
+          time: weekRange,
+          count: filteredBookings.filter(
+            (booking) =>
+              isWithinInterval(new Date(booking.selectedDate), {
+                start: selectedDateRange?.from || startOfMonth(new Date()),
+                end:
+                  selectedDateRange?.to ||
+                  selectedDateRange?.from ||
+                  endOfMonth(new Date()),
+              }) && format(booking.selectedDate, 'ccc') === weekRange
+          ).length,
+        }))
+
+        return weekData
+      }
+
+      const intervals = eachWeekOfInterval({
+        start: selectedDateRange?.from || startOfMonth(new Date()),
+        end:
+          selectedDateRange?.to ||
+          selectedDateRange?.from ||
+          endOfMonth(new Date()),
       })
 
-      const weekData = threeMonthsWeeks.map((weekStart) => {
+      const weekData = intervals.map((weekStart) => {
         const weekEnd = endOfWeek(weekStart)
 
         const weekRange = `${format(weekStart, 'MMM d')} - ${format(weekEnd, 'MMM d')}`

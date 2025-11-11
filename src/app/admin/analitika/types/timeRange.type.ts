@@ -1,1 +1,1 @@
-export type TimeRange = 'day' | 'week' | 'month' | '3month'
+export type TimeRange = 'day' | 'week' | 'month' | 'custom'
