@@ -206,7 +206,7 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
     setBookingsWithFinanceDoneSearchValue(event.target.value)
     const filteredBookings = allBookings.filter(
       (booking) =>
-        !booking.isFinanceDone &&
+        booking.isFinanceDone &&
         booking.contactInfo.name
           .toLowerCase()
           .includes(event.target.value.toLowerCase())
