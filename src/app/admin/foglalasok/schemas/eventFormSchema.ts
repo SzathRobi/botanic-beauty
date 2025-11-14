@@ -12,6 +12,9 @@ export const eventFormSchema = z.object({
     z.object({
       name: z.string(),
       duration: z.number(),
+      category: z.string(),
+      id: z.string(),
+      price: z.number(),
     })
   ),
   startTime: z.string().min(1, { message: 'A mező kitöltése kötelező' }),

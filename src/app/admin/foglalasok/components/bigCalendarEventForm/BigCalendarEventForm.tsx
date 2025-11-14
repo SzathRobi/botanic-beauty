@@ -3,7 +3,7 @@
 import './BigCalendarEventForm.override.css'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Booking } from '@prisma/client'
+import { Booking, TService } from '@prisma/client'
 import {
   addMinutes,
   format,
@@ -13,6 +13,7 @@ import {
   isSunday,
   parse,
   set,
+  subMinutes,
 } from 'date-fns'
 import { hu } from 'date-fns/locale'
 import { Dispatch, SetStateAction, useState } from 'react'
@@ -26,6 +27,7 @@ import { mapEventToBooking } from '@/app/admin/mappers/mapEventToBooking.mapper'
 import { CalendarEvent } from '@/app/admin/types/calendarEvent.type'
 import { getSecondsToDate } from '@/app/idopontfoglalas/utils/getSecondsToDate'
 import { Button } from '@/components/Button'
+import { Checkbox } from '@/components/ui/Checkbox'
 import {
   Form,
   FormControl,
@@ -43,7 +45,7 @@ import {
   SelectValue,
 } from '@/components/ui/Select'
 import { Separator } from '@/components/ui/Separator'
-import { SERVICES } from '@/constants/services.constants'
+import { EXTRA_SERVICES, SERVICES } from '@/constants/services.constants'
 
 import { eventFormSchema } from '../../schemas/eventFormSchema'
 
@@ -116,6 +118,50 @@ const BigCalendarEventForm = ({
     form.setValue('endTime', format(newEndDateTime, 'HH:mm'))
   }
 
+  const onExtraServiceChange = (checked: boolean, serviceName: string) => {
+    const extraService = EXTRA_SERVICES.find(
+      (service) => service.name === serviceName
+    )
+
+    if (!extraService) {
+      return
+    }
+
+    if (checked) {
+      form.setValue('extraServices', [
+        ...form.getValues('extraServices'),
+        extraService,
+      ])
+      form.setValue(
+        'endTime',
+        format(
+          addMinutes(
+            parse(form.getValues('endTime'), 'HH:mm', new Date()),
+            extraService.duration
+          ),
+          'HH:mm'
+        )
+      )
+    } else {
+      form.setValue(
+        'extraServices',
+        form
+          .getValues('extraServices')
+          .filter((service) => service.name !== extraService.name)
+      )
+      form.setValue(
+        'endTime',
+        format(
+          subMinutes(
+            parse(form.getValues('endTime'), 'HH:mm', new Date()),
+            extraService.duration
+          ),
+          'HH:mm'
+        )
+      )
+    }
+  }
+
   const handleSelect = (day: Date | undefined) => {
     if (day) {
       setSelectedDate(day)
@@ -123,7 +169,7 @@ const BigCalendarEventForm = ({
   }
 
   const updateBooking = async (booking: Partial<Booking>) => {
-    const response = await fetch(`/api/booking/${calendarEvent.event.id}`, {
+    const response = await fetch(`/api/booking/${booking.id}`, {
       method: 'PATCH',
       body: JSON.stringify(booking),
     })
@@ -194,6 +240,7 @@ const BigCalendarEventForm = ({
       selectedDate: selectedDate.toString(),
       selectedTimeSlot,
       service: selectedService,
+      extraServices: values.extraServices,
     }
 
     if (!booking.selectedDate || !booking.selectedTimeSlot) {
@@ -258,9 +305,11 @@ const BigCalendarEventForm = ({
 
           return {
             ...event,
+            id: bookingData.id,
             start: updatedStartDate,
             end: updatedEndDate,
             service: selectedService,
+            extraServices: values.extraServices,
             title: selectedService.name,
             contactInfo: {
               name: values.name,
@@ -392,21 +441,39 @@ const BigCalendarEventForm = ({
               </>
             )}
           />
-          {/* <FormField
+
+          <FormField
             control={form.control}
-            name="service.name"
+            name="extraServices"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-black">Szolgáltalás neve</FormLabel>
-
-                <FormControl>
-                  <Input {...field} disabled readOnly />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
+              <>
+                {EXTRA_SERVICES.map((service) => (
+                  <FormItem key={service.name}>
+                    <FormControl>
+                      <div className="flex items-center justify-start gap-2">
+                        <Checkbox
+                          id={service.name}
+                          checked={field.value
+                            .map((s) => s.name)
+                            .includes(service.name)}
+                          onCheckedChange={(checked) => {
+                            onExtraServiceChange(
+                              checked as boolean,
+                              service.name
+                            )
+                          }}
+                        />
+                        <FormLabel htmlFor={service.name}>
+                          {service.name}
+                        </FormLabel>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                ))}
+              </>
             )}
-          /> */}
+          />
 
           <Separator className="my-4" />
 

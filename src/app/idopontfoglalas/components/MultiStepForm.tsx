@@ -2,7 +2,7 @@
 
 import { Booking, Schedule, TService } from '@prisma/client'
 import { motion } from 'framer-motion'
-import { ReactNode, useEffect, useState } from 'react'
+import { ReactNode, useState } from 'react'
 
 import BackgroundBlur from '@/components/BackgroundBlur'
 import { SERVICES } from '@/constants/services.constants'
@@ -62,6 +62,7 @@ const MultiStepForm = ({
     phone: '',
     otherInfo: '',
   })
+  const [salonBookings, setSalonBookings] = useState<Booking[]>(bookings)
 
   const selectService = (service: TService) => {
     setSelectedExtraServices([])
@@ -176,7 +177,7 @@ const MultiStepForm = ({
           {activeStep === 2 && schedule && selectedService && (
             <FadeIn>
               <AvailableDatesForm
-                bookings={bookings}
+                bookings={salonBookings}
                 setSelectedDate={setSelectedDate}
                 selectedDate={selectedDate}
                 selectedTimeSlot={selectedTimeSlot}
@@ -197,6 +198,7 @@ const MultiStepForm = ({
             selectedService && (
               <FadeIn>
                 <ContactForm
+                  setSalonBookings={setSalonBookings}
                   setContactInfo={setContactInfo}
                   incrementActiveStep={incrementActiveStep}
                   decrementActiveStep={decrementActiveStep}

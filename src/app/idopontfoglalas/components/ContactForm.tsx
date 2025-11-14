@@ -28,6 +28,7 @@ const FOUR_HOUR_IN_SECONDS = 14400
 
 type ContactFormProps = {
   booking: Omit<Booking, 'id' | 'createdAt' | 'updatedAt'>
+  setSalonBookings: Dispatch<SetStateAction<Booking[]>>
   setContactInfo: Dispatch<SetStateAction<any>>
   incrementActiveStep: () => void
   decrementActiveStep: () => void
@@ -37,6 +38,7 @@ type ContactFormProps = {
 
 const ContactForm = ({
   booking,
+  setSalonBookings,
   setContactInfo,
   decrementActiveStep,
   incrementActiveStep,
@@ -166,6 +168,7 @@ const ContactForm = ({
 
       if (bookingWithId) {
         await scheduleReminderEmail(bookingWithId)
+        setSalonBookings((prev) => [...prev, bookingWithId!])
       }
 
       incrementActiveStep()
