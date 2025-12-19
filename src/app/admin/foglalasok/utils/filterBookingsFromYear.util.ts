@@ -6,6 +6,6 @@ export const filterBookingsFromYear = (
 ): Booking[] => {
   return bookings.filter((booking) => {
     const bookingDate = new Date(booking.selectedDate)
-    return bookingDate.getFullYear() === year
+    return bookingDate.getFullYear() >= year
   })
 }

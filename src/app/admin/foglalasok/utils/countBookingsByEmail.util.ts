@@ -5,8 +5,8 @@ export const countBookingsByEmail = (
 ): Record<string, number> => {
   return bookings.reduce(
     (acc, booking) => {
-      const email = booking.contactInfo.email
-      if (!email) return acc // csak ha van email
+      const email = booking.contactInfo.email.toLowerCase()
+      if (!email) return acc
       acc[email] = (acc[email] || 0) + 1
       return acc
     },
