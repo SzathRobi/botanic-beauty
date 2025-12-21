@@ -205,18 +205,18 @@ const BigCalendarEventForm = ({
     return await emailResponse.json()
   }
 
-  const deleteBookingData = async (id: string) => {
-    const response = await fetch(`/api/booking/${id}`, {
-      method: 'DELETE',
-    })
+  // const deleteBookingData = async (id: string) => {
+  //   const response = await fetch(`/api/booking/${id}`, {
+  //     method: 'DELETE',
+  //   })
 
-    if (!response.ok) {
-      toast.error('Hiba történt, a módosítás sikertelen')
-      return
-    }
+  //   if (!response.ok) {
+  //     toast.error('Hiba történt, a módosítás sikertelen')
+  //     return
+  //   }
 
-    return await response.json()
-  }
+  //   return await response.json()
+  // }
 
   const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
     setIsLoading(true)
@@ -237,7 +237,7 @@ const BigCalendarEventForm = ({
         phone: values.phone,
         otherInfo: values.otherInfo,
       },
-      selectedDate: selectedDate.toString(),
+      selectedDate: `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`,
       selectedTimeSlot,
       service: selectedService,
       extraServices: values.extraServices,
@@ -272,16 +272,7 @@ const BigCalendarEventForm = ({
       booking.selectedTimeSlot !== originalBooking.selectedTimeSlot ||
       booking.service?.name !== originalBooking.service.name
     ) {
-      const modificationResult = await sendModifierEmail(booking)
-
-      if (!modificationResult) {
-        deleteBookingData(bookingData.id)
-        return
-      }
-
-      // if (!scheduleResult) {
-      //   toast.error('Az emlekeztető email beütemezés sikertelen volt')
-      // }
+      sendModifierEmail(booking)
     }
 
     setCalendarEvents((prevCalendarEvents: CalendarEvent[]) => {

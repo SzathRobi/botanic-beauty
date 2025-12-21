@@ -14,7 +14,10 @@ import { isOffDayOfNemTimi, isOffDayOfTimi } from '../../utils/offDay'
 import BigCalendar from '../bigCalendar/BigCalendar'
 
 type BigCalendarContainerProps = {
-  events: CalendarEvent[]
+  events: (Omit<CalendarEvent, 'start' | 'end'> & {
+    start: string
+    end: string
+  })[]
   offDays: TOffDay[]
   bookingsByEmail: Record<string, number>
 }
@@ -26,9 +29,16 @@ const BigCalendarContainer = ({
   offDays,
   bookingsByEmail,
 }: BigCalendarContainerProps) => {
-  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>(events)
+  const normalizedEvents: CalendarEvent[] = events.map((event) => ({
+    ...event,
+    start: new Date(event.start.split('.')[0]),
+    end: new Date(event.end.split('.')[0]),
+  }))
+
+  const [calendarEvents, setCalendarEvents] =
+    useState<CalendarEvent[]>(normalizedEvents)
   const [calendarEventsBackup, setCalendarEventsBackup] =
-    useState<CalendarEvent[]>(events)
+    useState<CalendarEvent[]>(normalizedEvents)
   const [selectedHairdresser, setSelectedHairdresser] =
     useState<SelectedHairdresser>('all')
 

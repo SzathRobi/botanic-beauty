@@ -39,11 +39,25 @@ export async function PATCH(request: NextRequest, { params }: any) {
     )
   }
 
+  const [year, month, day] = selectedDate.split('-').map(Number)
+
+  const normalizedDate = new Date(`${year}-${month}-${day}`)
+
+  const formatted = normalizedDate
+    .toLocaleDateString('en-US', {
+      timeZone: 'Europe/Budapest',
+      weekday: 'short',
+      year: 'numeric',
+      month: 'short',
+      day: '2-digit',
+    })
+    .replaceAll(',', '')
+
   try {
     const allBookings = await prisma.booking.findMany({
       where: {
         selectedDate: {
-          equals: selectedDate,
+          startsWith: formatted,
         },
       },
     })

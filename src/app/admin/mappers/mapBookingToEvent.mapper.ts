@@ -24,7 +24,10 @@ export const mapBookingToEvent = ({
   miracleBoosterPrice,
   tips,
   remindenEmailJobId,
-}: Booking): CalendarEvent => {
+}: Booking): Omit<CalendarEvent, 'start' | 'end'> & {
+  start: string
+  end: string
+} => {
   const [startTime, endTime] = selectedTimeSlot.split(' - ')
 
   const [startHours, startMinutes] = startTime
@@ -46,8 +49,8 @@ export const mapBookingToEvent = ({
   return {
     id,
     title: service.name,
-    start: startDateWithTime,
-    end: endDateWithTime,
+    start: startDateWithTime.toISOString(),
+    end: endDateWithTime.toISOString(),
     hairdresser,
     contactInfo,
     service,

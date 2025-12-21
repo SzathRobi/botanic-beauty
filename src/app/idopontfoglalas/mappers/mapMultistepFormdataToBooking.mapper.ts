@@ -20,11 +20,7 @@ export const mapMultistepFormDataToBooking = ({
   service: selectedService,
   extraServices: selectedExtraServices,
   hairdresser: selectedHairdresser!,
-  selectedDate: new Date(
-    selectedDate.getFullYear(),
-    selectedDate.getMonth(),
-    selectedDate.getDate()
-  ).toString(),
+  selectedDate: `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`,
   selectedTimeSlot: selectedTimeSlot!,
   contactInfo,
   finalPrice: 0,
