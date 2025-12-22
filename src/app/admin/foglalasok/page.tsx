@@ -10,7 +10,6 @@ import BackgroundBlur from '@/components/BackgroundBlur'
 // import { MOCK_BOOKING } from '@/mocks/booking.mock'
 // import { MOCK_SCHEDULE } from '@/mocks/schedule.mock'
 // import { MOCK_USER } from '@/mocks/user.mock'
-import { mapBookingToEvent } from '../mappers/mapBookingToEvent.mapper'
 import BigCalendarContainer from './components/bigCalendarContainer/BigCalendarContainer'
 import { countBookingsByEmail } from './utils/countBookingsByEmail.util'
 import { filterBookingsFromYear } from './utils/filterBookingsFromYear.util'
@@ -31,8 +30,6 @@ const BookingPage = async () => {
   const bookings = await getBookings()
   // const bookings = [MOCK_BOOKING]
 
-  const calendarEvents = bookings?.map(mapBookingToEvent) ?? []
-
   const bookingsFrom2025 = filterBookingsFromYear(bookings, 2025)
 
   const bookingsByEmail = countBookingsByEmail(bookingsFrom2025)
@@ -43,7 +40,7 @@ const BookingPage = async () => {
         <h1 className="mb-8 text-3xl">Foglalások</h1>
 
         <BigCalendarContainer
-          events={calendarEvents}
+          bookings={bookings}
           offDays={schedule?.offDays ?? []}
           bookingsByEmail={bookingsByEmail}
         />

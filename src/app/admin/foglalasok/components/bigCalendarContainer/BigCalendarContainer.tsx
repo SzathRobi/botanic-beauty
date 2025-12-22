@@ -1,11 +1,12 @@
 'use client'
 
-import { TOffDay } from '@prisma/client'
+import { Booking, TOffDay } from '@prisma/client'
 import { format, isSunday } from 'date-fns'
 import { useState } from 'react'
 import { EventInteractionArgs } from 'react-big-calendar/lib/addons/dragAndDrop'
 import toast from 'react-hot-toast'
 
+import { mapBookingToEvent } from '@/app/admin/mappers/mapBookingToEvent.mapper'
 import { getSecondsToDate } from '@/app/idopontfoglalas/utils/getSecondsToDate'
 
 import { mapEventToBooking } from '../../../mappers/mapEventToBooking.mapper'
@@ -14,22 +15,21 @@ import { isOffDayOfNemTimi, isOffDayOfTimi } from '../../utils/offDay'
 import BigCalendar from '../bigCalendar/BigCalendar'
 
 type BigCalendarContainerProps = {
-  events: (Omit<CalendarEvent, 'start' | 'end'> & {
-    start: string
-    end: string
-  })[]
   offDays: TOffDay[]
   bookingsByEmail: Record<string, number>
+  bookings: Booking[]
 }
 
 export type SelectedHairdresser = 'all' | 'Timi' | 'nem_Timi'
 
 const BigCalendarContainer = ({
-  events,
   offDays,
   bookingsByEmail,
+  bookings,
 }: BigCalendarContainerProps) => {
-  const normalizedEvents: CalendarEvent[] = events.map((event) => ({
+  const cEvents = bookings?.map(mapBookingToEvent) ?? []
+
+  const normalizedEvents: CalendarEvent[] = cEvents.map((event) => ({
     ...event,
     start: new Date(event.start.split('.')[0]),
     end: new Date(event.end.split('.')[0]),
