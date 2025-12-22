@@ -34,23 +34,27 @@ export const mapBookingToEvent = ({
     .split(':')
     .map((num) => parseInt(num))
 
-  const startDateWithTime = addMinutes(
-    addHours(selectedDate, startHours),
-    startMinutes
-  )
+  const start = new Date(selectedDate)
+
+  start.setHours(startHours)
+  start.setMinutes(startMinutes)
+  start.setSeconds(0)
+  start.setMilliseconds(0)
 
   const [endHours, endMinutes] = endTime.split(':').map((num) => parseInt(num))
 
-  const endDateWithTime = addMinutes(
-    addHours(selectedDate, endHours),
-    endMinutes
-  )
+  const end = new Date(selectedDate)
+
+  end.setHours(endHours)
+  end.setMinutes(endMinutes)
+  end.setSeconds(0)
+  end.setMilliseconds(0)
 
   return {
     id,
     title: service.name,
-    start: startDateWithTime.toISOString(),
-    end: endDateWithTime.toISOString(),
+    start: start.toString(),
+    end: end.toString(),
     hairdresser,
     contactInfo,
     service,
