@@ -36,24 +36,12 @@ export async function POST(request: NextRequest) {
 
   const [year, month, day] = selectedDate.split('-').map(Number)
 
-  const normalizedDate = new Date(`${year}-${month}-${day}`)
-
-  const formatted = normalizedDate
-    .toLocaleDateString('en-US', {
-      timeZone: 'Europe/Budapest',
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-    })
-    .replaceAll(',', '')
+  const normalizedDateString = `${year}-${month}-${day}`
 
   try {
     const allBookings = await prisma.booking.findMany({
       where: {
-        selectedDate: {
-          startsWith: formatted,
-        },
+        selectedDate: normalizedDateString,
       },
     })
 
@@ -62,10 +50,8 @@ export async function POST(request: NextRequest) {
     const overlaps = allBookings.some((booking) => {
       const [existingStartTime, existingEndTime] =
         booking.selectedTimeSlot.split(' - ')
-      return (
-        (newStartTime < existingEndTime && newEndTime > existingStartTime) ||
-        (newEndTime > existingStartTime && newStartTime < existingEndTime)
-      )
+
+      return newStartTime < existingEndTime && newEndTime > existingStartTime
     })
 
     if (overlaps) {

@@ -139,7 +139,7 @@ const ContactForm = ({
     try {
       let bookingWithId: Booking | null = null
 
-      const [bookingData, verificationResult] = await Promise.all([
+      const [verificationResult, bookingData] = await Promise.all([
         sendVerificationEmail(contactInfo),
         postBookingData(contactInfo).then((data) => {
           bookingWithId = data.data
