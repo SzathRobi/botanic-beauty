@@ -1,12 +1,14 @@
 import { TOffDay } from '@prisma/client'
-import { isSameDay } from 'date-fns'
+import { format } from 'date-fns'
 
 export const isOffDayOfTimi = (
   dateToCheck: Date,
   OffDays: TOffDay[]
 ): boolean => {
   return OffDays.some(
-    (offDay) => isSameDay(offDay.date, dateToCheck) && offDay.person === 'Timi'
+    (offDay) =>
+      format(new Date(offDay.date), 'yyyy-MM-dd') ===
+        format(dateToCheck, 'yyyy-MM-dd') && offDay.person === 'Timi'
   )
 }
 
@@ -16,6 +18,7 @@ export const isOffDayOfNemTimi = (
 ): boolean => {
   return OffDays.some(
     (offDay) =>
-      isSameDay(offDay.date, dateToCheck) && offDay.person === 'nem_Timi'
+      format(new Date(offDay.date), 'yyyy-MM-dd') ===
+        format(dateToCheck, 'yyyy-MM-dd') && offDay.person === 'nem_Timi'
   )
 }

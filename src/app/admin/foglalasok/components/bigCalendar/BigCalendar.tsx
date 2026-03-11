@@ -31,6 +31,7 @@ const localizer = momentLocalizer(moment)
 type BigCalendarProps = {
   bookingsByEmail: Record<string, number>
   calendarEvents: CalendarEvent[]
+  // eslint-disable-next-line no-unused-vars
   onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void
   offDays: TOffDay[]
   selectedHairdresser: SelectedHairdresser
