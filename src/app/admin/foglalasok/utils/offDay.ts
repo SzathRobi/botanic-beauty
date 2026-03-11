@@ -4,15 +4,12 @@ export const isOffDayOfTimi = (
   dateToCheck: Date,
   offDays: TOffDay[]
 ): boolean => {
-  return offDays.some((offDay) => {
-    const offDate = new Date(offDay.date)
+  const check = dateToCheck.toLocaleDateString('hu-HU')
 
-    return (
-      offDate.getFullYear() === dateToCheck.getFullYear() &&
-      offDate.getMonth() === dateToCheck.getMonth() &&
-      offDate.getDate() === dateToCheck.getDate() &&
-      offDay.person === 'Timi'
-    )
+  return offDays.some((offDay) => {
+    const offDate = new Date(offDay.date).toLocaleDateString('hu-HU')
+
+    return offDate === check && offDay.person === 'Timi'
   })
 }
 
@@ -20,14 +17,11 @@ export const isOffDayOfNemTimi = (
   dateToCheck: Date,
   offDays: TOffDay[]
 ): boolean => {
-  return offDays.some((offDay) => {
-    const offDate = new Date(offDay.date)
+  const check = dateToCheck.toLocaleDateString('hu-HU')
 
-    return (
-      offDate.getFullYear() === dateToCheck.getFullYear() &&
-      offDate.getMonth() === dateToCheck.getMonth() &&
-      offDate.getDate() === dateToCheck.getDate() &&
-      offDay.person === 'nem_Timi'
-    )
+  return offDays.some((offDay) => {
+    const offDate = new Date(offDay.date).toLocaleDateString('hu-HU')
+
+    return offDate === check && offDay.person === 'nem_Timi'
   })
 }
