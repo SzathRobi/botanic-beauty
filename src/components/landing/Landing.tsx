@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import { BOOKING_ROUTE } from '@/constants/routes.constants'
 
-import landingBg from '../../../public/landing-bg.png'
+import landingBg from '../../../public/landing-bg.webp'
 import BackgroundBlur from '../BackgroundBlur'
 import Maintenance from '../Maintenance'
 import { LanidngWeaveSvg } from './LandingWaveSvg'
