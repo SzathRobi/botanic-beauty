@@ -1,21 +1,22 @@
 import { Booking } from '@prisma/client'
-import { compareAsc } from 'date-fns'
+import { compareDesc } from 'date-fns'
 
 export function sortBookingsByDate(bookings: Booking[]): Booking[] {
+  console.log(bookings[0])
   return bookings.sort((a, b) => {
     // Parse selectedDate to Date objects (using standard date format)
     const dateA = new Date(a.selectedDate)
     const dateB = new Date(b.selectedDate)
 
     // Compare the dates first
-    const dateComparison = compareAsc(dateA, dateB)
+    const dateComparison = compareDesc(dateA, dateB)
     if (dateComparison !== 0) return dateComparison
 
     // If the dates are the same, compare the time slots (based on the start time)
     const timeSlotA = parseTimeSlot(a.selectedTimeSlot)
     const timeSlotB = parseTimeSlot(b.selectedTimeSlot)
 
-    return timeSlotA - timeSlotB
+    return timeSlotB - timeSlotA
   })
 }
 
