@@ -2,7 +2,7 @@
 
 import { Customer } from '@prisma/client'
 import { ColumnDef } from '@tanstack/react-table'
-import { MoreHorizontal, UserPlus, X } from 'lucide-react'
+import { Check, Copy, MoreHorizontal, UserPlus, X } from 'lucide-react'
 import Image from 'next/image'
 import { useState } from 'react'
 import toast from 'react-hot-toast'
@@ -89,6 +89,29 @@ const columns: (
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Fodrászok" />
     ),
+    cell: ({ row }) => {
+      const customer = row.original
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const [isClicked, setIsClicked] = useState(false)
+
+      const onClick = () => {
+        setIsClicked(true)
+        navigator.clipboard.writeText(customer.email)
+
+        setTimeout(() => {
+          setIsClicked(false)
+        }, 500)
+      }
+
+      return (
+        <div className="flex items-center justify-between gap-2">
+          <p>{row.original.email}</p>
+          <Button size="iconSmall" onClick={onClick}>
+            {isClicked ? <Check size={16} /> : <Copy size={16} />}
+          </Button>
+        </div>
+      )
+    },
   },
   {
     accessorKey: 'otherInfo',
@@ -257,6 +280,18 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
     toast.success('A kijelölt ügyfelek törlése sikeres.')
   }
 
+  const copySelectedCustomersEmails = async (
+    customersToBeCopied: Customer[]
+  ) => {
+    const selectedCustomerEmails = customersToBeCopied.map(
+      (customerToBeCopied) => customerToBeCopied.email
+    )
+
+    await navigator.clipboard.writeText(selectedCustomerEmails.join(', '))
+
+    toast.success('Az emailek a vágólapra kerültek.')
+  }
+
   return (
     <div>
       <Dialog
@@ -335,6 +370,7 @@ const CustomersContainer = ({ salonCustomers }: CustomersContainerProps) => {
           data={customers}
           noDataText="Nincsenek ügyfelek"
           onDeleteSelectedRows={deleteSelectedCustomers}
+          onCopySelectedRowsEmails={copySelectedCustomersEmails}
         />
       </BackgroundBlur>
     </div>

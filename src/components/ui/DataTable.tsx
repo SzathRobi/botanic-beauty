@@ -37,6 +37,7 @@ interface DataTableProps<T> {
   noDataText?: string
   visibleColumns?: Record<string, boolean>
   onDeleteSelectedRows?: (data: any) => Promise<void>
+  onCopySelectedRowsEmails?: (data: any) => Promise<void>
   attributeFilter1?: string
 }
 
@@ -46,6 +47,7 @@ export function DataTable<T>({
   noDataText = 'Nincs adat',
   visibleColumns = {},
   onDeleteSelectedRows,
+  onCopySelectedRowsEmails,
   attributeFilter1 = 'name',
 }: DataTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([])
@@ -88,6 +90,13 @@ export function DataTable<T>({
         .finally(() => {
           setIsDeleteLoading(false)
         })
+  }
+
+  const copyAllSelectedRowsEmails = () => {
+    !!onCopySelectedRowsEmails &&
+      onCopySelectedRowsEmails(extendedRowSelectionData).then(() => {
+        setRowSelection({})
+      })
   }
 
   return (
@@ -134,13 +143,19 @@ export function DataTable<T>({
           className="max-w-sm"
         />
 
-        {!!onDeleteSelectedRows && (
+        {!!onDeleteSelectedRows && extendedRowSelectionData.length > 0 && (
           <Button
             isLoading={isDeleteLoading}
             variant="outline"
             onClick={deleteAllSelectedRows}
           >
             Kiválasztott sorok törlése
+          </Button>
+        )}
+
+        {!!onCopySelectedRowsEmails && extendedRowSelectionData.length > 0 && (
+          <Button variant="outline" onClick={copyAllSelectedRowsEmails}>
+            Email címek másolása
           </Button>
         )}
       </div>
