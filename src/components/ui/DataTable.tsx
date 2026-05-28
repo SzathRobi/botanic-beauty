@@ -101,7 +101,7 @@ export function DataTable<T>({
 
   return (
     <div>
-      <div className="flex items-center gap-4 py-4">
+      <div className="flex flex-col gap-4 py-4 md:flex-row md:items-center">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="icon">
@@ -143,9 +143,10 @@ export function DataTable<T>({
           className="max-w-sm"
         />
 
-        {!!onDeleteSelectedRows && extendedRowSelectionData.length > 0 && (
+        {!!onDeleteSelectedRows && (
           <Button
             isLoading={isDeleteLoading}
+            disabled={isDeleteLoading || extendedRowSelectionData.length === 0}
             variant="outline"
             onClick={deleteAllSelectedRows}
           >
@@ -153,8 +154,12 @@ export function DataTable<T>({
           </Button>
         )}
 
-        {!!onCopySelectedRowsEmails && extendedRowSelectionData.length > 0 && (
-          <Button variant="outline" onClick={copyAllSelectedRowsEmails}>
+        {!!onCopySelectedRowsEmails && (
+          <Button
+            variant="outline"
+            disabled={extendedRowSelectionData.length === 0}
+            onClick={copyAllSelectedRowsEmails}
+          >
             Email címek másolása
           </Button>
         )}
