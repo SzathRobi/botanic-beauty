@@ -170,7 +170,9 @@ const BigCalendarDay = ({
                 </div>
               )}
 
-              <p className="mb-4">Foglalt: {format(createdAt, 'yyyy-MM-dd')}</p>
+              <p className="mb-4 text-sm">
+                Foglalt: {format(createdAt, 'yyyy-MM-dd')}
+              </p>
 
               <div className="flex items-center gap-2">
                 <Button
