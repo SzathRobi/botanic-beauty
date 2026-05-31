@@ -46,6 +46,7 @@ const BigCalendarDay = ({
       finalPrice,
       isPaidWithCard,
       isFinanceDone,
+      createdAt,
     },
   } = calendarEvent
 
@@ -168,6 +169,8 @@ const BigCalendarDay = ({
                   </div>
                 </div>
               )}
+
+              <p className="mb-4">Foglalt: {format(createdAt, 'yyyy-MM-dd')}</p>
 
               <div className="flex items-center gap-2">
                 <Button
