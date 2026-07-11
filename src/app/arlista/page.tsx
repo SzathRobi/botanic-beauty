@@ -129,8 +129,8 @@ const PricinggPage = async () => {
               Festések mellé hajvágásra 50% kedvezményt biztosítunk!{' '}
             </p>
             <ul className="pl-6 sm:pl-10">
-              <li>hajfestékek activátorral: 100 Ft / g</li>
-              <li>szőkitőpor activátorral: 100 Ft/ g</li>
+              <li>hajfestékek activátorral: 120 Ft / g</li>
+              <li>szőkitőpor activátorral: 120 Ft/ g</li>
             </ul>
 
             <p>
