@@ -37,8 +37,8 @@ const formSchema = z.object({
   isPaidWithCard: z.boolean().optional(),
 })
 
-const BLEACH_PRICE_PER_GRAMM = 100
-const DYE_PRICE_PER_GRAMM = 100
+const BLEACH_PRICE_PER_GRAMM = 120
+const DYE_PRICE_PER_GRAMM = 120
 
 type FinanceFormProps = {
   selectedBooking: Booking
