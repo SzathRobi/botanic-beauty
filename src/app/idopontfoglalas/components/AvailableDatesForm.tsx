@@ -11,6 +11,7 @@ import {
   isSaturday,
   isSunday,
   isToday,
+  max,
   setHours,
   setMinutes,
   startOfDay,
@@ -139,6 +140,8 @@ const AvailableDatesForm = ({
     return setMinutes(setHours(date, OPENING_HOUR), 0)
   }
 
+  const openingHourForToday = getOpeningHour()
+
   return (
     <div className="mb-8">
       <div className="mb-12 flex flex-col items-start justify-evenly gap-4 md:flex-row">
@@ -165,7 +168,11 @@ const AvailableDatesForm = ({
         />
         <TimeSlots
           bookings={bookings}
-          startTime={isToday(selectedDate) ? tPlus2Hours : getOpeningHour()}
+          startTime={
+            isToday(selectedDate)
+              ? max([tPlus2Hours, openingHourForToday])
+              : openingHourForToday
+          }
           endTime={CLOSING_HOUR}
           interval={serviceDuration}
           isClosedDay={isClosedDay}
