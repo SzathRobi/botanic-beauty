@@ -102,7 +102,7 @@ const ServiceCard = ({
         />
       </label>
 
-      {isSelected && (
+      {isSelected && service.id !== '7' && (
         <ExtraServiceCard
           extraService={EXTRA_SERVICE_MIRACLE_BOOSTER}
           selectExtraService={selectExtraService}
