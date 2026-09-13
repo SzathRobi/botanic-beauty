@@ -129,7 +129,7 @@ const ContactForm = ({
 
     const contactInfo = {
       name: values.name,
-      email: values.email,
+      email: values.email.toLocaleLowerCase(),
       phone: values.phone,
       otherInfo: values.otherInfo || null,
     }
