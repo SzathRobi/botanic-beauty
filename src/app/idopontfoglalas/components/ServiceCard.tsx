@@ -102,13 +102,13 @@ const ServiceCard = ({
         />
       </label>
 
-      {isSelected && service.id !== '7' && (
+      {/* {isSelected && service.id !== '7' && (
         <ExtraServiceCard
           extraService={EXTRA_SERVICE_MIRACLE_BOOSTER}
           selectExtraService={selectExtraService}
           removeExtraService={removeExtraService}
         />
-      )}
+      )} */}
 
       {isSelected && service.category === 'Festések' && (
         <ExtraServiceCard
