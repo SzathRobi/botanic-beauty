@@ -83,7 +83,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function PATCH(request: NextRequest, nextResponse: NextResponse) {
+export async function PATCH(request: NextRequest) {
   const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
 
   if (!isBookingAvailable) {

@@ -1,6 +1,8 @@
 'use client'
 
+// @ts-expect-error minden tuti
 import 'moment/locale/hu'
+// @ts-expect-error minden tuti
 import './calendar.css'
 
 import { TOffDay } from '@prisma/client'

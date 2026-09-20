@@ -1,5 +1,6 @@
 'use client'
 
+// @ts-expect-error minden tuti
 import './BigCalendarEventForm.override.css'
 
 import { zodResolver } from '@hookform/resolvers/zod'

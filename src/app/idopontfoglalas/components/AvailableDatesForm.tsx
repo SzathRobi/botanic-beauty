@@ -1,5 +1,6 @@
 'use client'
 
+// @ts-expect-error minden tuti
 import './AvailableDatesForm.override.css'
 
 import { Booking, Schedule, TOffDay, TService } from '@prisma/client'

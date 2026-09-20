@@ -28,13 +28,13 @@ const Day = ({
 
   if (
     datesAppearingTwice.some((dateAppearingTwice) =>
-      isSameDay(dateAppearingTwice, day.date)
+      isSameDay(dateAppearingTwice, day.day.date)
     )
   ) {
     color = 'orange'
   } else if (isSelectedDayDate(selectedDates, selectedPerson, day)) {
     color = selectedPerson === 'Timi' ? 'red' : 'blue'
-  } else if (isSunday(day.date)) {
+  } else if (isSunday(day.day.date)) {
     color = 'gray'
     cursor = 'cursor-not-allowed'
     opacity = 0.8
@@ -47,9 +47,9 @@ const Day = ({
   return (
     <div
       style={{ backgroundColor: color, cursor, opacity }}
-      onClick={() => (isSunday(day.date) ? null : handleDayClick(day))}
+      onClick={() => (isSunday(day.day.date) ? null : handleDayClick(day))}
     >
-      {day.date.getDate()}
+      {day.day.date.getDate()}
     </div>
   )
 }

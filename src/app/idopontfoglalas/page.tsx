@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+
 import 'react-day-picker/dist/style.css'
 
 import { Metadata } from 'next'
@@ -51,9 +53,9 @@ export const metadata: Metadata = {
 }
 
 type BookingPageProps = {
-  searchParams: {
+  searchParams: Promise<{
     szolgaltatas: SearchParamService
-  }
+  }>
 }
 
 const BookingPage = async ({ searchParams }: BookingPageProps) => {
@@ -67,7 +69,7 @@ const BookingPage = async ({ searchParams }: BookingPageProps) => {
 
   const bookings = await getBookings()
 
-  const serviceId = getServiceIdByName(searchParams.szolgaltatas)
+  const serviceId = getServiceIdByName((await searchParams).szolgaltatas)
 
   return (
     <>

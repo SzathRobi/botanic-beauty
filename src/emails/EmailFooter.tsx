@@ -1,4 +1,4 @@
-import { Link, Text } from '@react-email/components'
+import { Link, Text } from 'react-email'
 
 import { CONTACT_ADDRESS, CONTACT_PHONE } from '@/constants/contact.constants'
 

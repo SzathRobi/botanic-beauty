@@ -9,6 +9,6 @@ export const isSelectedDayDate = (
 ): boolean =>
   selectedDates.some(
     (date) =>
-      new Date(date.date).getTime() === day.date.getTime() &&
+      new Date(date.date).getTime() === day.day.date.getTime() &&
       date.person === selectedPerson
   )

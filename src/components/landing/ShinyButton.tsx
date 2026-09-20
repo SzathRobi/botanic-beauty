@@ -1,29 +1,8 @@
 'use client'
 
-import { type AnimationProps, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 import { cn } from '@/lib/utils'
-
-const animationProps = {
-  initial: { '--x': '100%', scale: 0.8 },
-  animate: { '--x': '-100%', scale: 1 },
-  whileTap: { scale: 0.95 },
-  transition: {
-    repeat: Infinity,
-    repeatType: 'loop',
-    repeatDelay: 2,
-    type: 'spring',
-    stiffness: 20,
-    damping: 15,
-    mass: 2,
-    scale: {
-      type: 'spring',
-      stiffness: 200,
-      damping: 5,
-      mass: 0.5,
-    },
-  },
-} as AnimationProps
 
 interface ShinyButtonProps {
   children: React.ReactNode
@@ -33,7 +12,24 @@ interface ShinyButtonProps {
 const ShinyButton = ({ children, className }: ShinyButtonProps) => {
   return (
     <motion.button
-      {...animationProps}
+      initial={{ '--x': '100%', scale: 0.8 }}
+      animate={{ '--x': '-100%', scale: 1 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{
+        repeat: Infinity,
+        repeatType: 'loop',
+        repeatDelay: 2,
+        type: 'spring',
+        stiffness: 20,
+        damping: 15,
+        mass: 2,
+        scale: {
+          type: 'spring',
+          stiffness: 200,
+          damping: 5,
+          mass: 0.5,
+        },
+      }}
       className={cn(
         'relative min-w-max rounded-lg border-2 border-emerald-900 bg-emerald-800 px-6 py-2 text-lg font-medium shadow-[inset_0_-2px_12px_rgba(250,0,0,0.4)] shadow-black/30 backdrop-blur-xl transition duration-300 ease-in-out hover:border-emerald-950 hover:bg-emerald-900 hover:shadow-lg',
         className

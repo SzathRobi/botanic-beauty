@@ -1,3 +1,4 @@
+// @ts-expect-error minden tuti
 import 'react-big-calendar/lib/css/react-big-calendar.css'
 
 import { redirect } from 'next/navigation'

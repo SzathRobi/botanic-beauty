@@ -5,7 +5,7 @@ import prisma from '@/lib/db'
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { email: string } }
+  { params }: { params: Promise<{ email: string }> }
 ) {
   const session = await auth()
 
@@ -24,9 +24,11 @@ export async function PATCH(
     )
   }
 
+  const paramsEmail = (await params).email
+
   const existingCustomer = await prisma.customer.findUnique({
     where: {
-      email: params.email,
+      email: paramsEmail,
     },
   })
 
@@ -45,7 +47,7 @@ export async function PATCH(
     try {
       await prisma.customer.update({
         where: {
-          email: params.email,
+          email: paramsEmail,
         },
         data: {
           email,
@@ -95,7 +97,7 @@ export async function PATCH(
   try {
     await prisma.customer.update({
       where: {
-        email: params.email,
+        email: paramsEmail,
       },
       data: {
         email,
