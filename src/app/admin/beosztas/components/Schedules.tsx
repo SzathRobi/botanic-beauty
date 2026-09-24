@@ -97,13 +97,13 @@ const Schedules = ({ schedule }: ScheduleProps) => {
       <DayPicker
         mode="multiple"
         selected={selectedDates.map((date) => date.date)}
-        onDayClick={handleDayClick}
+        onSelect={handleDayClick}
         numberOfMonths={3}
         weekStartsOn={1}
         components={{
-          Day: (day) => (
+          Day: (props) => (
             <Day
-              day={day}
+              day={props}
               selectedDates={selectedDates}
               selectedPerson={selectedPerson}
               handleDayClick={handleDayClick}

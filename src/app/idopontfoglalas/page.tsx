@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 
-import 'react-day-picker/dist/style.css'
+import 'react-day-picker/style.css'
 
 import { Metadata } from 'next'
 import Image from 'next/image'

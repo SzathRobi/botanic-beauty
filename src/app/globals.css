@@ -20,15 +20,37 @@
   }
 }
 
-.rdp-button {
+.rdp-button_previous,
+.rdp-button_next {
+  background-color: transparent !important;
   transition: background-color 0.2s ease-in-out;
 }
 
-.rdp-day_selected {
-  background-color: #059669 !important;
+.rdp-chevron {
+  fill: #ffffff !important;
 }
 
-.rdp-button:hover:not([disabled]):not(.rdp-day_selected) {
+.rdp-selected {
+  background-color: #059669 !important;
+  border-radius: 0.5rem !important;
+  color: #ffffff !important;
+  border: none !important;
+}
+
+.rdp-day_button {
+  border: none !important;
+  border-radius: 0.5rem !important;
+}
+
+.rdp-today:not(.rdp-outside) {
+  color: inherit !important;
+  background-color: #059669aa !important;
+  border-radius: 0.5rem !important;
+  border: none !important;
+}
+
+.rdp-button_previous:hover:not([disabled]):not(.rdp-selected),
+.rdp-button_next:hover:not([disabled]):not(.rdp-selected) {
   background-color: #05966966 !important;
 }
 

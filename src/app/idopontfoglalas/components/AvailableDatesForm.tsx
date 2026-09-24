@@ -150,13 +150,11 @@ const AvailableDatesForm = ({
           className="dayPicker text-sm sm:text-base md:text-lg"
           mode="single"
           selected={selectedDate}
-          // TODO / high: change to selectedDate
           defaultMonth={selectedDate}
           weekStartsOn={1}
           locale={hu}
           disabled={(date) =>
             isBefore(date, new Date(Date.now())) ||
-            // isBeforeAug1(date) ||
             isClosedDay ||
             isSunday(date) ||
             isSaturday(date) ||
@@ -167,6 +165,7 @@ const AvailableDatesForm = ({
           }
           onSelect={handleSelect}
         />
+
         <TimeSlots
           bookings={bookings}
           startTime={

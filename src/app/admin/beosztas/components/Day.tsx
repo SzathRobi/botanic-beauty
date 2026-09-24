@@ -45,12 +45,13 @@ const Day = ({
   }
 
   return (
-    <div
+    <td
       style={{ backgroundColor: color, cursor, opacity }}
-      onClick={() => (isSunday(day.day.date) ? null : handleDayClick(day))}
+      onClick={() => (isSunday(day.day.date) ? null : handleDayClick(day.day))}
+      className="rounded p-2 text-center align-middle"
     >
       {day.day.date.getDate()}
-    </div>
+    </td>
   )
 }
 
