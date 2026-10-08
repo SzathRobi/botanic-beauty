@@ -21,6 +21,7 @@ import { Input } from '@/components/ui/Input'
 import { Label } from '@/components/ui/Label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/Tabs'
 
+import { sortBookingsByDate } from '../utils/sortBookingsByDate.util'
 import FinanceForm from './financeForm'
 import FinanceMobileCard from './financeMobileCard'
 
@@ -197,7 +198,7 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
           .toLowerCase()
           .includes(event.target.value.toLowerCase())
     )
-    setBookingsWithoutFianceDone(filteredBookings)
+    setBookingsWithoutFianceDone(sortBookingsByDate(filteredBookings))
   }
 
   const onSearchInBookingsWithFinanceDone = (
@@ -211,15 +212,17 @@ const FinanceTabs = ({ bookings }: FinanceTabsProps) => {
           .toLowerCase()
           .includes(event.target.value.toLowerCase())
     )
-    setBookingsWithFianceDone(filteredBookings)
+    setBookingsWithFianceDone(sortBookingsByDate(filteredBookings))
   }
 
   useEffect(() => {
     setBookingsWithFianceDone(
-      allBookings.filter((booking) => booking.isFinanceDone)
+      sortBookingsByDate(allBookings.filter((booking) => booking.isFinanceDone))
     )
     setBookingsWithoutFianceDone(
-      allBookings.filter((booking) => !booking.isFinanceDone)
+      sortBookingsByDate(
+        allBookings.filter((booking) => !booking.isFinanceDone)
+      )
     )
   }, [allBookings])
 

@@ -35,6 +35,7 @@ const formSchema = z.object({
   discountPercentage: z.number().optional(),
   financeComment: z.string().optional(),
   isPaidWithCard: z.boolean().optional(),
+  isFinanceDone: z.boolean().optional(),
 })
 
 const BLEACH_PRICE_PER_GRAMM = 120
@@ -77,6 +78,7 @@ export default function FinanceForm({
       discountPercentage: selectedBooking.discountPercentage || 0,
       financeComment: selectedBooking.financeComment || '',
       isPaidWithCard: selectedBooking.isPaidWithCard || false,
+      isFinanceDone: selectedBooking.isFinanceDone || false,
     },
     resolver: zodResolver(formSchema),
   })
@@ -114,7 +116,13 @@ export default function FinanceForm({
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ ...values, finalPrice }),
+      body: JSON.stringify({
+        ...values,
+        finalPrice,
+        isFinanceDone: selectedBooking.isFinanceDone
+          ? values.isFinanceDone
+          : true,
+      }),
     })
 
     if (!response.ok) {
@@ -129,7 +137,9 @@ export default function FinanceForm({
         if (booking.id === selectedBooking.id) {
           return {
             ...booking,
-            isFinanceDone: true,
+            isFinanceDone: selectedBooking.isFinanceDone
+              ? values.isFinanceDone!
+              : true,
             bleachMaterialUsage: values.bleachMaterialUsage ?? null,
             dyeMaterialUsage: values.dyeMaterialUsage ?? null,
             finalPrice,
@@ -179,6 +189,26 @@ export default function FinanceForm({
             )}
           </div>
         </Alert>
+
+        {selectedBooking.isFinanceDone && (
+          <FormField
+            control={form.control}
+            name="isFinanceDone"
+            render={({ field }) => (
+              <FormItem className="flex items-center gap-2 space-y-0 text-white">
+                <FormLabel>Lezárva</FormLabel>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}

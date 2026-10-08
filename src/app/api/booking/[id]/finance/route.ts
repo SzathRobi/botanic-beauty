@@ -15,6 +15,7 @@ export async function POST(request: NextRequest, { params }: any) {
     isPaidWithCard,
     tips,
     discountPercentage,
+    isFinanceDone,
   } = await request.json()
 
   if (
@@ -37,7 +38,7 @@ export async function POST(request: NextRequest, { params }: any) {
         bleachMaterialUsage,
         dyeMaterialUsage,
         finalPrice,
-        isFinanceDone: true,
+        isFinanceDone,
         extraHaircutPrice,
         miracleBoosterPrice,
         isPaidWithCard,

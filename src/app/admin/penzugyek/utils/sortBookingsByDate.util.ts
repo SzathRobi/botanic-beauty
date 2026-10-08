@@ -2,7 +2,6 @@ import { Booking } from '@prisma/client'
 import { compareDesc } from 'date-fns'
 
 export function sortBookingsByDate(bookings: Booking[]): Booking[] {
-  console.log(bookings[0])
   return bookings.sort((a, b) => {
     // Parse selectedDate to Date objects (using standard date format)
     const dateA = new Date(a.selectedDate)
