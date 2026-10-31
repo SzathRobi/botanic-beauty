@@ -6,7 +6,6 @@ import {
   addMinutes,
   format,
   isSameDay,
-  isSunday,
   isToday,
   setDate,
   setHours,
@@ -18,9 +17,9 @@ import { useEffect, useMemo } from 'react'
 type TimeSlotsProps = {
   bookings: Booking[]
   startTime: Date
-  endTime: number
+  closingTime: Date
+  isDayOpen: boolean
   interval: number
-  isClosedDay: boolean
   isClosedForToday: boolean
   selectedTimeSlot: string | null
   setSelectedTimeSlot: (timeSlot: string) => void
@@ -60,9 +59,9 @@ const roundUpToNearestQuarter = (date: Date): Date => {
 
 const TimeSlots = ({
   startTime,
-  endTime,
+  closingTime,
+  isDayOpen,
   interval,
-  isClosedDay,
   isClosedForToday,
   selectedTimeSlot,
   setSelectedTimeSlot,
@@ -73,9 +72,8 @@ const TimeSlots = ({
   isSelectedHairdresserOffDay,
 }: TimeSlotsProps) => {
   const isInvalidDate =
-    isSunday(selectedDate) ||
+    !isDayOpen ||
     isSelectedHairdresserOffDay ||
-    isClosedDay ||
     (isToday(selectedDate) && isClosedForToday)
 
   const bookingsForSelectedDay = useMemo(() => {
@@ -84,9 +82,8 @@ const TimeSlots = ({
     )
   }, [bookings, selectedDate])
 
-  // 3. Elérhető időpontok kiszámolása (render-biztos módon)
+  // Elérhető időpontok kiszámolása
   const availableTimeSlots = useMemo(() => {
-    // Ha a nap alapból zárva van, ne is számoljunk időpontokat
     if (isInvalidDate) return []
 
     const isOverlappingDate = (time: Date): boolean => {
@@ -100,21 +97,20 @@ const TimeSlots = ({
         )
 
         return (
-          (startDate >= start && startDate < end) || // Új kezdete ütközik
-          (endDate > start && endDate <= end) || // Új vége ütközik
-          (startDate <= start && endDate >= end) // Új lefedi a meglévőt
+          (startDate >= start && startDate < end) ||
+          (endDate > start && endDate <= end) ||
+          (startDate <= start && endDate >= end)
         )
       })
     }
 
     const slots: string[] = []
     let currentTime = roundUpToNearestQuarter(startTime)
-    const endOfDay = setHours(startOfDay(selectedDate), endTime)
 
-    while (currentTime < endOfDay) {
+    while (currentTime < closingTime) {
       const endTimeSlot = addMinutes(currentTime, interval)
 
-      if (endTimeSlot > endOfDay) {
+      if (endTimeSlot > closingTime) {
         break
       }
 
@@ -132,21 +128,20 @@ const TimeSlots = ({
     return slots
   }, [
     startTime,
-    endTime,
+    closingTime,
     interval,
     selectedDate,
     isInvalidDate,
     bookingsForSelectedDay,
   ])
 
-  // 4. A mellékhatások (state módosítások, nap ugratása) biztonságos helyen
+  // Mellékhatások kezelése
   useEffect(() => {
     if (isInvalidDate) {
       setSelectedDate(addDays(selectedDate, 1))
       return
     }
 
-    // Ha nincs isInvalidDate, de az adott napra már elfogyott minden időpont
     if (availableTimeSlots.length === 0) {
       setDatesWithNoTimeForSelectedService((prevDates: any) => [
         ...prevDates,
@@ -170,13 +165,11 @@ const TimeSlots = ({
           <button
             key={timeSlotText}
             onClick={() => setSelectedTimeSlot(timeSlotText)}
-            // Javítva egy apró css bug: az eredetiben a "false" kiíródhatott a classnevek közé
-            className={`p-2 ${isClosedDay ? 'cursor-not-allowed opacity-50' : ''} ${
+            className={`p-2 ${
               selectedTimeSlot === timeSlotText
                 ? 'bg-emerald-600/40'
                 : 'bg-black/50'
             } transition`}
-            disabled={isClosedDay}
           >
             {timeSlotText}
           </button>

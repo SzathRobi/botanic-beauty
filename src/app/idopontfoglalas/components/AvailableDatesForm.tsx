@@ -3,14 +3,19 @@
 // @ts-expect-error minden tuti
 import './AvailableDatesForm.override.css'
 
-import { Booking, Schedule, TOffDay, TService } from '@prisma/client'
+import {
+  Booking,
+  OpeningHour,
+  Schedule,
+  SpecialOpeningHour,
+  TOffDay,
+  TService,
+} from '@prisma/client'
 import {
   addDays,
   addMinutes,
   isBefore,
   isSameDay,
-  isSaturday,
-  isSunday,
   isToday,
   max,
   setHours,
@@ -24,11 +29,6 @@ import { DayPicker } from 'react-day-picker'
 import { Button } from '@/components/Button'
 import { EXTRA_SERVICES_IDS_WITHOUT_DURATION } from '@/constants/services.constants'
 
-import {
-  CLOSING_HOUR,
-  LAST_BOOKING_HOUR,
-  OPENING_HOUR,
-} from '../constants/openingHours.constants'
 import TimeSlots from './TimeSlots'
 
 type AvailableDatesFormProps = {
@@ -41,8 +41,50 @@ type AvailableDatesFormProps = {
   selectedExtraServices: TService[]
   selectedHairdresser: 'Timi' | 'nem_Timi'
   schedule: Schedule
+  openingHours: OpeningHour[]
+  specialOpeningHours: SpecialOpeningHour[]
   incrementActiveStep: () => void
   decrementActiveStep: () => void
+}
+
+// Segédfüggvény a nap nyitvatartásának lekérésére (speciális felülírja a normált)
+export const getDaySchedule = (
+  date: Date,
+  openingHours: OpeningHour[],
+  specialOpeningHours: SpecialOpeningHour[]
+) => {
+  const special = specialOpeningHours.find((s) =>
+    isSameDay(new Date(s.date), date)
+  )
+  if (special) {
+    return {
+      isOpen: special.isOpen,
+      openingHour: special.openingHour,
+      closingHour: special.closingHour,
+    }
+  }
+
+  const dayNames = [
+    'sunday',
+    'monday',
+    'tuesday',
+    'wednesday',
+    'thursday',
+    'friday',
+    'saturday',
+  ]
+  const dayName = dayNames[date.getDay()]
+
+  const regular = openingHours.find((oh) => oh.day.toLowerCase() === dayName)
+  if (regular) {
+    return {
+      isOpen: regular.isOpen,
+      openingHour: regular.openingHour,
+      closingHour: regular.closingHour,
+    }
+  }
+
+  return { isOpen: false, openingHour: '10:00', closingHour: '19:00' }
 }
 
 const roundUpToNearestQuarter = (date: Date): Date => {
@@ -64,15 +106,13 @@ const AvailableDatesForm = ({
   selectedExtraServices,
   selectedHairdresser,
   schedule,
+  openingHours,
+  specialOpeningHours,
   decrementActiveStep,
   incrementActiveStep,
 }: AvailableDatesFormProps) => {
   const now = new Date()
   const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120))
-  // TODO: ide kell majd az új extra service is
-  // const serviceDuration = selectedExtraServices
-  //   ? selectedExtraServices[0].duration + selectedService.duration
-  //   : selectedService.duration
 
   const servicesWithDuration = selectedExtraServices.filter(
     (extraservice) =>
@@ -92,9 +132,22 @@ const AvailableDatesForm = ({
   const hairdresserOffDays: Date[] = schedule.offDays
     .filter((offDay: TOffDay) => offDay.person === selectedHairdresser)
     .map((offDay: TOffDay) => offDay.date)
-  const isClosedForToday = selectedDate.getHours() >= LAST_BOOKING_HOUR
 
-  const [isClosedDay, setIsClosedDay] = useState<boolean>(false)
+  const currentDaySchedule = getDaySchedule(
+    selectedDate,
+    openingHours,
+    specialOpeningHours
+  )
+
+  const [closingH, closingM] = currentDaySchedule.closingHour
+    .split(':')
+    .map(Number)
+  const closingTimeForToday = setMinutes(
+    setHours(startOfDay(selectedDate), closingH),
+    closingM
+  )
+
+  const isClosedForToday = isToday(selectedDate) && now.getHours() >= closingH
 
   const handleSelect = (day: Date | undefined) => {
     if (day) {
@@ -106,8 +159,8 @@ const AvailableDatesForm = ({
     let firstAvailableDate = selectedDate
 
     while (
-      isSunday(firstAvailableDate) ||
-      isSaturday(firstAvailableDate) ||
+      !getDaySchedule(firstAvailableDate, openingHours, specialOpeningHours)
+        .isOpen ||
       hairdresserOffDays.some(
         (offDay) =>
           isSameDay(offDay, firstAvailableDate) ||
@@ -121,27 +174,27 @@ const AvailableDatesForm = ({
   }
 
   useEffect(() => {
-    if (isClosedDay) {
-      setSelectedTimeSlot(null)
-    }
-  }, [isClosedDay])
-
-  useEffect(() => {
     setSelectedDate(getFirstAvailableDate())
   }, [])
 
   useEffect(() => {
-    if (isSaturday(selectedDate)) {
+    const scheduleInfo = getDaySchedule(
+      selectedDate,
+      openingHours,
+      specialOpeningHours
+    )
+    if (!scheduleInfo.isOpen) {
       setSelectedDate(addDays(selectedDate, 1))
     }
-  }, [selectedDate])
+  }, [selectedDate, openingHours, specialOpeningHours])
 
-  const getOpeningHour = () => {
-    const date = startOfDay(selectedDate)
-    return setMinutes(setHours(date, OPENING_HOUR), 0)
-  }
-
-  const openingHourForToday = getOpeningHour()
+  const [openingH, openingM] = currentDaySchedule.openingHour
+    .split(':')
+    .map(Number)
+  const openingHourForToday = setMinutes(
+    setHours(startOfDay(selectedDate), openingH),
+    openingM
+  )
 
   return (
     <div className="mb-8">
@@ -153,16 +206,21 @@ const AvailableDatesForm = ({
           defaultMonth={selectedDate}
           weekStartsOn={1}
           locale={hu}
-          disabled={(date) =>
-            isBefore(date, new Date(Date.now())) ||
-            isClosedDay ||
-            isSunday(date) ||
-            isSaturday(date) ||
-            hairdresserOffDays.some((offDay) => isSameDay(offDay, date)) ||
-            datesWithNoTimeForSelectedService.some((datesWithNoTime) =>
-              isSameDay(datesWithNoTime, date)
+          disabled={(date) => {
+            const daySchedule = getDaySchedule(
+              date,
+              openingHours,
+              specialOpeningHours
             )
-          }
+            return (
+              isBefore(date, new Date(Date.now())) ||
+              !daySchedule.isOpen ||
+              hairdresserOffDays.some((offDay) => isSameDay(offDay, date)) ||
+              datesWithNoTimeForSelectedService.some((datesWithNoTime) =>
+                isSameDay(datesWithNoTime, date)
+              )
+            )
+          }}
           onSelect={handleSelect}
         />
 
@@ -173,9 +231,9 @@ const AvailableDatesForm = ({
               ? max([tPlus2Hours, openingHourForToday])
               : openingHourForToday
           }
-          endTime={CLOSING_HOUR}
+          closingTime={closingTimeForToday}
+          isDayOpen={currentDaySchedule.isOpen}
           interval={serviceDuration}
-          isClosedDay={isClosedDay}
           isClosedForToday={isClosedForToday}
           selectedTimeSlot={selectedTimeSlot}
           setSelectedTimeSlot={setSelectedTimeSlot}

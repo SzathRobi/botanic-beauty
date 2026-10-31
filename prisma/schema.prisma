@@ -73,3 +73,23 @@ model Customer {
   hairdressers      Hairdresser[]
   otherInfo         String?
 }
+
+type OpeningHour {
+    day         String
+    openingHour String
+    closingHour String
+    isOpen      Boolean
+  }
+
+type SpecialOpeningHour {
+  date        DateTime
+  openingHour String
+  closingHour String
+  isOpen      Boolean
+}
+
+model Salon {
+  id                    String   @id @map("_id") @default(cuid())
+  openingHours          OpeningHour[]
+  specialOpeningHours   SpecialOpeningHour[]
+}

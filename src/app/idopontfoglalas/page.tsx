@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
 import { getBookings } from '@/actions/booking'
+import { getSalon } from '@/actions/salon'
 import { getSchedule } from '@/actions/schedule'
 import Footer from '@/components/Footer'
 import { HOME_ROUTE } from '@/constants/routes.constants'
@@ -60,16 +61,19 @@ type BookingPageProps = {
 
 const BookingPage = async ({ searchParams }: BookingPageProps) => {
   const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+  const szolgaltatasSearchParam = (await searchParams).szolgaltatas
 
   if (!isBookingAvailable) {
     return redirect(HOME_ROUTE)
   }
 
-  const schedule = await getSchedule()
+  const [bookings, schedule, salon] = await Promise.all([
+    getBookings(),
+    getSchedule(),
+    getSalon(),
+  ])
 
-  const bookings = await getBookings()
-
-  const serviceId = getServiceIdByName((await searchParams).szolgaltatas)
+  const serviceId = getServiceIdByName(szolgaltatasSearchParam)
 
   return (
     <>
@@ -86,6 +90,8 @@ const BookingPage = async ({ searchParams }: BookingPageProps) => {
           schedule={schedule}
           bookings={bookings || []}
           serviceId={serviceId}
+          openingHours={salon?.openingHours ?? []}
+          specialOpeningHours={salon?.specialOpeningHours ?? []}
         />
       </section>
 

@@ -5,3 +5,8 @@ export const PRICES_ROUTE = '/arlista'
 export const SERVICES_ROUTE = '/szolgaltatasaink'
 export const PRIVACY_POLICY_ROUTE = '/adatvedelmi-nyilatkozat'
 export const TERMS_OF_USE_ROUTE = '/felhasznalasi-feltetelek'
+
+export const SALON_OPENING_HOURS_ROUTE = '/nyitvatartasok'
+
+export const SALON_API_OPENING_HOURS_ROUTE = '/opening-hours'
+export const SALON_API_SPECIAL_OPENING_HOURS_ROUTE = '/special-opening-hours'

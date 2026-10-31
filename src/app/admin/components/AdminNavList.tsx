@@ -4,6 +4,7 @@ import {
   Album,
   CalendarDays,
   ChartColumnDecreasing,
+  Clock,
   DollarSign,
   Ellipsis,
   ImageUp,
@@ -24,6 +25,11 @@ const navElements = [
     title: 'Beosztás',
     href: '/admin/beosztas',
     icon: <CalendarDays className="mx-auto mb-1" />,
+  },
+  {
+    title: 'Nyitvatartások',
+    href: '/admin/nyitvatartasok',
+    icon: <Clock className="mx-auto mb-1" />,
   },
   {
     title: 'Foglalások',
@@ -81,6 +87,16 @@ const navElementsMobile = [
         </DropdownMenuTrigger>
 
         <DropdownMenuContent className="dark">
+          <DropdownMenuItem>
+            <Link
+              href="/admin/nyitvatartasok"
+              className="px-1 py-2 text-center text-xs hover:bg-emerald-500/20 sm:px-4 md:w-full md:text-base"
+            >
+              <Clock />
+              Nyitvatartások
+            </Link>
+          </DropdownMenuItem>
+
           <DropdownMenuItem>
             <Link
               href="/admin/kepfeltoltes"

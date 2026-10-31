@@ -1,6 +1,12 @@
 'use client'
 
-import { Booking, Schedule, TService } from '@prisma/client'
+import {
+  Booking,
+  OpeningHour,
+  Schedule,
+  SpecialOpeningHour,
+  TService,
+} from '@prisma/client'
 import { motion } from 'framer-motion'
 import { ReactNode, useState } from 'react'
 
@@ -33,12 +39,16 @@ type MultiStepFormProps = {
   schedule: Schedule | null
   bookings: Booking[]
   serviceId: `${number}` | null
+  openingHours: OpeningHour[]
+  specialOpeningHours: SpecialOpeningHour[]
 }
 
 const MultiStepForm = ({
   bookings,
   schedule,
   serviceId,
+  openingHours,
+  specialOpeningHours,
 }: MultiStepFormProps) => {
   const preSelectedService = SERVICES.find(
     (service) => service.id === serviceId
@@ -186,6 +196,8 @@ const MultiStepForm = ({
                 selectedExtraServices={selectedExtraServices}
                 selectedHairdresser={selectedHairdresser!}
                 schedule={schedule}
+                openingHours={openingHours}
+                specialOpeningHours={specialOpeningHours}
                 incrementActiveStep={incrementActiveStep}
                 decrementActiveStep={decrementActiveStep}
               />
