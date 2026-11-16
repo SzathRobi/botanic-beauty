@@ -1,5 +1,45 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Helyi MongoDB Dockerrel
+
+A projekthez külön MongoDB tartozik, a másik projekt `27017`-es konténerétől függetlenül:
+
+| Beállítás              | Érték                        |
+| ---------------------- | ---------------------------- |
+| Docker Desktop projekt | `botanic-beauty-local`       |
+| Konténer               | `botanic-beauty-mongodb`     |
+| Elérés a gépről        | `127.0.0.1:27018`            |
+| Adatbázis              | `botanic_beauty`             |
+| Replica set            | `botanic-beauty-rs`          |
+| Adattárolás            | Saját Docker named volume-ok |
+
+Indítás és a helyi adatbázis előkészítése:
+
+```bash
+npm run db:local:up
+npm run db:local:init
+```
+
+Másold a `.env.local.example` fájlt `.env.local` néven, ha még nem létezik. A kapcsolat:
+
+```dotenv
+DATABASE_URL="mongodb://127.0.0.1:27018/botanic_beauty?replicaSet=botanic-beauty-rs&directConnection=true"
+```
+
+A Next.js a `.env.local` értékét használja a `.env` helyett. Az eredeti `.env` változatlan maradhat; a fejlesztői szervert az új beállítás után újra kell indítani. A MongoDB csak a helyi gépen érhető el, fejlesztéshez jelszó nélkül.
+
+Az inicializáló parancs kizárólag a fenti helyi címre kapcsolódik, az alkalmazás meglévő Prisma-sémájából hozza létre a kollekciókat és indexeket, és beállít egy hétfőtől péntekig 10–19 órás nyitvatartást, valamint egy üres beosztást. Újrafuttatva megőrzi a már meglévő helyi adatokat és beállításokat. Éles adatokat nem másol át, a Prisma-sémát nem módosítja.
+
+Helyi adatbázis-előkészítéshez a `db:local:init` parancsot használd: a közvetlen Prisma CLI parancsok a `.env.local` fájlt nem töltik be automatikusan.
+
+Leállítás az adatok megtartásával:
+
+```bash
+npm run db:local:down
+```
+
+A konténer egynódos replica setként indul, hogy a Prisma MongoDB-tranzakciói is működjenek. [MongoDB: replica set és tranzakciók](https://www.mongodb.com/docs/manual/replication/)
+
 ## Getting Started
 
 First, run the development server:
