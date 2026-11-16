@@ -7,7 +7,7 @@ import './calendar.css'
 
 import { OpeningHour, SpecialOpeningHour, TOffDay } from '@prisma/client'
 import moment from 'moment'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import {
   Calendar,
   EventProps,
@@ -37,6 +37,8 @@ const localizer = momentLocalizer(moment)
 
 type BigCalendarProps = {
   bookingsByEmail: Record<string, number>
+  onCreate?: (start: Date) => void
+  focusDate?: Date
   calendarEvents: CalendarEvent[]
   // eslint-disable-next-line no-unused-vars
   onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void
@@ -51,6 +53,8 @@ const DndCalendar = withDragAndDrop<CalendarEvent>(Calendar)
 
 const BigCalendar = ({
   bookingsByEmail,
+  onCreate,
+  focusDate,
   calendarEvents,
   onEventDrop,
   offDays,
@@ -61,6 +65,10 @@ const BigCalendar = ({
 }: BigCalendarProps) => {
   const [view, setView] = useState<View>(Views.WEEK)
   const [date, setDate] = useState(new Date())
+
+  useEffect(() => {
+    if (focusDate) setDate(focusDate)
+  }, [focusDate])
 
   const today = new Date()
   const hours = [...openingHours, ...specialOpeningHours].filter(
@@ -206,7 +214,8 @@ const BigCalendar = ({
         events={calendarEvents}
         min={minCalendarStartTime}
         max={maxCalendarStartTime}
-        selectable={true}
+        selectable={Boolean(onCreate)}
+        onSelectSlot={({ start }) => onCreate?.(new Date(start))}
         resizable={false}
         components={{
           event: (eventProps: EventProps<CalendarEvent>) => (

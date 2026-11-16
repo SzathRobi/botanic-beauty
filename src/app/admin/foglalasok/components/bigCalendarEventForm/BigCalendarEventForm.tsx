@@ -4,7 +4,14 @@
 import './BigCalendarEventForm.override.css'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { OpeningHour, SpecialOpeningHour, TOffDay } from '@prisma/client'
+import {
+  Booking,
+  Hairdresser,
+  OpeningHour,
+  SpecialOpeningHour,
+  TOffDay,
+} from '@prisma/client'
+import { format } from 'date-fns'
 import { hu } from 'date-fns/locale'
 import { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { EventProps } from 'react-big-calendar'
@@ -43,11 +50,18 @@ import {
 } from '@/lib/guest-booking'
 
 import { eventFormSchema } from '../../schemas/eventFormSchema'
-import { getNotificationWarning, updateBooking } from '../../utils/bookingApi'
+import {
+  createBooking,
+  getNotificationWarning,
+  updateBooking,
+} from '../../utils/bookingApi'
 import { calculateBookingEndTime } from '../../utils/bookingTime'
 
 type BigCalendarEventFormProps = {
-  calendarEvent: EventProps<CalendarEvent>
+  calendarEvent?: EventProps<CalendarEvent>
+  initialStart?: Date
+  initialHairdresser?: Hairdresser
+  onCreated?: (booking: Booking) => void
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>
   offDays: TOffDay[]
@@ -60,24 +74,40 @@ const BigCalendarEventForm = ({
   setCalendarEvents,
   setIsDialogOpen,
   offDays,
+  initialStart,
+  initialHairdresser = 'Timi',
+  onCreated,
 }: BigCalendarEventFormProps) => {
-  const booking = mapEventToBooking(calendarEvent.event)
+  const booking = calendarEvent ? mapEventToBooking(calendarEvent.event) : null
+  const initialService = booking?.service ?? SERVICES[0]
+  const initialTime =
+    booking?.selectedTimeSlot.split(' - ')[0] ??
+    (initialStart ? format(initialStart, 'HH:mm') : '10:00')
   const [isLoading, setIsLoading] = useState(false)
   const submitting = useRef(false)
   const [selectedDate, setSelectedDate] = useState(() =>
-    dateFromCalendarKey(booking.selectedDate)
+    booking
+      ? dateFromCalendarKey(booking.selectedDate)
+      : (initialStart ?? dateFromCalendarKey(getBookingDateKey(new Date())!))
   )
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
-      hairdresser: booking.hairdresser,
-      startTime: booking.selectedTimeSlot.split(' - ')[0],
-      endTime: booking.selectedTimeSlot.split(' - ')[1],
-      service: booking.service,
-      extraServices: booking.extraServices,
-      ...booking.contactInfo,
+      hairdresser: booking?.hairdresser ?? initialHairdresser,
+      startTime: initialTime,
+      endTime:
+        booking?.selectedTimeSlot.split(' - ')[1] ??
+        calculateBookingEndTime(initialTime, initialService, []),
+      service: initialService,
+      extraServices: booking?.extraServices ?? [],
+      name: booking?.contactInfo.name ?? '',
+      email: booking?.contactInfo.email ?? '',
+      phone: booking?.contactInfo.phone ?? '',
+      otherInfo: booking?.contactInfo.otherInfo ?? '',
     },
   })
+
+  const selectedHairdresser = form.watch('hairdresser')
 
   const recalculateEndTime = () => {
     const values = form.getValues()
@@ -123,7 +153,7 @@ const BigCalendarEventForm = ({
     submitting.current = true
     setIsLoading(true)
     try {
-      const result = await updateBooking(booking.id, {
+      const payload = {
         selectedDate: getCalendarDateKey(selectedDate),
         selectedTimeSlot: values.startTime + ' - ' + values.endTime,
         hairdresser: values.hairdresser,
@@ -135,18 +165,26 @@ const BigCalendarEventForm = ({
           phone: values.phone,
           otherInfo: values.otherInfo || null,
         },
-      })
+      }
+      const result = booking
+        ? await updateBooking(booking.id, payload)
+        : await createBooking(payload)
       const saved = mapBookingToEvent(result.data)
       setCalendarEvents((previous) =>
-        previous.map((event) => (event.id === booking.id ? saved : event))
+        booking
+          ? previous.map((event) => (event.id === booking.id ? saved : event))
+          : [...previous.filter((event) => event.id !== saved.id), saved]
       )
-      toast.success('Sikeres módosítás')
+      if (!booking) onCreated?.(result.data)
+      toast.success(booking ? 'Sikeres módosítás' : 'A foglalást létrehoztuk.')
       const warning = getNotificationWarning(result.notifications)
       if (warning) toast.error(warning)
       setIsDialogOpen(false)
     } catch (error) {
       toast.error(
-        error instanceof Error ? error.message : 'A módosítás sikertelen.'
+        error instanceof Error
+          ? error.message
+          : 'A foglalás mentése sikertelen.'
       )
     } finally {
       submitting.current = false
@@ -158,6 +196,29 @@ const BigCalendarEventForm = ({
     <div className="dark text-white">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          {!booking && (
+            <FormField
+              control={form.control}
+              name="hairdresser"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Fodrász</FormLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Válassz fodrászt" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent className="dark">
+                      <SelectItem value="Timi">Timi</SelectItem>
+                      <SelectItem value="nem_Timi">nem Timi</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
           <FormItem>
             <FormLabel>Dátum</FormLabel>
 
@@ -173,7 +234,7 @@ const BigCalendarEventForm = ({
                   getCalendarDateKey(date) < getBookingDateKey(new Date())! ||
                   offDays.some(
                     (day) =>
-                      day.person === booking.hairdresser &&
+                      day.person === selectedHairdresser &&
                       getBookingDateKey(day.date) === getCalendarDateKey(date)
                   )
                 }
@@ -243,7 +304,7 @@ const BigCalendarEventForm = ({
                         <SelectValue placeholder="Válassz szolgáltatást" />
                       </SelectTrigger>
                     </FormControl>
-                    <SelectContent>
+                    <SelectContent className="dark">
                       {SERVICES.map((service) => (
                         <SelectItem key={service.name} value={service.name}>
                           <div className="flex items-center gap-2">
@@ -372,7 +433,7 @@ const BigCalendarEventForm = ({
               Mégse
             </Button>
             <Button type="submit" isLoading={isLoading} disabled={isLoading}>
-              Módosítás
+              {booking ? 'Módosítás' : 'Foglalás létrehozása'}
             </Button>
           </div>
         </form>

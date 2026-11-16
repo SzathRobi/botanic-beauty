@@ -8,6 +8,21 @@ import ModifierEmail from '@/emails/ModifierEmail'
 import prisma from '@/lib/db'
 
 import { getBookingDateKey, getGuestReminderDelay } from './guest-booking'
+import { notifyGuestBooking } from './guest-booking-notifications'
+
+export const notifyAdminBookingCreation = async (booking: Booking) => {
+  const result = await notifyGuestBooking(booking)
+  const saved = await prisma.booking
+    .findUnique({ where: { id: booking.id } })
+    .catch(() => null)
+  return {
+    booking: saved ?? booking,
+    notifications: {
+      emailSent: result.verificationEmailSent,
+      reminderUpdated: result.reminderScheduled,
+    },
+  }
+}
 
 const emailBooking = (booking: Booking) => ({
   ...booking,

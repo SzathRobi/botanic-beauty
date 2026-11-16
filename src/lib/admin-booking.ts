@@ -6,6 +6,7 @@ import prisma from '@/lib/db'
 
 import {
   notifyAdminBookingChange,
+  notifyAdminBookingCreation,
   notifyAdminBookingDeletion,
 } from './admin-booking-notifications'
 import {
@@ -33,6 +34,159 @@ const updateSchema = z.object({
 
 const failure = (message: string, status: number) =>
   NextResponse.json({ error: true, message }, { status })
+
+const createSchema = updateSchema.required({
+  hairdresser: true,
+  service: true,
+  extraServices: true,
+  contactInfo: true,
+})
+
+export const createAdminBooking = async (body: unknown) => {
+  const parsed = createSchema.safeParse(body)
+  if (!parsed.success) return failure('Invalid data', 400)
+  const input = parsed.data
+  const dateKey = getBookingDateKey(input.selectedDate)
+  const [start, end] = input.selectedTimeSlot.split(' - ').map(timeToMinutes)
+  const service = SERVICES.find((item) => item.id === input.service.id)
+  const extras = input.extraServices.map((extra) =>
+    EXTRA_SERVICES.find((item) => item.id === extra.id)
+  )
+  if (
+    !dateKey ||
+    !service ||
+    extras.some((extra) => !extra) ||
+    new Set(input.extraServices.map((extra) => extra.id)).size !== extras.length
+  ) {
+    return failure('Invalid data', 400)
+  }
+  const extraServices = extras.filter(
+    (extra): extra is NonNullable<typeof extra> => Boolean(extra)
+  )
+  if (
+    start === null ||
+    end === null ||
+    end <= start ||
+    end - start !== getGuestServiceDuration(service, extraServices)
+  ) {
+    return failure('Invalid booking duration', 400)
+  }
+  try {
+    const saved = await withGuestBookingLock(
+      dateKey + ':' + input.hairdresser,
+      async () => {
+        const [schedule, bookings] = await Promise.all([
+          prisma.schedule.findFirst(),
+          prisma.booking.findMany({
+            select: {
+              selectedDate: true,
+              selectedTimeSlot: true,
+              hairdresser: true,
+            },
+          }),
+        ])
+        // Admin creation follows the same exceptions as admin moves: no opening-hour
+        // or two-hour guest limit, but no staff off days, past dates or collisions.
+        if (
+          dateKey < getBookingDateKey(new Date())! ||
+          schedule?.offDays.some(
+            (day) =>
+              day.person === input.hairdresser &&
+              getBookingDateKey(day.date) === dateKey
+          )
+        ) {
+          return {
+            ok: false,
+            error: 'Time slot is not available',
+            status: 400,
+          } as const
+        }
+        const overlaps = bookings.some((booking) => {
+          if (
+            booking.hairdresser !== input.hairdresser ||
+            getBookingDateKey(booking.selectedDate) !== dateKey
+          )
+            return false
+          const [existingStart, existingEnd] = booking.selectedTimeSlot
+            .split(' - ')
+            .map(timeToMinutes)
+          return (
+            existingStart !== null &&
+            existingEnd !== null &&
+            start < existingEnd &&
+            end > existingStart
+          )
+        })
+        if (overlaps)
+          return {
+            ok: false,
+            error: 'Overlap with existing booking',
+            status: 409,
+          } as const
+        const [year, month, day] = dateKey.split('-').map(Number)
+        const contactInfo = {
+          ...input.contactInfo,
+          email: input.contactInfo.email.toLowerCase(),
+          otherInfo: input.contactInfo.otherInfo || null,
+        }
+        const booking = await prisma.$transaction(async (tx) => {
+          const customer = await tx.customer.upsert({
+            where: { email: contactInfo.email },
+            update: {},
+            create: {
+              name: contactInfo.name,
+              email: contactInfo.email,
+              phone: contactInfo.phone,
+              hairdressers: [input.hairdresser],
+            },
+          })
+          if (!customer.hairdressers.includes(input.hairdresser)) {
+            await tx.customer.update({
+              where: { id: customer.id },
+              data: { hairdressers: { push: input.hairdresser } },
+            })
+          }
+          return tx.booking.create({
+            data: {
+              selectedDate: `${year}-${month}-${day}`,
+              selectedTimeSlot: input.selectedTimeSlot,
+              hairdresser: input.hairdresser,
+              service,
+              extraServices,
+              contactInfo,
+              isFinanceDone: false,
+              finalPrice: 0,
+              bleachMaterialUsage: 0,
+              dyeMaterialUsage: 0,
+            },
+          })
+        })
+        return { ok: true, booking } as const
+      }
+    )
+    if (!saved.ok) return failure(saved.error, saved.status)
+    const result = await notifyAdminBookingCreation(saved.booking).catch(
+      (error) => {
+        console.error('Admin booking creation notifications failed:', error)
+        return {
+          booking: saved.booking,
+          notifications: { emailSent: false, reminderUpdated: false },
+        }
+      }
+    )
+    return NextResponse.json(
+      {
+        success: true,
+        data: result.booking,
+        notifications: result.notifications,
+      },
+      { status: 201 }
+    )
+  } catch (error) {
+    console.error('Admin booking creation failed:', error)
+    return failure('Unable to create booking', 500)
+  }
+}
 
 export const updateAdminBooking = async (id: string, body: unknown) => {
   const parsed = updateSchema.safeParse(body)

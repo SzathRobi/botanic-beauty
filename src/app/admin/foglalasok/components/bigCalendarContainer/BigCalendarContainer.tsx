@@ -12,11 +12,24 @@ import { EventInteractionArgs } from 'react-big-calendar/lib/addons/dragAndDrop'
 import toast from 'react-hot-toast'
 
 import { mapBookingToEvent } from '@/app/admin/mappers/mapBookingToEvent.mapper'
-import { getCalendarDateKey } from '@/lib/guest-booking'
+import { Button } from '@/components/Button'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/Dialog'
+import {
+  dateFromCalendarKey,
+  getBookingDateKey,
+  getCalendarDateKey,
+} from '@/lib/guest-booking'
 
 import { CalendarEvent } from '../../../types/calendarEvent.type'
 import { getNotificationWarning, updateBooking } from '../../utils/bookingApi'
 import BigCalendar from '../bigCalendar/BigCalendar'
+import BigCalendarEventForm from '../bigCalendarEventForm/BigCalendarEventForm'
 
 type BigCalendarContainerProps = {
   offDays: TOffDay[]
@@ -40,6 +53,17 @@ const BigCalendarContainer = ({
   )
   const [selectedHairdresser, setSelectedHairdresser] =
     useState<SelectedHairdresser>('all')
+  const [isCreateOpen, setIsCreateOpen] = useState(false)
+  const [createStart, setCreateStart] = useState<Date>()
+  const [focusDate, setFocusDate] = useState<Date>()
+  const openCreate = (start?: Date) => {
+    const initial = start
+      ? new Date(start)
+      : dateFromCalendarKey(getBookingDateKey(new Date())!)
+    if (!start) initial.setHours(10, 0, 0, 0)
+    setCreateStart(initial)
+    setIsCreateOpen(true)
+  }
   const pending = useRef(new Set<string>())
   const visibleEvents = useMemo(
     () =>
@@ -100,7 +124,10 @@ const BigCalendarContainer = ({
 
   return (
     <div className="max-w-[100vw] overflow-scroll md:overflow-hidden">
-      <div className="mb-8 flex gap-4">
+      <div className="mb-8 flex flex-wrap items-center gap-4">
+        <Button type="button" onClick={() => openCreate()}>
+          Új foglalás
+        </Button>
         <div>
           <input
             type="radio"
@@ -139,7 +166,44 @@ const BigCalendarContainer = ({
         </div>
       </div>
 
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        {isCreateOpen && (
+          <DialogContent className="dark">
+            <DialogHeader>
+              <DialogTitle>Új foglalás</DialogTitle>
+              <DialogDescription>
+                Válassz fodrászt, szolgáltatást és időpontot, majd add meg a
+                vendég adatait.
+              </DialogDescription>
+            </DialogHeader>
+            <BigCalendarEventForm
+              initialStart={createStart}
+              initialHairdresser={
+                selectedHairdresser === 'all' ? 'Timi' : selectedHairdresser
+              }
+              setCalendarEvents={setCalendarEvents}
+              setIsDialogOpen={setIsCreateOpen}
+              offDays={offDays}
+              openingHours={openingHours}
+              specialOpeningHours={specialOpeningHours}
+              onCreated={(booking) => {
+                if (
+                  selectedHairdresser !== 'all' &&
+                  selectedHairdresser !== booking.hairdresser
+                )
+                  setSelectedHairdresser(booking.hairdresser)
+                setFocusDate(
+                  dateFromCalendarKey(getBookingDateKey(booking.selectedDate)!)
+                )
+              }}
+            />
+          </DialogContent>
+        )}
+      </Dialog>
+
       <BigCalendar
+        onCreate={openCreate}
+        focusDate={focusDate}
         calendarEvents={visibleEvents}
         setCalendarEvents={setCalendarEvents}
         onEventDrop={onEventDrop}

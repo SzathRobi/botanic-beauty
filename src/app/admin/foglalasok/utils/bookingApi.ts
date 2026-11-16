@@ -6,14 +6,14 @@ export type BookingNotifications = {
 }
 
 const requestBooking = async (
-  id: string,
+  url: string,
   method: string,
   body?: Partial<Booking>
 ) => {
   let response: Response
   let result
   try {
-    response = await fetch(`/api/booking/${encodeURIComponent(id)}`, {
+    response = await fetch(url, {
       method,
       headers: { 'Content-Type': 'application/json' },
       ...(body ? { body: JSON.stringify(body) } : {}),
@@ -31,7 +31,7 @@ const requestBooking = async (
       throw new Error('A kiválasztott időpont ütközik egy másik foglalással.')
     if (result?.message === 'Time slot is not available')
       throw new Error(
-        'A kiválasztott időpont a nyitvatartás vagy a beosztás miatt nem elérhető.'
+        'A kiválasztott nap múltbeli, vagy a fodrász szabadságon van.'
       )
     if (
       result?.message === 'Invalid booking duration' ||
@@ -45,15 +45,20 @@ const requestBooking = async (
     throw new Error(
       method === 'DELETE'
         ? 'A foglalás törlése sikertelen.'
-        : 'A foglalás módosítása sikertelen.'
+        : method === 'POST'
+          ? 'A foglalás létrehozása sikertelen.'
+          : 'A foglalás módosítása sikertelen.'
     )
   }
   return result as { data: Booking; notifications: BookingNotifications }
 }
 
 export const updateBooking = (id: string, changes: Partial<Booking>) =>
-  requestBooking(id, 'PATCH', changes)
-export const deleteBooking = (id: string) => requestBooking(id, 'DELETE')
+  requestBooking(`/api/booking/${encodeURIComponent(id)}`, 'PATCH', changes)
+export const deleteBooking = (id: string) =>
+  requestBooking(`/api/booking/${encodeURIComponent(id)}`, 'DELETE')
+export const createBooking = (booking: Partial<Booking>) =>
+  requestBooking('/api/admin/bookings', 'POST', booking)
 
 export const getNotificationWarning = (
   notifications?: BookingNotifications

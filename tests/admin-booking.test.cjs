@@ -153,6 +153,15 @@ const fixture = (overrides = {}) => ({
   ...overrides,
 })
 const request = (value) => ({ json: async () => value })
+const createBody = (overrides = {}) => ({
+  selectedDate: '2026-11-16',
+  selectedTimeSlot: '20:00 - 20:30',
+  hairdresser: 'Timi',
+  service: { id: '1' },
+  extraServices: [],
+  contactInfo: fixture().contactInfo,
+  ...overrides,
+})
 const context = (id = 'one') => ({ params: Promise.resolve({ id }) })
 
 function harness({
@@ -161,9 +170,12 @@ function harness({
   db: actualDb,
   updateFails = false,
   deleteFails = false,
+  createFails = false,
+  customers = [],
 } = {}) {
   const state = {
     bookings: [...bookings],
+    customers: [...customers],
     sequence: [],
     offDays: [],
     specialOpeningHours: [],
@@ -201,6 +213,51 @@ function harness({
       },
     },
   }
+  if (!actualDb) {
+    db.customer = {
+      upsert: async ({ where, create }) => {
+        let customer = state.customers.find(
+          (item) => item.email === where.email
+        )
+        if (!customer) {
+          customer = { id: 'customer-' + state.customers.length, ...create }
+          state.customers.push(customer)
+        }
+        return customer
+      },
+      update: async ({ where, data }) => {
+        const customer = state.customers.find((item) => item.id === where.id)
+        customer.hairdressers = [
+          ...customer.hairdressers,
+          data.hairdressers.push,
+        ]
+        return customer
+      },
+    }
+    db.booking.create = async ({ data }) => {
+      if (createFails) throw new Error('Expected create failure')
+      const saved = fixture({ id: 'created-' + state.bookings.length, ...data })
+      state.sequence.push('create')
+      state.bookings.push(saved)
+      return saved
+    }
+    db.$transaction = async (callback) => {
+      const before = {
+        bookings: [...state.bookings],
+        customers: state.customers.map((customer) => ({
+          ...customer,
+          hairdressers: [...customer.hairdressers],
+        })),
+      }
+      try {
+        return await callback(db)
+      } catch (error) {
+        state.bookings = before.bookings
+        state.customers = before.customers
+        throw error
+      }
+    }
+  }
   const load = loader({
     'next/server': {
       NextResponse: {
@@ -210,6 +267,13 @@ function harness({
     '@/lib/db': { __esModule: true, default: db },
     '@/auth': { auth: async () => (user ? { user } : null) },
     './admin-booking-notifications': {
+      notifyAdminBookingCreation: async (booking) => {
+        state.sequence.push('notify-create')
+        return {
+          booking,
+          notifications: { emailSent: false, reminderUpdated: false },
+        }
+      },
       notifyAdminBookingChange: async (previous, booking) => {
         state.sequence.push('notify-change')
         return {
@@ -584,6 +648,20 @@ test('filtering after a drag keeps other hairdressers, and failed drags keep the
     react: renderer.hooks,
     '@/components/BackgroundBlur': {},
     '../bigCalendar/BigCalendar': { __esModule: true, default: 'BigCalendar' },
+    '../bigCalendarEventForm/BigCalendarEventForm': {
+      __esModule: true,
+      default: 'BookingForm',
+    },
+    '@/components/Button': { Button: 'button' },
+    '@/components/ui/Dialog': Object.fromEntries(
+      [
+        'Dialog',
+        'DialogContent',
+        'DialogTitle',
+        'DialogDescription',
+        'DialogHeader',
+      ].map((name) => [name, name])
+    ),
     '../../utils/bookingApi': {
       updateBooking: async () => {
         if (fail) throw new Error('Occupied')
@@ -715,6 +793,7 @@ test('admin form recalculates all extras and releases loading state after failed
     'react-hook-form': {
       useForm: () => ({
         handleSubmit: (callback) => callback,
+        watch: (key) => values[key],
         getValues: (key) => (key ? values[key] : values),
         setValue: (key, value) => {
           values[key] = value
@@ -974,3 +1053,315 @@ test('staff off-day markers keep the selected calendar date in late evening', ()
   assert.equal(isOffDayOfTimi(new Date(2026, 10, 16, 22, 30), days), true)
   assert.equal(isOffDayOfNemTimi(new Date(2026, 10, 16, 22, 30), days), false)
 })
+
+test('admin creation supports closed hours and creates the customer before notifying', async () => {
+  const { state, load } = harness({ bookings: [] })
+  const route = load('src/app/api/admin/bookings/route.ts')
+  const response = await route.POST(
+    request(
+      createBody({
+        selectedDate: '2026-11-21',
+        service: { id: '1', duration: 1, price: 1 },
+      })
+    )
+  )
+  assert.equal(response.status, 201)
+  assert.equal(state.bookings.length, 1)
+  assert.equal(state.bookings[0].service.duration, 30)
+  assert.equal(state.bookings[0].service.price, 4500)
+  assert.equal(state.customers.length, 1)
+  assert.equal(state.customers[0].email, fixture().contactInfo.email)
+  assert.deepEqual(state.sequence, ['create', 'notify-create'])
+  assert.equal(response.data.notifications.emailSent, false)
+})
+
+test('admin creation requires authentication, valid contact fields and canonical duration', async () => {
+  assert.equal(
+    (
+      await harness({ user: null })
+        .load('src/app/api/admin/bookings/route.ts')
+        .POST(request(createBody()))
+    ).status,
+    401
+  )
+  for (const body of [
+    null,
+    {},
+    createBody({ contactInfo: null }),
+    createBody({ selectedTimeSlot: '20:00 - 20:01' }),
+    createBody({ service: { id: 'unknown' } }),
+    createBody({ extraServices: [{ id: '1' }, { id: '1' }] }),
+  ]) {
+    const { state, load } = harness({ bookings: [] })
+    assert.equal(
+      (await load('src/app/api/admin/bookings/route.ts').POST(request(body)))
+        .status,
+      400
+    )
+    assert.equal(state.bookings.length, 0)
+    assert.equal(state.customers.length, 0)
+  }
+})
+
+test('admin creation rejects off days and collisions, including parallel submissions', async () => {
+  const { state, load } = harness({ bookings: [] })
+  const route = load('src/app/api/admin/bookings/route.ts')
+  state.offDays = [{ person: 'Timi', date: new Date('2026-11-15T23:00:00Z') }]
+  assert.equal((await route.POST(request(createBody()))).status, 400)
+  state.offDays = []
+  const responses = await Promise.all([
+    route.POST(request(createBody())),
+    route.POST(request(createBody())),
+  ])
+  assert.deepEqual(
+    responses.map((response) => response.status).sort(),
+    [201, 409]
+  )
+  assert.equal(state.bookings.length, 1)
+  assert.equal(state.customers.length, 1)
+  assert.equal(
+    state.sequence.filter((operation) => operation === 'notify-create').length,
+    1
+  )
+  assert.equal(
+    (await route.POST(request(createBody({ hairdresser: 'nem_Timi' })))).status,
+    201
+  )
+  assert.deepEqual(plain(state.customers[0].hairdressers).sort(), [
+    'Timi',
+    'nem_Timi',
+  ])
+})
+
+test('failed booking creation rolls back a new customer and never notifies', async () => {
+  const { state, load } = harness({ bookings: [], createFails: true })
+  assert.equal(
+    (
+      await load('src/app/api/admin/bookings/route.ts').POST(
+        request(createBody())
+      )
+    ).status,
+    500
+  )
+  assert.equal(state.bookings.length, 0)
+  assert.equal(state.customers.length, 0)
+  assert.equal(state.sequence.length, 0)
+})
+
+test('new admin form prefills calendar selection and inserts the saved event once', async () => {
+  const renderer = hookRenderer()
+  let values
+  let finish
+  let calls = 0
+  let closed = false
+  let created
+  let events = [fixture()]
+  const load = loader({
+    react: renderer.hooks,
+    './BigCalendarEventForm.override.css': {},
+    '@/components/ui/Checkbox': { Checkbox: 'Checkbox' },
+    '@/components/ui/Separator': { Separator: 'Separator' },
+    'react-day-picker': { DayPicker: 'DayPicker' },
+    '@hookform/resolvers/zod': { zodResolver() {} },
+    'react-hook-form': {
+      useForm: ({ defaultValues }) => {
+        values ??= defaultValues
+        return {
+          handleSubmit: (callback) => callback,
+          watch: (key) => values[key],
+          getValues: (key) => (key ? values[key] : values),
+          setValue: (key, value) => {
+            values[key] = value
+          },
+        }
+      },
+    },
+    '@/components/Button': { Button: 'button' },
+    '@/components/ui/Form': Object.fromEntries(
+      [
+        'Form',
+        'FormField',
+        'FormItem',
+        'FormControl',
+        'FormLabel',
+        'FormMessage',
+      ].map((name) => [name, name])
+    ),
+    '@/components/ui/Input': { Input: 'Input' },
+    '@/components/ui/Select': Object.fromEntries(
+      [
+        'Select',
+        'SelectContent',
+        'SelectItem',
+        'SelectTrigger',
+        'SelectValue',
+      ].map((name) => [name, name])
+    ),
+    '../../utils/bookingApi': {
+      createBooking: async (body) => {
+        calls++
+        await new Promise((resolve) => {
+          finish = resolve
+        })
+        return {
+          data: fixture({ ...body, id: 'new-booking' }),
+          notifications: {},
+        }
+      },
+      getNotificationWarning: () => null,
+    },
+    'react-hot-toast': {
+      __esModule: true,
+      default: { error() {}, success() {} },
+    },
+  })
+  const Component = load(
+    'src/app/admin/foglalasok/components/bigCalendarEventForm/BigCalendarEventForm.tsx'
+  ).default
+  const props = {
+    initialStart: new Date(2026, 10, 16, 20),
+    initialHairdresser: 'nem_Timi',
+    offDays: [],
+    openingHours,
+    specialOpeningHours: [],
+    setCalendarEvents: (update) => {
+      events = update(events)
+    },
+    setIsDialogOpen: (value) => {
+      closed = !value
+    },
+    onCreated: (booking) => {
+      created = booking
+    },
+  }
+  const tree = renderer.render(Component, props)
+  assert.equal(values.startTime, '20:00')
+  assert.equal(values.endTime, '20:30')
+  assert.equal(values.hairdresser, 'nem_Timi')
+  assert.ok(
+    findElement(
+      tree,
+      (node) => node.type === 'FormField' && node.props.name === 'hairdresser'
+    )
+  )
+  Object.assign(values, fixture().contactInfo)
+  const submit = findElement(tree, (node) => node.type === 'form').props
+    .onSubmit
+  const pending = submit(values)
+  await submit(values)
+  assert.equal(calls, 1)
+  finish()
+  await pending
+  assert.equal(closed, true)
+  assert.equal(created.id, 'new-booking')
+  assert.equal(events.length, 2)
+  assert.equal(events[1].id, 'new-booking')
+})
+
+test('new booking button and empty calendar slot open the form with the selected hairdresser', () => {
+  const renderer = hookRenderer()
+  const load = loader({
+    react: renderer.hooks,
+    '../bigCalendar/BigCalendar': { __esModule: true, default: 'BigCalendar' },
+    '../bigCalendarEventForm/BigCalendarEventForm': {
+      __esModule: true,
+      default: 'BookingForm',
+    },
+    '@/components/Button': { Button: 'button' },
+    '@/components/ui/Dialog': Object.fromEntries(
+      [
+        'Dialog',
+        'DialogContent',
+        'DialogTitle',
+        'DialogDescription',
+        'DialogHeader',
+      ].map((name) => [name, name])
+    ),
+  })
+  const Component = load(
+    'src/app/admin/foglalasok/components/bigCalendarContainer/BigCalendarContainer.tsx'
+  ).default
+  const props = {
+    bookings: [],
+    offDays: [],
+    openingHours,
+    specialOpeningHours: [],
+    bookingsByEmail: {},
+  }
+  const render = () => renderer.render(Component, props)
+  findElement(
+    render(),
+    (node) => node.type === 'input' && node.props.value === 'nem_Timi'
+  ).props.onChange({ target: { value: 'nem_Timi' } })
+  findElement(
+    render(),
+    (node) => node.type === 'button' && node.props.children === 'Új foglalás'
+  ).props.onClick()
+  let form = findElement(render(), (node) => node.type === 'BookingForm')
+  assert.ok(form)
+  assert.equal(form.props.initialHairdresser, 'nem_Timi')
+  form.props.setIsDialogOpen(false)
+  const chosen = new Date(2026, 10, 21, 20, 15)
+  findElement(render(), (node) => node.type === 'BigCalendar').props.onCreate(
+    chosen
+  )
+  form = findElement(render(), (node) => node.type === 'BookingForm')
+  assert.equal(form.props.initialStart.getTime(), chosen.getTime())
+  form.props.onCreated(
+    fixture({ selectedDate: '2026-11-21', hairdresser: 'Timi' })
+  )
+  const calendar = findElement(render(), (node) => node.type === 'BigCalendar')
+  assert.equal(calendar.props.selectedHairdresser, 'Timi')
+  assert.equal(calendar.props.focusDate.getDate(), 21)
+})
+
+test(
+  'local MongoDB admin creation saves a closed-day appointment and one customer atomically',
+  { skip: process.env.RUN_LOCAL_DB_TESTS !== '1' },
+  async () => {
+    const { PrismaClient } = require('@prisma/client')
+    const { randomUUID } = require('node:crypto')
+    const prisma = new PrismaClient({
+      datasources: {
+        db: {
+          url: 'mongodb://127.0.0.1:27018/botanic_beauty?replicaSet=botanic-beauty-rs&directConnection=true',
+        },
+      },
+    })
+    const email = 'admin-create-' + randomUUID() + '@example.invalid'
+    try {
+      const { load } = harness({ db: prisma })
+      const route = load('src/app/api/admin/bookings/route.ts')
+      const body = createBody({
+        selectedDate: '2030-1-5',
+        contactInfo: { ...fixture().contactInfo, email },
+      })
+      const created = await route.POST(request(body))
+      assert.equal(created.status, 201)
+      const saved = await prisma.booking.findUnique({
+        where: { id: created.data.data.id },
+      })
+      assert.equal(saved.selectedTimeSlot, '20:00 - 20:30')
+      assert.equal(saved.selectedDate, '2030-1-5')
+      assert.ok(await prisma.customer.findUnique({ where: { email } }))
+      assert.equal((await route.POST(request(body))).status, 409)
+      assert.equal(
+        (await route.POST(request({ ...body, hairdresser: 'nem_Timi' })))
+          .status,
+        201
+      )
+      const customer = await prisma.customer.findUnique({ where: { email } })
+      assert.deepEqual(customer.hairdressers.sort(), ['Timi', 'nem_Timi'])
+    } finally {
+      const bookings = await prisma.booking.findMany({
+        select: { id: true, contactInfo: true },
+      })
+      const ownIds = bookings
+        .filter((booking) => booking.contactInfo.email === email)
+        .map((booking) => booking.id)
+      await prisma.booking.deleteMany({ where: { id: { in: ownIds } } })
+      await prisma.customer.deleteMany({ where: { email } })
+      await prisma.$disconnect()
+    }
+  }
+)
