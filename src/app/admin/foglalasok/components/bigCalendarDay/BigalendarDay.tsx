@@ -1,12 +1,12 @@
 'use client'
 
+import { OpeningHour, SpecialOpeningHour, TOffDay } from '@prisma/client'
 import { format } from 'date-fns'
 import { Loader2 } from 'lucide-react'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { EventProps } from 'react-big-calendar'
 import toast from 'react-hot-toast'
 
-import { mapEventToBooking } from '@/app/admin/mappers/mapEventToBooking.mapper'
 import { Button } from '@/components/Button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/Popover'
 import { Badge } from '@/components/ui/Badge'
@@ -15,17 +15,27 @@ import { Separator } from '@/components/ui/Separator'
 import { useRemovePointerEvents } from '@/hooks'
 
 import { CalendarEvent } from '../../../types/calendarEvent.type'
+import {
+  deleteBooking as deleteBookingRequest,
+  getNotificationWarning,
+} from '../../utils/bookingApi'
 import BigCalendarEventForm from '../bigCalendarEventForm/BigCalendarEventForm'
 
 type BigCalendarDayProps = {
   calendarEvent: EventProps<CalendarEvent>
   discountProgression: string
+  offDays: TOffDay[]
+  openingHours: OpeningHour[]
+  specialOpeningHours: SpecialOpeningHour[]
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>
 }
 
 const BigCalendarDay = ({
   calendarEvent,
   discountProgression,
+  offDays,
+  openingHours,
+  specialOpeningHours,
   setCalendarEvents,
 }: BigCalendarDayProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -36,8 +46,6 @@ const BigCalendarDay = ({
     event: {
       contactInfo,
       extraServices,
-      hairdresser,
-      service,
       start,
       end,
       title,
@@ -59,44 +67,26 @@ const BigCalendarDay = ({
       : 'bg-blue-600'
 
   const [isLoading, setIsLoading] = useState(false)
+  const deleting = useRef(false)
 
   const deleteBooking = async (id: string) => {
+    if (deleting.current) return
+    deleting.current = true
     setIsLoading(true)
     try {
-      const bookingResponse = await fetch(`/api/booking/${id}`, {
-        method: 'DELETE',
-      })
-
-      const booking = mapEventToBooking(calendarEvent.event)
-
-      const cancelEamilResponse = await fetch('/api/email/cancel', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          booking: {
-            ...booking,
-            selectedDate: format(booking.selectedDate, 'yyyy-MM-dd'),
-          },
-        }),
-      })
-
-      if (!cancelEamilResponse.ok) {
-        toast.error('A foglalás törlő email küldése sikertelen!')
-      }
-
-      const data = await bookingResponse.json()
-
-      if (!data.success) {
-        toast.error('Hiba történt, a módosítás sikertelen')
-        return
-      }
-
-      setCalendarEvents((prev) => prev.filter((event) => event.id !== id))
+      const result = await deleteBookingRequest(id)
+      setCalendarEvents((previous) =>
+        previous.filter((event) => event.id !== id)
+      )
+      toast.success('A foglalást töröltük.')
+      const warning = getNotificationWarning(result.notifications)
+      if (warning) toast.error(warning)
     } catch (error) {
-      toast.error('Hiba történt, a módosítás sikertelen')
+      toast.error(
+        error instanceof Error ? error.message : 'A törlés sikertelen.'
+      )
     } finally {
+      deleting.current = false
       setIsLoading(false)
     }
   }
@@ -179,13 +169,14 @@ const BigCalendarDay = ({
                   size="sm"
                   variant="destructive"
                   isLoading={isLoading}
+                  disabled={isLoading}
                   onClick={() => deleteBooking(id)}
                 >
                   Törlés
                 </Button>
 
                 <DialogTrigger asChild>
-                  <Button size="sm" variant="secondary">
+                  <Button size="sm" variant="secondary" disabled={isLoading}>
                     Módosítás
                   </Button>
                 </DialogTrigger>
@@ -195,6 +186,9 @@ const BigCalendarDay = ({
             <DialogContent className="dark">
               <BigCalendarEventForm
                 calendarEvent={calendarEvent}
+                offDays={offDays}
+                openingHours={openingHours}
+                specialOpeningHours={specialOpeningHours}
                 setCalendarEvents={setCalendarEvents}
                 setIsDialogOpen={setIsDialogOpen}
               />

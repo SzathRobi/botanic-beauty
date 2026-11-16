@@ -1,6 +1,13 @@
-// This serializes guest requests in one server instance. Cross-instance locking
+// This serializes booking mutations in one server process. Cross-instance locking
 // requires shared database/infrastructure coordination and is intentionally separate.
-const pendingBookings = new Map<string, Promise<void>>()
+// Next.js can load the same helper in separate route bundles; share their queue.
+const lockState = globalThis as typeof globalThis & {
+  bookingMutationLocks?: Map<string, Promise<void>>
+}
+const pendingBookings = (lockState.bookingMutationLocks ??= new Map<
+  string,
+  Promise<void>
+>())
 
 export const withGuestBookingLock = async <T>(
   key: string,

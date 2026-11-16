@@ -4,6 +4,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css'
 import { redirect } from 'next/navigation'
 
 import { getBookings } from '@/actions/booking'
+import { getSalon } from '@/actions/salon'
 import { getSchedule } from '@/actions/schedule'
 import { auth } from '@/auth'
 import BackgroundBlur from '@/components/BackgroundBlur'
@@ -25,6 +26,7 @@ const BookingPage = async () => {
     redirect('/admin/bejelentkezes')
   }
 
+  const salon = await getSalon()
   const schedule = await getSchedule()
   // const schedule = MOCK_SCHEDULE
 
@@ -43,6 +45,8 @@ const BookingPage = async () => {
         <BigCalendarContainer
           bookings={bookings}
           offDays={schedule?.offDays ?? []}
+          openingHours={salon?.openingHours ?? []}
+          specialOpeningHours={salon?.specialOpeningHours ?? []}
           bookingsByEmail={bookingsByEmail}
         />
       </BackgroundBlur>

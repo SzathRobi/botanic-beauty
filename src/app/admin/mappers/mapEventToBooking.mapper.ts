@@ -1,6 +1,8 @@
 import { Booking } from '@prisma/client'
 import { format } from 'date-fns'
 
+import { getCalendarDateKey } from '@/lib/guest-booking'
+
 import { CalendarEvent } from '../types/calendarEvent.type'
 
 export const mapEventToBooking = ({
@@ -25,12 +27,7 @@ export const mapEventToBooking = ({
   miracleBoosterPrice,
   remindenEmailJobId,
 }: CalendarEvent): Booking => ({
-  selectedDate:
-    new Date(
-      start!.getFullYear(),
-      start!.getMonth(),
-      start!.getDate()
-    )?.toISOString() ?? '',
+  selectedDate: getCalendarDateKey(start!),
   contactInfo: contactInfo,
   hairdresser: hairdresser,
   service,

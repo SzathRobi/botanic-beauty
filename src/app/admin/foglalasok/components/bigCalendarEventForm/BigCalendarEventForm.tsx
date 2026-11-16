@@ -1,32 +1,21 @@
 'use client'
 
-// @ts-expect-error minden tuti
+// @ts-expect-error Next.js loads this stylesheet.
 import './BigCalendarEventForm.override.css'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Booking, TService } from '@prisma/client'
-import {
-  addMinutes,
-  format,
-  isBefore,
-  isSameDay,
-  isSaturday,
-  isSunday,
-  parse,
-  set,
-  subMinutes,
-} from 'date-fns'
+import { OpeningHour, SpecialOpeningHour, TOffDay } from '@prisma/client'
 import { hu } from 'date-fns/locale'
-import { Dispatch, SetStateAction, useState } from 'react'
+import { Dispatch, SetStateAction, useRef, useState } from 'react'
 import { EventProps } from 'react-big-calendar'
 import { DayPicker } from 'react-day-picker'
 import { useForm } from 'react-hook-form'
 import toast from 'react-hot-toast'
 import { z } from 'zod'
 
+import { mapBookingToEvent } from '@/app/admin/mappers/mapBookingToEvent.mapper'
 import { mapEventToBooking } from '@/app/admin/mappers/mapEventToBooking.mapper'
 import { CalendarEvent } from '@/app/admin/types/calendarEvent.type'
-import { getSecondsToDate } from '@/app/idopontfoglalas/utils/getSecondsToDate'
 import { Button } from '@/components/Button'
 import { Checkbox } from '@/components/ui/Checkbox'
 import {
@@ -47,284 +36,125 @@ import {
 } from '@/components/ui/Select'
 import { Separator } from '@/components/ui/Separator'
 import { EXTRA_SERVICES, SERVICES } from '@/constants/services.constants'
+import {
+  dateFromCalendarKey,
+  getBookingDateKey,
+  getCalendarDateKey,
+  getDaySchedule,
+} from '@/lib/guest-booking'
 
 import { eventFormSchema } from '../../schemas/eventFormSchema'
+import { getNotificationWarning, updateBooking } from '../../utils/bookingApi'
+import { calculateBookingEndTime } from '../../utils/bookingTime'
 
 type BigCalendarEventFormProps = {
   calendarEvent: EventProps<CalendarEvent>
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>
   setIsDialogOpen: Dispatch<SetStateAction<boolean>>
+  offDays: TOffDay[]
+  openingHours: OpeningHour[]
+  specialOpeningHours: SpecialOpeningHour[]
 }
 
 const BigCalendarEventForm = ({
   calendarEvent,
   setCalendarEvents,
   setIsDialogOpen,
+  offDays,
+  openingHours,
+  specialOpeningHours,
 }: BigCalendarEventFormProps) => {
   const booking = mapEventToBooking(calendarEvent.event)
-
   const [isLoading, setIsLoading] = useState(false)
-  const [selectedDate, setSelectedDate] = useState<Date>(
-    new Date(booking.selectedDate)
+  const submitting = useRef(false)
+  const [selectedDate, setSelectedDate] = useState(() =>
+    dateFromCalendarKey(booking.selectedDate)
   )
-  const [selectedService, setSelectedService] = useState(booking.service)
-
   const form = useForm<z.infer<typeof eventFormSchema>>({
     resolver: zodResolver(eventFormSchema),
     defaultValues: {
-      hairdresser: calendarEvent.event.hairdresser,
+      hairdresser: booking.hairdresser,
       startTime: booking.selectedTimeSlot.split(' - ')[0],
       endTime: booking.selectedTimeSlot.split(' - ')[1],
-      service: calendarEvent.event.service,
-      extraServices: calendarEvent.event.extraServices,
-      name: calendarEvent.event.contactInfo.name,
-      email: calendarEvent.event.contactInfo.email,
-      phone: calendarEvent.event.contactInfo.phone,
-      otherInfo: calendarEvent.event.contactInfo?.otherInfo,
+      service: booking.service,
+      extraServices: booking.extraServices,
+      ...booking.contactInfo,
     },
   })
 
-  const onStartTimeChange = (event: any, fieldOnchange: any) => {
-    fieldOnchange(event)
-
-    const startTime = form.getValues('startTime')
-    const service = form.getValues('service')
-
-    const startDateTime = parse(startTime, 'HH:mm', new Date())
-
-    let endDateTime = addMinutes(startDateTime, service.duration)
-
-    const extraServices = form.getValues('extraServices')
-
-    if (extraServices.length > 0) {
-      // TODO: kell az uj extra service is (miracle booster)
-      endDateTime = addMinutes(endDateTime, extraServices[0].duration)
-    }
-
-    form.setValue('endTime', format(endDateTime, 'HH:mm'))
+  const recalculateEndTime = () => {
+    const values = form.getValues()
+    form.setValue(
+      'endTime',
+      calculateBookingEndTime(
+        values.startTime,
+        values.service,
+        values.extraServices
+      )
+    )
   }
-
-  const onServiceSelectChange = (serviceName: string) => {
-    const service =
-      SERVICES.find((service) => service.name === serviceName) || SERVICES[0]
-
+  const onStartTimeChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    fieldOnChange: (value: string) => void
+  ) => {
+    fieldOnChange(event.target.value)
+    recalculateEndTime()
+  }
+  const onServiceSelectChange = (name: string) => {
+    const service = SERVICES.find((item) => item.name === name)
+    if (!service) return
     form.setValue('service', service)
-    setSelectedService(service)
-
-    const newEndDateTime = addMinutes(
-      parse(form.getValues('startTime'), 'HH:mm', new Date()),
-      service.duration
-    )
-
-    form.setValue('endTime', format(newEndDateTime, 'HH:mm'))
+    recalculateEndTime()
   }
-
-  const onExtraServiceChange = (checked: boolean, serviceName: string) => {
-    const extraService = EXTRA_SERVICES.find(
-      (service) => service.name === serviceName
-    )
-
-    if (!extraService) {
-      return
-    }
-
-    if (checked) {
-      form.setValue('extraServices', [
-        ...form.getValues('extraServices'),
-        extraService,
-      ])
-      form.setValue(
-        'endTime',
-        format(
-          addMinutes(
-            parse(form.getValues('endTime'), 'HH:mm', new Date()),
-            extraService.duration
-          ),
-          'HH:mm'
-        )
-      )
-    } else {
-      form.setValue(
-        'extraServices',
-        form
-          .getValues('extraServices')
-          .filter((service) => service.name !== extraService.name)
-      )
-      form.setValue(
-        'endTime',
-        format(
-          subMinutes(
-            parse(form.getValues('endTime'), 'HH:mm', new Date()),
-            extraService.duration
-          ),
-          'HH:mm'
-        )
-      )
-    }
+  const onExtraServiceChange = (checked: boolean, name: string) => {
+    const extra = EXTRA_SERVICES.find((item) => item.name === name)
+    if (!extra) return
+    const current = form.getValues('extraServices')
+    const filtered = current.filter((item) => item.id !== extra.id)
+    form.setValue('extraServices', checked ? [...filtered, extra] : filtered)
+    recalculateEndTime()
   }
-
   const handleSelect = (day: Date | undefined) => {
-    if (day) {
-      setSelectedDate(day)
-    }
+    if (day) setSelectedDate(day)
   }
-
-  const updateBooking = async (booking: Partial<Booking>) => {
-    const response = await fetch(`/api/booking/${booking.id}`, {
-      method: 'PATCH',
-      body: JSON.stringify(booking),
-    })
-
-    if (!response.ok) {
-      toast.error('Hiba történt, a módosítás sikertelen')
-      return
-    }
-
-    return await response.json()
+  const onCancel = () => {
+    if (!submitting.current) setIsDialogOpen(false)
   }
-
-  const sendModifierEmail = async (booking: Partial<Booking>) => {
-    const bookingWithFormattedDate = {
-      ...booking,
-      selectedDate: format(booking.selectedDate!, 'yyyy-MM-dd'),
-    }
-
-    const emailResponse = await fetch('/api/email/modifier', {
-      method: 'POST',
-      body: JSON.stringify({
-        booking: bookingWithFormattedDate,
-        emailDelayInSeconds: getSecondsToDate(booking as Booking),
-      }),
-    })
-
-    if (!emailResponse.ok) {
-      toast.error('A módosító email nem ment ki')
-
-      return
-    }
-
-    return await emailResponse.json()
-  }
-
-  // const deleteBookingData = async (id: string) => {
-  //   const response = await fetch(`/api/booking/${id}`, {
-  //     method: 'DELETE',
-  //   })
-
-  //   if (!response.ok) {
-  //     toast.error('Hiba történt, a módosítás sikertelen')
-  //     return
-  //   }
-
-  //   return await response.json()
-  // }
 
   const onSubmit = async (values: z.infer<typeof eventFormSchema>) => {
+    if (submitting.current) return
+    submitting.current = true
     setIsLoading(true)
-
-    const selectedTimeSlot = `${values.startTime} - ${values.endTime}`
-    const [startHour, startMinute] = values.startTime.split(':').map(Number)
-    const [endHour, endMinute] = values.endTime.split(':').map(Number)
-
-    const updatedSelectedDate = new Date(selectedDate)
-    updatedSelectedDate.setHours(startHour, startMinute, 0, 0)
-
-    const booking: Partial<Booking> = {
-      id: calendarEvent.event.id,
-      remindenEmailJobId: calendarEvent.event.remindenEmailJobId,
-      contactInfo: {
-        name: values.name,
-        email: values.email,
-        phone: values.phone,
-        otherInfo: values.otherInfo,
-      },
-      selectedDate: `${selectedDate.getFullYear()}-${selectedDate.getMonth() + 1}-${selectedDate.getDate()}`,
-      selectedTimeSlot,
-      service: selectedService,
-      extraServices: values.extraServices,
-    }
-
-    if (!booking.selectedDate || !booking.selectedTimeSlot) {
-      toast.error('Nincs kiválasztott időpont')
-      setIsLoading(false)
-      return
-    }
-
-    const bookingData = await updateBooking(booking)
-
-    if (bookingData.message === 'Overlap with existing booking') {
-      toast.error(
-        'A kiválasztott időpont már nem elérhető. Kérlek válassz másik időpontot.'
-      )
-      return
-    }
-
-    if (bookingData.error) {
-      toast.error(
-        'Hoppá! Valami hiba történt a foglalás során. Kérlek próbáld meg később.'
-      )
-      return
-    }
-
-    const originalBooking = mapEventToBooking(calendarEvent.event)
-
-    if (
-      !isSameDay(booking.selectedDate!, originalBooking.selectedDate) ||
-      booking.selectedTimeSlot !== originalBooking.selectedTimeSlot ||
-      booking.service?.name !== originalBooking.service.name
-    ) {
-      sendModifierEmail(booking)
-    }
-
-    setCalendarEvents((prevCalendarEvents: CalendarEvent[]) => {
-      const updatedCalendarEvents = prevCalendarEvents.map((event) => {
-        if (event.id === calendarEvent.event.id && event.start && event.end) {
-          const updatedStartDate = set(event.start, {
-            year: selectedDate.getFullYear(),
-            month: selectedDate.getMonth(),
-            date: selectedDate.getDate(),
-            hours: startHour,
-            minutes: startMinute,
-          })
-
-          const updatedEndDate = set(event.end, {
-            year: selectedDate.getFullYear(),
-            month: selectedDate.getMonth(),
-            date: selectedDate.getDate(),
-            hours: endHour,
-            minutes: endMinute,
-          })
-
-          return {
-            ...event,
-            id: bookingData.id,
-            start: updatedStartDate,
-            end: updatedEndDate,
-            service: selectedService,
-            extraServices: values.extraServices,
-            title: selectedService.name,
-            contactInfo: {
-              name: values.name,
-              email: values.email,
-              phone: values.phone,
-              otherInfo: values.otherInfo,
-            },
-          }
-        }
-
-        return event
+    try {
+      const result = await updateBooking(booking.id, {
+        selectedDate: getCalendarDateKey(selectedDate),
+        selectedTimeSlot: values.startTime + ' - ' + values.endTime,
+        hairdresser: values.hairdresser,
+        service: values.service,
+        extraServices: values.extraServices,
+        contactInfo: {
+          name: values.name,
+          email: values.email,
+          phone: values.phone,
+          otherInfo: values.otherInfo || null,
+        },
       })
-
-      return updatedCalendarEvents
-    })
-
-    toast.success('Sikeres módosítás')
-    setIsLoading(false)
-    setIsDialogOpen(false)
-  }
-
-  const onCancel = () => {
-    setIsDialogOpen(false)
+      const saved = mapBookingToEvent(result.data)
+      setCalendarEvents((previous) =>
+        previous.map((event) => (event.id === booking.id ? saved : event))
+      )
+      toast.success('Sikeres módosítás')
+      const warning = getNotificationWarning(result.notifications)
+      if (warning) toast.error(warning)
+      setIsDialogOpen(false)
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'A módosítás sikertelen.'
+      )
+    } finally {
+      submitting.current = false
+      setIsLoading(false)
+    }
   }
 
   return (
@@ -343,9 +173,17 @@ const BigCalendarEventForm = ({
                 weekStartsOn={1}
                 locale={hu}
                 disabled={(date) =>
-                  isBefore(date, new Date(Date.now())) ||
-                  isSunday(date) ||
-                  isSaturday(date)
+                  getCalendarDateKey(date) < getBookingDateKey(new Date())! ||
+                  !getDaySchedule(
+                    getCalendarDateKey(date),
+                    openingHours,
+                    specialOpeningHours
+                  )?.isOpen ||
+                  offDays.some(
+                    (day) =>
+                      day.person === booking.hairdresser &&
+                      getBookingDateKey(day.date) === getCalendarDateKey(date)
+                  )
                 }
                 onSelect={handleSelect}
               />
@@ -385,7 +223,7 @@ const BigCalendarEventForm = ({
                   <FormLabel>Időpont vége</FormLabel>
 
                   <FormControl>
-                    <Input type="time" {...field} disabled readOnly />
+                    <Input type="time" {...field} readOnly />
                   </FormControl>
 
                   <FormMessage />
@@ -410,7 +248,7 @@ const BigCalendarEventForm = ({
                   >
                     <FormControl>
                       <SelectTrigger>
-                        <SelectValue placeholder="Select a verified email to display" />
+                        <SelectValue placeholder="Válassz szolgáltatást" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
@@ -533,10 +371,15 @@ const BigCalendarEventForm = ({
           />
 
           <div className="flex justify-end gap-2">
-            <Button variant="secondary" type="button" onClick={onCancel}>
+            <Button
+              variant="secondary"
+              type="button"
+              onClick={onCancel}
+              disabled={isLoading}
+            >
               Mégse
             </Button>
-            <Button type="submit" isLoading={isLoading}>
+            <Button type="submit" isLoading={isLoading} disabled={isLoading}>
               Módosítás
             </Button>
           </div>

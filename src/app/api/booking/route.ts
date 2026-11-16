@@ -9,6 +9,7 @@ import {
   EXTRA_SERVICES,
   SERVICES,
 } from '@/constants/services.constants'
+import { updateAdminBooking } from '@/lib/admin-booking'
 import prisma from '@/lib/db'
 import {
   getAvailableTimeSlots,
@@ -192,40 +193,27 @@ export async function POST(request: NextRequest) {
   }
 }
 
+// Compatibility for already-open admin tabs using the former drag endpoint.
 export async function PATCH(request: NextRequest) {
-  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
-
-  if (!isBookingAvailable) {
-    return NextResponse.json(
-      { error: true, message: 'Booking is not available' },
-      { status: 503 }
-    )
-  }
-
   const session = await auth()
-
-  if (!session?.user) {
+  if (!session?.user)
     return NextResponse.json(
       { error: true, message: 'Unauthenticated' },
       { status: 401 }
     )
-  }
-
-  const booking = await request.json()
-
+  let body
   try {
-    await prisma.booking.update({
-      where: {
-        id: booking.id,
-      },
-      data: {
-        selectedTimeSlot: booking.selectedTimeSlot,
-        selectedDate: booking.selectedDate,
-      },
-    })
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    return NextResponse.json({ error: true, message: error })
+    body = await request.json()
+  } catch {
+    return NextResponse.json(
+      { error: true, message: 'Invalid data' },
+      { status: 400 }
+    )
   }
+  if (typeof body?.id !== 'string')
+    return NextResponse.json(
+      { error: true, message: 'Invalid data' },
+      { status: 400 }
+    )
+  return updateAdminBooking(body.id, body)
 }

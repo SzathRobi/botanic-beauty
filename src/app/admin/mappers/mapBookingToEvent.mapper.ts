@@ -1,76 +1,40 @@
 import { Booking } from '@prisma/client'
-import { addHours, addMinutes } from 'date-fns'
+
+import { dateFromCalendarKey, getBookingDateKey } from '@/lib/guest-booking'
 
 import { CalendarEvent } from '../types/calendarEvent.type'
 
-export const mapBookingToEvent = ({
-  contactInfo,
-  hairdresser,
-  selectedDate,
-  selectedTimeSlot,
-  id,
-  service,
-  extraServices,
-  createdAt,
-  updatedAt,
-  bleachMaterialUsage,
-  discountPercentage,
-  dyeMaterialUsage,
-  extraHaircutPrice,
-  finalPrice,
-  financeComment,
-  isFinanceDone,
-  isPaidWithCard,
-  miracleBoosterPrice,
-  tips,
-  remindenEmailJobId,
-}: Booking): Omit<CalendarEvent, 'start' | 'end'> & {
-  start: string
-  end: string
-} => {
-  const [startTime, endTime] = selectedTimeSlot.split(' - ')
-
-  const [startHours, startMinutes] = startTime
-    .split(':')
-    .map((num) => parseInt(num))
-
-  const start = new Date(selectedDate)
-
-  start.setHours(startHours)
-  start.setMinutes(startMinutes)
-  start.setSeconds(0)
-  start.setMilliseconds(0)
-
-  const [endHours, endMinutes] = endTime.split(':').map((num) => parseInt(num))
-
-  const end = new Date(selectedDate)
-
-  end.setHours(endHours)
-  end.setMinutes(endMinutes)
-  end.setSeconds(0)
-  end.setMilliseconds(0)
-
+export const mapBookingToEvent = (booking: Booking): CalendarEvent => {
+  const key = getBookingDateKey(booking.selectedDate)
+  if (!key) throw new Error('Invalid booking date')
+  const [startText, endText] = booking.selectedTimeSlot.split(' - ')
+  const createTime = (text: string) => {
+    const date = dateFromCalendarKey(key)
+    const [hours, minutes] = text.split(':').map(Number)
+    date.setHours(hours, minutes, 0, 0)
+    return date
+  }
   return {
-    id,
-    title: service.name,
-    start: start.toString(),
-    end: end.toString(),
-    hairdresser,
-    contactInfo,
-    service,
-    extraServices,
-    createdAt,
-    updatedAt,
-    bleachMaterialUsage: bleachMaterialUsage || undefined,
-    discountPercentage: discountPercentage || undefined,
-    dyeMaterialUsage: dyeMaterialUsage || undefined,
-    extraHaircutPrice: extraHaircutPrice || undefined,
-    finalPrice: finalPrice || undefined,
-    financeComment: financeComment || undefined,
-    isFinanceDone: isFinanceDone || undefined,
-    isPaidWithCard: isPaidWithCard || undefined,
-    miracleBoosterPrice: miracleBoosterPrice || undefined,
-    tips: tips || undefined,
-    remindenEmailJobId: remindenEmailJobId || undefined,
+    id: booking.id,
+    title: booking.service.name,
+    start: createTime(startText),
+    end: createTime(endText),
+    hairdresser: booking.hairdresser,
+    contactInfo: booking.contactInfo,
+    service: booking.service,
+    extraServices: booking.extraServices,
+    createdAt: new Date(booking.createdAt),
+    updatedAt: new Date(booking.updatedAt),
+    bleachMaterialUsage: booking.bleachMaterialUsage ?? undefined,
+    discountPercentage: booking.discountPercentage ?? undefined,
+    dyeMaterialUsage: booking.dyeMaterialUsage ?? undefined,
+    extraHaircutPrice: booking.extraHaircutPrice ?? undefined,
+    finalPrice: booking.finalPrice ?? undefined,
+    financeComment: booking.financeComment ?? undefined,
+    isFinanceDone: booking.isFinanceDone ?? undefined,
+    isPaidWithCard: booking.isPaidWithCard ?? undefined,
+    miracleBoosterPrice: booking.miracleBoosterPrice ?? undefined,
+    tips: booking.tips ?? undefined,
+    remindenEmailJobId: booking.remindenEmailJobId ?? undefined,
   }
 }

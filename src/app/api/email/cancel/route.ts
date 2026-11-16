@@ -1,57 +1,15 @@
 import { NextResponse } from 'next/server'
-import { Resend } from 'resend'
 
 import { auth } from '@/auth'
-import { CONTACT_EMAIL, EMAIL_SENDER } from '@/constants/contact.constants'
-import CancelEmail from '@/emails/CancelEmail'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
-import { Client } from '@upstash/qstash'
-
-const client = new Client({ token: process.env.QSTASH_TOKEN! })
-
-export async function POST(request: Request) {
+// Compatibility for old admin tabs. The booking mutation now owns notifications;
+// a separate request must never send an email for an unsuccessful mutation.
+export async function POST() {
   const session = await auth()
-
-  if (!session?.user) {
+  if (!session?.user)
     return NextResponse.json(
       { error: true, message: 'Unauthenticated' },
       { status: 401 }
     )
-  }
-
-  const { booking } = await request.json()
-
-  if (!booking.contactInfo.email || !booking.service) {
-    return NextResponse.json(
-      { error: true, message: 'Invalid data' },
-      { status: 400 }
-    )
-  }
-
-  try {
-    await resend.emails.send({
-      from:
-        process.env.NODE_ENV === 'production'
-          ? EMAIL_SENDER
-          : 'Acme <onboarding@resend.dev>',
-      to: booking.contactInfo.email,
-      subject: 'Foglalás törlése',
-      react: CancelEmail({ booking }),
-      reply_to: CONTACT_EMAIL,
-    })
-
-    if (booking.remindenEmailJobId) {
-      try {
-        await client.messages.delete(booking.remindenEmailJobId)
-      } catch (err) {
-        console.warn('Failed to delete QStash job:', err)
-      }
-    }
-
-    return NextResponse.json({ success: true })
-  } catch (error) {
-    console.log(error)
-    return NextResponse.json({ error: true, message: error }, { status: 500 })
-  }
+  return NextResponse.json({ success: true })
 }

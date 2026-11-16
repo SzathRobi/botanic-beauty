@@ -1,141 +1,37 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 import { auth } from '@/auth'
-import prisma from '@/lib/db'
+import { deleteAdminBooking, updateAdminBooking } from '@/lib/admin-booking'
 
-export async function PATCH(request: NextRequest, { params }: any) {
-  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
+type BookingContext = { params: Promise<{ id: string }> }
 
-  if (!isBookingAvailable) {
-    return NextResponse.json(
-      { error: true, message: 'Booking is not available' },
-      { status: 503 }
-    )
-  }
-
+export async function PATCH(request: NextRequest, { params }: BookingContext) {
   const session = await auth()
-
-  if (!session?.user) {
+  if (!session?.user)
     return NextResponse.json(
       { error: true, message: 'Unauthenticated' },
       { status: 401 }
     )
-  }
-
-  const id = await params.id
-
-  const {
-    contactInfo,
-    selectedDate,
-    selectedTimeSlot,
-    service,
-    extraServices,
-  } = await request.json()
-
-  if (!contactInfo || !selectedDate || !selectedTimeSlot) {
+  const { id } = await params
+  let body: unknown
+  try {
+    body = await request.json()
+  } catch {
     return NextResponse.json(
       { error: true, message: 'Invalid data' },
       { status: 400 }
     )
   }
-
-  const [year, month, day] = selectedDate.split('-').map(Number)
-
-  const normalizedDate = new Date(`${year}-${month}-${day}`)
-
-  const formatted = normalizedDate
-    .toLocaleDateString('en-US', {
-      timeZone: 'Europe/Budapest',
-      weekday: 'short',
-      year: 'numeric',
-      month: 'short',
-      day: '2-digit',
-    })
-    .replaceAll(',', '')
-
-  try {
-    const allBookings = await prisma.booking.findMany({
-      where: {
-        selectedDate: {
-          startsWith: formatted,
-        },
-      },
-    })
-
-    const [newStartTime, newEndTime] = selectedTimeSlot.split(' - ')
-
-    const overlaps = allBookings.some((booking) => {
-      if (booking.id === id) {
-        return false
-      }
-
-      const [existingStartTime, existingEndTime] =
-        booking.selectedTimeSlot.split(' - ')
-
-      return (
-        (newStartTime < existingEndTime && newEndTime > existingStartTime) ||
-        (newEndTime > existingStartTime && newStartTime < existingEndTime)
-      )
-    })
-
-    if (overlaps) {
-      return NextResponse.json(
-        { error: true, message: 'Overlap with existing booking' },
-        { status: 400 }
-      )
-    }
-
-    const response = await prisma.booking.update({
-      where: {
-        id,
-      },
-      data: {
-        contactInfo,
-        selectedDate,
-        selectedTimeSlot,
-        service,
-        extraServices,
-      },
-    })
-
-    return NextResponse.json(
-      { success: true, message: response },
-      { status: 200 }
-    )
-  } catch (error) {
-    return NextResponse.json({ error: true, message: error }, { status: 500 })
-  }
+  return updateAdminBooking(id, body)
 }
 
-export async function DELETE(_: NextRequest, { params }: any) {
-  const isBookingAvailable = process.env.IS_BOOKING_AVAILABLE === 'true'
-
-  if (!isBookingAvailable) {
-    return NextResponse.json(
-      { error: true, message: 'Booking is not available' },
-      { status: 503 }
-    )
-  }
-
+export async function DELETE(_: NextRequest, { params }: BookingContext) {
   const session = await auth()
-
-  if (!session?.user) {
+  if (!session?.user)
     return NextResponse.json(
       { error: true, message: 'Unauthenticated' },
       { status: 401 }
     )
-  }
-
-  const id = await params.id
-
-  try {
-    await prisma.booking.delete({
-      where: {
-        id,
-      },
-    })
-    return NextResponse.json({ success: true }, { status: 200 })
-  } catch (error) {
-    return NextResponse.json({ error: true, message: error }, { status: 500 })
-  }
+  const { id } = await params
+  return deleteAdminBooking(id)
 }

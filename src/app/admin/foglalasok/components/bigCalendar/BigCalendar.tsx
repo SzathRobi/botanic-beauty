@@ -5,8 +5,7 @@ import 'moment/locale/hu'
 // @ts-expect-error minden tuti
 import './calendar.css'
 
-import { TOffDay } from '@prisma/client'
-import { isSaturday, isSunday } from 'date-fns'
+import { OpeningHour, SpecialOpeningHour, TOffDay } from '@prisma/client'
 import moment from 'moment'
 import { Dispatch, SetStateAction, useState } from 'react'
 import {
@@ -20,6 +19,12 @@ import {
 import withDragAndDrop, {
   EventInteractionArgs,
 } from 'react-big-calendar/lib/addons/dragAndDrop'
+
+import {
+  getCalendarDateKey,
+  getDaySchedule,
+  timeToMinutes,
+} from '@/lib/guest-booking'
 
 import { CalendarEvent } from '../../../types/calendarEvent.type'
 import { getProgressString } from '../../utils/getProgressionString.util'
@@ -36,6 +41,8 @@ type BigCalendarProps = {
   // eslint-disable-next-line no-unused-vars
   onEventDrop: (dragEvent: EventInteractionArgs<CalendarEvent>) => void
   offDays: TOffDay[]
+  openingHours: OpeningHour[]
+  specialOpeningHours: SpecialOpeningHour[]
   selectedHairdresser: SelectedHairdresser
   setCalendarEvents: Dispatch<SetStateAction<CalendarEvent[]>>
 }
@@ -47,6 +54,8 @@ const BigCalendar = ({
   calendarEvents,
   onEventDrop,
   offDays,
+  openingHours,
+  specialOpeningHours,
   selectedHairdresser,
   setCalendarEvents,
 }: BigCalendarProps) => {
@@ -54,23 +63,60 @@ const BigCalendar = ({
   const [date, setDate] = useState(new Date())
 
   const today = new Date()
+  const hours = [...openingHours, ...specialOpeningHours].filter(
+    (day) => day.isOpen
+  )
+  const firstMinute = hours.reduce(
+    (minimum, day) =>
+      Math.min(minimum, timeToMinutes(day.openingHour) ?? minimum),
+    8 * 60
+  )
+  const lastMinute = hours.reduce(
+    (maximum, day) =>
+      Math.max(maximum, timeToMinutes(day.closingHour) ?? maximum),
+    19 * 60
+  )
+  const earliestEvent = calendarEvents.reduce(
+    (minimum, event) =>
+      Math.min(
+        minimum,
+        event.start
+          ? event.start.getHours() * 60 + event.start.getMinutes()
+          : minimum
+      ),
+    firstMinute
+  )
+  const latestEvent = calendarEvents.reduce(
+    (maximum, event) =>
+      Math.max(
+        maximum,
+        event.end ? event.end.getHours() * 60 + event.end.getMinutes() : maximum
+      ),
+    lastMinute
+  )
   const minCalendarStartTime = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
-    8
+    0,
+    earliestEvent
   )
   const maxCalendarStartTime = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
-    19
+    0,
+    Math.min(1439, latestEvent)
   )
 
   const eventStyleGetter = (calendarEvent: CalendarEvent) => {
     if (
       calendarEvent.start &&
-      (isSunday(calendarEvent.start) || isSaturday(calendarEvent.start))
+      !getDaySchedule(
+        getCalendarDateKey(calendarEvent.start),
+        openingHours,
+        specialOpeningHours
+      )?.isOpen
     ) {
       return {
         style: {
@@ -107,7 +153,13 @@ const BigCalendar = ({
   }
 
   const dayStyleGetter = (date: Date) => {
-    if (isSunday(date) || isSaturday(date)) {
+    if (
+      !getDaySchedule(
+        getCalendarDateKey(date),
+        openingHours,
+        specialOpeningHours
+      )?.isOpen
+    ) {
       return {
         style: {
           backgroundColor: 'lightgray',
@@ -155,7 +207,7 @@ const BigCalendar = ({
         min={minCalendarStartTime}
         max={maxCalendarStartTime}
         selectable={true}
-        resizable={true}
+        resizable={false}
         components={{
           event: (eventProps: EventProps<CalendarEvent>) => (
             <BigCalendarDay
@@ -163,6 +215,9 @@ const BigCalendar = ({
                 bookingsByEmail[eventProps.event.contactInfo.email] ?? 0
               )}
               calendarEvent={eventProps}
+              offDays={offDays}
+              openingHours={openingHours}
+              specialOpeningHours={specialOpeningHours}
               setCalendarEvents={setCalendarEvents}
             />
           ),
@@ -177,7 +232,7 @@ const BigCalendar = ({
         className="min-h-[80vh] w-[200vw] bg-black/60 md:w-full"
         eventPropGetter={eventStyleGetter}
         dayPropGetter={dayStyleGetter}
-        draggableAccessor={() => true}
+        draggableAccessor={(event) => !event.isLoaderEvent}
         onEventDrop={onEventDrop}
         onNavigate={(date) => {
           setDate(new Date(date))

@@ -1,21 +1,27 @@
 'use client'
 
-import { Booking, TOffDay } from '@prisma/client'
-import { format, isSunday } from 'date-fns'
-import { useState } from 'react'
+import {
+  Booking,
+  OpeningHour,
+  SpecialOpeningHour,
+  TOffDay,
+} from '@prisma/client'
+import { format } from 'date-fns'
+import { useMemo, useRef, useState } from 'react'
 import { EventInteractionArgs } from 'react-big-calendar/lib/addons/dragAndDrop'
 import toast from 'react-hot-toast'
 
 import { mapBookingToEvent } from '@/app/admin/mappers/mapBookingToEvent.mapper'
-import { getSecondsToDate } from '@/app/idopontfoglalas/utils/getSecondsToDate'
+import { getCalendarDateKey } from '@/lib/guest-booking'
 
-import { mapEventToBooking } from '../../../mappers/mapEventToBooking.mapper'
 import { CalendarEvent } from '../../../types/calendarEvent.type'
-import { isOffDayOfNemTimi, isOffDayOfTimi } from '../../utils/offDay'
+import { getNotificationWarning, updateBooking } from '../../utils/bookingApi'
 import BigCalendar from '../bigCalendar/BigCalendar'
 
 type BigCalendarContainerProps = {
   offDays: TOffDay[]
+  openingHours: OpeningHour[]
+  specialOpeningHours: SpecialOpeningHour[]
   bookingsByEmail: Record<string, number>
   bookings: Booking[]
 }
@@ -24,132 +30,71 @@ export type SelectedHairdresser = 'all' | 'Timi' | 'nem_Timi'
 
 const BigCalendarContainer = ({
   offDays,
+  openingHours,
+  specialOpeningHours,
   bookingsByEmail,
   bookings,
 }: BigCalendarContainerProps) => {
-  const cEvents = bookings?.map(mapBookingToEvent) ?? []
-
-  const normalizedEvents: CalendarEvent[] = cEvents.map((event) => ({
-    ...event,
-    start: new Date(event.start.split('.')[0]),
-    end: new Date(event.end.split('.')[0]),
-  }))
-
-  const [calendarEvents, setCalendarEvents] =
-    useState<CalendarEvent[]>(normalizedEvents)
-  const [calendarEventsBackup, setCalendarEventsBackup] =
-    useState<CalendarEvent[]>(normalizedEvents)
+  const [calendarEvents, setCalendarEvents] = useState<CalendarEvent[]>(() =>
+    bookings.map(mapBookingToEvent)
+  )
   const [selectedHairdresser, setSelectedHairdresser] =
     useState<SelectedHairdresser>('all')
+  const pending = useRef(new Set<string>())
+  const visibleEvents = useMemo(
+    () =>
+      selectedHairdresser === 'all'
+        ? calendarEvents
+        : calendarEvents.filter(
+            (event) => event.hairdresser === selectedHairdresser
+          ),
+    [calendarEvents, selectedHairdresser]
+  )
 
   const handleHairdresserChange = (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    const value = event.target.value as SelectedHairdresser
-    setSelectedHairdresser(value)
-    if (value === 'all') {
-      setCalendarEvents(calendarEventsBackup)
-    } else if (value === 'nem_Timi') {
-      setCalendarEvents(
-        calendarEventsBackup.filter(
-          (calendarEvent) => calendarEvent.hairdresser !== 'Timi'
-        )
-      )
-    } else if (value === 'Timi') {
-      setCalendarEvents(
-        calendarEventsBackup.filter(
-          (calendarEvent) => calendarEvent.hairdresser === 'Timi'
-        )
-      )
-    }
+    setSelectedHairdresser(event.target.value as SelectedHairdresser)
   }
 
-  const updateEvent = async (event: CalendarEvent) => {
-    const booking = mapEventToBooking(event)
-
-    const bookingWithFormattedDate = {
-      ...booking,
-      selectedDate: format(booking.selectedDate, 'yyyy-MM-dd'),
-    }
-
-    try {
-      const response = await fetch('/api/booking', {
-        method: 'PATCH',
-        body: JSON.stringify(booking),
-      })
-      const data = await response.json()
-
-      const emailResponse = await fetch('/api/email/modifier', {
-        method: 'POST',
-        body: JSON.stringify({
-          booking: bookingWithFormattedDate,
-          emailDelayInSeconds: getSecondsToDate(booking),
-        }),
-      })
-
-      if (!emailResponse.ok) {
-        toast.error('A módosító email nem ment ki')
-      }
-
-      return { data, success: true }
-    } catch (error) {
-      toast.error('Hiba történt, a módosítás sikertelen')
-      return { data: null, error: true }
-    }
-  }
-
-  const onEventDrop = (dragEvent: EventInteractionArgs<CalendarEvent>) => {
-    const { end, event, start } = dragEvent
-
-    if (
-      isSunday(start) ||
-      (isOffDayOfNemTimi(new Date(start), offDays) &&
-        event.hairdresser === 'nem_Timi') ||
-      (isOffDayOfTimi(new Date(start), offDays) && event.hairdresser === 'Timi')
-    ) {
-      return
-    }
-
-    let modifiedEvent: CalendarEvent | undefined
-
-    const modifiedEvents: CalendarEvent[] = calendarEvents.map(
-      (calendarEvent: CalendarEvent) => {
-        if (calendarEvent.id === event.id) {
-          modifiedEvent = { ...calendarEvent, start, end } as CalendarEvent
-
-          return modifiedEvent
-        }
-
-        return calendarEvent
-      }
+  const onEventDrop = async ({
+    event,
+    start,
+    end,
+  }: EventInteractionArgs<CalendarEvent>) => {
+    if (event.isLoaderEvent || pending.current.has(event.id)) return
+    pending.current.add(event.id)
+    setCalendarEvents((previous) =>
+      previous.map((item) =>
+        item.id === event.id ? { ...item, isLoaderEvent: true } : item
+      )
     )
-
-    if (modifiedEvent) {
-      const loaderEvent = { ...modifiedEvent, isLoaderEvent: true }
-      setCalendarEvents([...modifiedEvents, loaderEvent])
-      updateEvent(modifiedEvent)
-        .then((response) => {
-          if (!response.success) {
-            return
-          }
-
-          const calendarEvents = modifiedEvents.filter(
-            (calendarEvent) => calendarEvent.isLoaderEvent !== true
-          )
-
-          setCalendarEvents(calendarEvents)
-          setCalendarEventsBackup(calendarEvents)
-        })
-        .catch(() => {
-          toast.error('Hiba történt, a módosítás sikertelen')
-
-          const calendarEvents = modifiedEvents.filter(
-            (calendarEvent) => calendarEvent.isLoaderEvent !== true
-          )
-
-          setCalendarEvents(calendarEvents)
-          setCalendarEventsBackup(calendarEvents)
-        })
+    try {
+      const result = await updateBooking(event.id, {
+        selectedDate: getCalendarDateKey(new Date(start)),
+        selectedTimeSlot:
+          format(new Date(start), 'HH:mm') +
+          ' - ' +
+          format(new Date(end), 'HH:mm'),
+      })
+      const saved = mapBookingToEvent(result.data)
+      setCalendarEvents((previous) =>
+        previous.map((item) => (item.id === event.id ? saved : item))
+      )
+      toast.success('Sikeres módosítás')
+      const warning = getNotificationWarning(result.notifications)
+      if (warning) toast.error(warning)
+    } catch (error) {
+      toast.error(
+        error instanceof Error ? error.message : 'A módosítás sikertelen.'
+      )
+    } finally {
+      pending.current.delete(event.id)
+      setCalendarEvents((previous) =>
+        previous.map((item) =>
+          item.id === event.id ? { ...item, isLoaderEvent: false } : item
+        )
+      )
     }
   }
 
@@ -162,7 +107,7 @@ const BigCalendarContainer = ({
             name="hairdresser"
             value="Timi"
             id="hairdresser-timi"
-            defaultChecked={selectedHairdresser === 'Timi'}
+            checked={selectedHairdresser === 'Timi'}
             onChange={handleHairdresserChange}
           />
 
@@ -174,7 +119,7 @@ const BigCalendarContainer = ({
             name="hairdresser"
             value="nem_Timi"
             id="hairdresser-nem-timi"
-            defaultChecked={selectedHairdresser === 'nem_Timi'}
+            checked={selectedHairdresser === 'nem_Timi'}
             onChange={handleHairdresserChange}
           />
 
@@ -186,7 +131,7 @@ const BigCalendarContainer = ({
             name="hairdresser"
             value="all"
             id="hairdresser-all"
-            defaultChecked={selectedHairdresser === 'all'}
+            checked={selectedHairdresser === 'all'}
             onChange={handleHairdresserChange}
           />
 
@@ -195,10 +140,12 @@ const BigCalendarContainer = ({
       </div>
 
       <BigCalendar
-        calendarEvents={calendarEvents}
+        calendarEvents={visibleEvents}
         setCalendarEvents={setCalendarEvents}
         onEventDrop={onEventDrop}
         offDays={offDays}
+        openingHours={openingHours}
+        specialOpeningHours={specialOpeningHours}
         selectedHairdresser={selectedHairdresser}
         bookingsByEmail={bookingsByEmail}
       />
