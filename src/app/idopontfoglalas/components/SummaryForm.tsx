@@ -20,8 +20,9 @@ type SummaryFormProps = {
     name: string
     email: string
     phone: string
-    otherInfo: string
+    otherInfo: string | null
   }
+  verificationEmailSent: boolean
   selectedService: TService
   selectedExtraServices: TService[]
   selectedHairdresser: 'Timi' | 'nem_Timi' | null
@@ -34,6 +35,7 @@ const ICON_SIZE = 48
 
 const SummaryForm = ({
   contactInfo,
+  verificationEmailSent,
   selectedHairdresser,
   selectedService,
   selectedExtraServices,
@@ -154,7 +156,9 @@ const SummaryForm = ({
 
       <div className="mb-24 flex flex-col items-center justify-center gap-4">
         <p className="text-center">
-          Email címedre kiküldtünk egy visszaigazoló levelet.
+          {verificationEmailSent
+            ? 'Email címedre kiküldtünk egy visszaigazoló levelet.'
+            : 'Az időpontodat rögzítettük, de a visszaigazoló emailt nem sikerült elküldeni. Kérdés esetén keress minket az alábbi elérhetőségen.'}
         </p>
         <p className="text-center font-medium">
           Ha mégse lenne jó az időpont, kérlek időben jelezd ezen az

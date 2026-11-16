@@ -25,3 +25,12 @@ export const getBookings = async () => {
     throw new Error(error.message || error)
   }
 }
+
+export const getBookingAvailability = async () =>
+  prisma.booking.findMany({
+    select: {
+      selectedDate: true,
+      selectedTimeSlot: true,
+      hairdresser: true,
+    },
+  })

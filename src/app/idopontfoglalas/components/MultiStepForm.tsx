@@ -1,10 +1,10 @@
 'use client'
 
 import {
-  Booking,
   OpeningHour,
   Schedule,
   SpecialOpeningHour,
+  TContactInfo,
   TService,
 } from '@prisma/client'
 import { motion } from 'framer-motion'
@@ -12,6 +12,11 @@ import { ReactNode, useState } from 'react'
 
 import BackgroundBlur from '@/components/BackgroundBlur'
 import { SERVICES } from '@/constants/services.constants'
+import {
+  BookingAvailability,
+  dateFromCalendarKey,
+  getBookingDateKey,
+} from '@/lib/guest-booking'
 
 import { mapMultistepFormDataToBooking } from '../mappers/mapMultistepFormdataToBooking.mapper'
 import AvailableDatesForm from './AvailableDatesForm'
@@ -37,7 +42,7 @@ const FadeIn = ({ children }: FadeInProps) => (
 
 type MultiStepFormProps = {
   schedule: Schedule | null
-  bookings: Booking[]
+  bookings: BookingAvailability[]
   serviceId: `${number}` | null
   openingHours: OpeningHour[]
   specialOpeningHours: SpecialOpeningHour[]
@@ -64,33 +69,43 @@ const MultiStepForm = ({
   const [selectedHairdresser, setSelectedHairdresser] = useState<
     'Timi' | 'nem_Timi' | null
   >('Timi')
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date(Date.now()))
+  const [selectedDate, setSelectedDate] = useState<Date>(() =>
+    dateFromCalendarKey(getBookingDateKey(new Date())!)
+  )
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null)
-  const [contactInfo, setContactInfo] = useState({
+  const [contactInfo, setContactInfo] = useState<TContactInfo>({
     name: '',
     email: '',
     phone: '',
     otherInfo: '',
   })
-  const [salonBookings, setSalonBookings] = useState<Booking[]>(bookings)
+  const [salonBookings, setSalonBookings] =
+    useState<BookingAvailability[]>(bookings)
+  const [verificationEmailSent, setVerificationEmailSent] = useState(true)
 
   const selectService = (service: TService) => {
     setSelectedExtraServices([])
     setSelectedService(service)
+    setSelectedTimeSlot(null)
   }
 
   const selectExtraService = (service: TService) => {
-    setSelectedExtraServices((prev) => [...prev, service])
+    setSelectedTimeSlot(null)
+    setSelectedExtraServices((prev) =>
+      prev.some((item) => item.id === service.id) ? prev : [...prev, service]
+    )
   }
 
   const removeExtraService = (service: TService) => {
+    setSelectedTimeSlot(null)
     setSelectedExtraServices((prev) =>
       prev.filter((item) => item.id !== service.id)
     )
   }
 
   const selectHairdresser = (hairdresser: 'Timi' | 'nem_Timi') => {
-    setSelectedHairdresser('Timi')
+    setSelectedTimeSlot(null)
+    setSelectedHairdresser(hairdresser)
   }
 
   const incrementActiveStep = () => {
@@ -101,39 +116,69 @@ const MultiStepForm = ({
     setActiveStep((prevActiveStep) => prevActiveStep - 1)
   }
 
-  const postBookingData = async (contactInfo: any) => {
-    if (!selectedHairdresser || !selectedService || !selectedTimeSlot) return
-
-    const response = await fetch('/api/booking', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
+  const submitBooking = async (submittedContactInfo: TContactInfo) => {
+    setContactInfo(submittedContactInfo)
+    if (!selectedHairdresser || !selectedService || !selectedTimeSlot) {
+      throw new Error('Kérlek válassz időpontot a foglaláshoz.')
+    }
+    let response: Response
+    let data
+    try {
+      response = await fetch('/api/booking', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(
+          mapMultistepFormDataToBooking({
+            selectedHairdresser,
+            selectedService,
+            selectedExtraServices,
+            contactInfo: submittedContactInfo,
+            selectedDate,
+            selectedTimeSlot,
+          })
+        ),
+      })
+      data = await response.json()
+    } catch {
+      throw new Error(
+        'Nem kaptunk visszajelzést a foglalásról. Újabb foglalás előtt ellenőrizd az emailjeidet, vagy keress minket.'
+      )
+    }
+    if (!response.ok || !data.success || !data.data) {
+      if (
+        data.message === 'Overlap with existing booking' ||
+        data.message === 'Time slot is not available'
+      ) {
+        try {
+          const latest = await fetch('/api/booking', { cache: 'no-store' })
+          const availability = await latest.json()
+          if (latest.ok && availability.success)
+            setSalonBookings(availability.data)
+        } catch {
+          // The unavailable selection is cleared even if refreshing fails.
+        }
+        setSelectedTimeSlot(null)
+        setActiveStep(2)
+        throw new Error(
+          'A kiválasztott időpont már nem elérhető. Kérlek válassz másik időpontot.'
+        )
+      }
+      throw new Error(
+        'Hoppá! Valami hiba történt a foglalás során. Kérlek próbáld meg később.'
+      )
+    }
+    const saved = data.data as BookingAvailability
+    setSalonBookings((previous) => [
+      ...previous,
+      {
+        selectedDate: saved.selectedDate,
+        selectedTimeSlot: saved.selectedTimeSlot,
+        hairdresser: saved.hairdresser,
       },
-      body: JSON.stringify(
-        mapMultistepFormDataToBooking({
-          selectedHairdresser,
-          selectedService,
-          selectedExtraServices,
-          contactInfo,
-          selectedDate,
-          selectedTimeSlot,
-        })
-      ),
-    })
-
-    const data = await response.json()
-
-    return data
-  }
-
-  const deleteBookingData = async (id: string) => {
-    const response = await fetch(`/api/booking/${id}`, {
-      method: 'DELETE',
-    })
-
-    const data = await response.json()
-
-    return data
+    ])
+    setVerificationEmailSent(
+      data.notifications?.verificationEmailSent !== false
+    )
   }
 
   const resetForm = () => {
@@ -141,7 +186,8 @@ const MultiStepForm = ({
     setSelectedService(null)
     setSelectedExtraServices([])
     setSelectedHairdresser('Timi')
-    setSelectedDate(new Date(Date.now()))
+    setSelectedDate(dateFromCalendarKey(getBookingDateKey(new Date())!))
+    setVerificationEmailSent(true)
     setSelectedTimeSlot(null)
     setContactInfo({
       name: '',
@@ -166,6 +212,7 @@ const MultiStepForm = ({
                 setSelectedTimeSlot={setSelectedTimeSlot}
                 selectService={selectService}
                 selectedService={selectedService}
+                selectedExtraServices={selectedExtraServices}
                 selectExtraService={selectExtraService}
                 removeExtraService={removeExtraService}
                 incrementActiveStep={incrementActiveStep}
@@ -184,7 +231,7 @@ const MultiStepForm = ({
             </FadeIn>
           )}
 
-          {activeStep === 2 && schedule && selectedService && (
+          {activeStep === 2 && selectedService && (
             <FadeIn>
               <AvailableDatesForm
                 bookings={salonBookings}
@@ -195,7 +242,8 @@ const MultiStepForm = ({
                 selectedService={selectedService}
                 selectedExtraServices={selectedExtraServices}
                 selectedHairdresser={selectedHairdresser!}
-                schedule={schedule}
+                schedule={schedule ?? { offDays: [] }}
+                isBookingConfigured={Boolean(schedule)}
                 openingHours={openingHours}
                 specialOpeningHours={specialOpeningHours}
                 incrementActiveStep={incrementActiveStep}
@@ -210,20 +258,11 @@ const MultiStepForm = ({
             selectedService && (
               <FadeIn>
                 <ContactForm
-                  setSalonBookings={setSalonBookings}
-                  setContactInfo={setContactInfo}
+                  contactInfo={contactInfo}
+                  saveContactInfo={setContactInfo}
                   incrementActiveStep={incrementActiveStep}
                   decrementActiveStep={decrementActiveStep}
-                  postBookingData={postBookingData}
-                  deleteBookingData={deleteBookingData}
-                  booking={mapMultistepFormDataToBooking({
-                    selectedHairdresser,
-                    selectedService,
-                    selectedExtraServices,
-                    contactInfo,
-                    selectedDate,
-                    selectedTimeSlot,
-                  })}
+                  submitBooking={submitBooking}
                 />
               </FadeIn>
             )}
@@ -232,6 +271,7 @@ const MultiStepForm = ({
             <FadeIn>
               <SummaryForm
                 contactInfo={contactInfo}
+                verificationEmailSent={verificationEmailSent}
                 selectedService={selectedService}
                 selectedExtraServices={selectedExtraServices}
                 selectedHairdresser={selectedHairdresser}

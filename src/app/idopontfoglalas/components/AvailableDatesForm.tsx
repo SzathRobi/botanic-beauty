@@ -1,38 +1,34 @@
 'use client'
 
-// @ts-expect-error minden tuti
+// @ts-expect-error Next.js loads this stylesheet.
 import './AvailableDatesForm.override.css'
 
 import {
-  Booking,
   OpeningHour,
-  Schedule,
   SpecialOpeningHour,
   TOffDay,
   TService,
 } from '@prisma/client'
-import {
-  addDays,
-  addMinutes,
-  isBefore,
-  isSameDay,
-  isToday,
-  max,
-  setHours,
-  setMinutes,
-  startOfDay,
-} from 'date-fns'
 import { hu } from 'date-fns/locale'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { DayPicker } from 'react-day-picker'
 
 import { Button } from '@/components/Button'
-import { EXTRA_SERVICES_IDS_WITHOUT_DURATION } from '@/constants/services.constants'
+import {
+  BookingAvailability,
+  dateFromCalendarKey,
+  findNextAvailableDate,
+  getAvailableTimeSlots,
+  getBookingDateKey,
+  getCalendarDateKey,
+  getDaySchedule,
+  getGuestServiceDuration,
+} from '@/lib/guest-booking'
 
 import TimeSlots from './TimeSlots'
 
 type AvailableDatesFormProps = {
-  bookings: Booking[]
+  bookings: BookingAvailability[]
   selectedDate: Date
   setSelectedDate: (date: Date) => void
   selectedTimeSlot: string | null
@@ -40,60 +36,12 @@ type AvailableDatesFormProps = {
   selectedService: TService
   selectedExtraServices: TService[]
   selectedHairdresser: 'Timi' | 'nem_Timi'
-  schedule: Schedule
+  schedule: { offDays: TOffDay[] }
+  isBookingConfigured: boolean
   openingHours: OpeningHour[]
   specialOpeningHours: SpecialOpeningHour[]
   incrementActiveStep: () => void
   decrementActiveStep: () => void
-}
-
-// Segédfüggvény a nap nyitvatartásának lekérésére (speciális felülírja a normált)
-export const getDaySchedule = (
-  date: Date,
-  openingHours: OpeningHour[],
-  specialOpeningHours: SpecialOpeningHour[]
-) => {
-  const special = specialOpeningHours.find((s) =>
-    isSameDay(new Date(s.date), date)
-  )
-  if (special) {
-    return {
-      isOpen: special.isOpen,
-      openingHour: special.openingHour,
-      closingHour: special.closingHour,
-    }
-  }
-
-  const dayNames = [
-    'sunday',
-    'monday',
-    'tuesday',
-    'wednesday',
-    'thursday',
-    'friday',
-    'saturday',
-  ]
-  const dayName = dayNames[date.getDay()]
-
-  const regular = openingHours.find((oh) => oh.day.toLowerCase() === dayName)
-  if (regular) {
-    return {
-      isOpen: regular.isOpen,
-      openingHour: regular.openingHour,
-      closingHour: regular.closingHour,
-    }
-  }
-
-  return { isOpen: false, openingHour: '10:00', closingHour: '19:00' }
-}
-
-const roundUpToNearestQuarter = (date: Date): Date => {
-  const minutes = date.getMinutes()
-  const remainder = minutes % 15
-  if (remainder !== 0) {
-    date = addMinutes(date, 15 - remainder)
-  }
-  return date
 }
 
 const AvailableDatesForm = ({
@@ -106,155 +54,137 @@ const AvailableDatesForm = ({
   selectedExtraServices,
   selectedHairdresser,
   schedule,
+  isBookingConfigured,
   openingHours,
   specialOpeningHours,
   decrementActiveStep,
   incrementActiveStep,
 }: AvailableDatesFormProps) => {
-  const now = new Date()
-  const tPlus2Hours = roundUpToNearestQuarter(addMinutes(now, 120))
-
-  const servicesWithDuration = selectedExtraServices.filter(
-    (extraservice) =>
-      !EXTRA_SERVICES_IDS_WITHOUT_DURATION.includes(extraservice.id)
+  const [now, setNow] = useState(() => new Date())
+  const [month, setMonth] = useState(selectedDate)
+  const initialized = useRef(false)
+  const dateKey = getCalendarDateKey(selectedDate)
+  const duration = getGuestServiceDuration(
+    selectedService,
+    selectedExtraServices
   )
-
-  const serviceDuration = servicesWithDuration.reduce(
-    (acc, extraservice) => acc + extraservice.duration,
-    selectedService.duration
+  const options = useMemo(
+    () => ({
+      bookings,
+      openingHours,
+      specialOpeningHours,
+      offDays: schedule.offDays,
+      hairdresser: selectedHairdresser,
+      duration,
+      now,
+    }),
+    [
+      bookings,
+      openingHours,
+      specialOpeningHours,
+      schedule.offDays,
+      selectedHairdresser,
+      duration,
+      now,
+    ]
   )
-
-  const [
-    datesWithNoTimeForSelectedService,
-    setDatesWithNoTimeForSelectedService,
-  ] = useState<Date[]>([])
-
-  const hairdresserOffDays: Date[] = schedule.offDays
-    .filter((offDay: TOffDay) => offDay.person === selectedHairdresser)
-    .map((offDay: TOffDay) => offDay.date)
-
-  const currentDaySchedule = getDaySchedule(
-    selectedDate,
-    openingHours,
-    specialOpeningHours
+  const timeSlots = useMemo(
+    () => (isBookingConfigured ? getAvailableTimeSlots(dateKey, options) : []),
+    [dateKey, options, isBookingConfigured]
   )
+  const canContinue =
+    selectedTimeSlot !== null && timeSlots.includes(selectedTimeSlot)
 
-  const [closingH, closingM] = currentDaySchedule.closingHour
-    .split(':')
-    .map(Number)
-  const closingTimeForToday = setMinutes(
-    setHours(startOfDay(selectedDate), closingH),
-    closingM
-  )
+  useEffect(() => {
+    const timer = setInterval(() => setNow(new Date()), 30000)
+    return () => clearInterval(timer)
+  }, [])
 
-  const isClosedForToday = isToday(selectedDate) && now.getHours() >= closingH
+  useEffect(() => {
+    if (initialized.current || !isBookingConfigured) return
+    initialized.current = true
+    const today = getBookingDateKey(now)!
+    const firstDate = findNextAvailableDate(
+      dateKey < today ? today : dateKey,
+      options
+    )
+    if (firstDate && firstDate !== dateKey) {
+      setSelectedTimeSlot(null)
+      setSelectedDate(dateFromCalendarKey(firstDate))
+    }
+  }, [
+    dateKey,
+    isBookingConfigured,
+    now,
+    options,
+    setSelectedDate,
+    setSelectedTimeSlot,
+  ])
+
+  useEffect(() => {
+    setMonth(selectedDate)
+  }, [selectedDate])
+
+  useEffect(() => {
+    if (selectedTimeSlot !== null && !timeSlots.includes(selectedTimeSlot)) {
+      setSelectedTimeSlot(null)
+    }
+  }, [selectedTimeSlot, timeSlots, setSelectedTimeSlot])
 
   const handleSelect = (day: Date | undefined) => {
-    if (day) {
+    if (day && getCalendarDateKey(day) !== dateKey) {
+      setSelectedTimeSlot(null)
       setSelectedDate(day)
     }
   }
 
-  const getFirstAvailableDate = (): Date => {
-    let firstAvailableDate = selectedDate
-
-    while (
-      !getDaySchedule(firstAvailableDate, openingHours, specialOpeningHours)
-        .isOpen ||
-      hairdresserOffDays.some(
-        (offDay) =>
-          isSameDay(offDay, firstAvailableDate) ||
-          (isClosedForToday && isToday(firstAvailableDate))
-      )
-    ) {
-      firstAvailableDate = addDays(firstAvailableDate, 1)
-    }
-
-    return firstAvailableDate
-  }
-
-  useEffect(() => {
-    setSelectedDate(getFirstAvailableDate())
-  }, [])
-
-  useEffect(() => {
-    const scheduleInfo = getDaySchedule(
-      selectedDate,
-      openingHours,
-      specialOpeningHours
-    )
-    if (!scheduleInfo.isOpen) {
-      setSelectedDate(addDays(selectedDate, 1))
-    }
-  }, [selectedDate, openingHours, specialOpeningHours])
-
-  const [openingH, openingM] = currentDaySchedule.openingHour
-    .split(':')
-    .map(Number)
-  const openingHourForToday = setMinutes(
-    setHours(startOfDay(selectedDate), openingH),
-    openingM
-  )
-
   return (
     <div className="mb-8">
-      <div className="mb-12 flex flex-col items-start justify-evenly gap-4 md:flex-row">
-        <DayPicker
-          className="dayPicker text-sm sm:text-base md:text-lg"
-          mode="single"
-          selected={selectedDate}
-          defaultMonth={selectedDate}
-          weekStartsOn={1}
-          locale={hu}
-          disabled={(date) => {
-            const daySchedule = getDaySchedule(
-              date,
-              openingHours,
-              specialOpeningHours
-            )
-            return (
-              isBefore(date, new Date(Date.now())) ||
-              !daySchedule.isOpen ||
-              hairdresserOffDays.some((offDay) => isSameDay(offDay, date)) ||
-              datesWithNoTimeForSelectedService.some((datesWithNoTime) =>
-                isSameDay(datesWithNoTime, date)
+      {!isBookingConfigured ? (
+        <p role="status" className="mb-8">
+          Az online foglalás jelenleg nem elérhető. Kérlek próbáld meg később.
+        </p>
+      ) : (
+        <div className="mb-12 flex flex-col items-start justify-evenly gap-4 md:flex-row">
+          <DayPicker
+            className="dayPicker text-sm sm:text-base md:text-lg"
+            mode="single"
+            selected={selectedDate}
+            month={month}
+            onMonthChange={setMonth}
+            weekStartsOn={1}
+            locale={hu}
+            disabled={(date) => {
+              const key = getCalendarDateKey(date)
+              return (
+                key < getBookingDateKey(now)! ||
+                !getDaySchedule(key, openingHours, specialOpeningHours)
+                  ?.isOpen ||
+                schedule.offDays.some(
+                  (day) =>
+                    day.person === selectedHairdresser &&
+                    getBookingDateKey(day.date) === key
+                )
               )
-            )
-          }}
-          onSelect={handleSelect}
-        />
-
-        <TimeSlots
-          bookings={bookings}
-          startTime={
-            isToday(selectedDate)
-              ? max([tPlus2Hours, openingHourForToday])
-              : openingHourForToday
-          }
-          closingTime={closingTimeForToday}
-          isDayOpen={currentDaySchedule.isOpen}
-          interval={serviceDuration}
-          isClosedForToday={isClosedForToday}
-          selectedTimeSlot={selectedTimeSlot}
-          setSelectedTimeSlot={setSelectedTimeSlot}
-          selectedDate={selectedDate}
-          setSelectedDate={setSelectedDate}
-          setDatesWithNoTimeForSelectedService={
-            setDatesWithNoTimeForSelectedService
-          }
-          isSelectedHairdresserOffDay={hairdresserOffDays.some((offDay) =>
-            isSameDay(offDay, selectedDate)
-          )}
-        />
-      </div>
-
+            }}
+            onSelect={handleSelect}
+          />
+          <TimeSlots
+            timeSlots={timeSlots}
+            selectedTimeSlot={selectedTimeSlot}
+            setSelectedTimeSlot={setSelectedTimeSlot}
+          />
+        </div>
+      )}
       <div className="flex items-center justify-end gap-2">
         <Button type="button" variant="secondary" onClick={decrementActiveStep}>
           Vissza
         </Button>
         <Button
-          disabled={selectedTimeSlot === null}
-          onClick={incrementActiveStep}
+          disabled={!canContinue}
+          onClick={() => {
+            if (canContinue) incrementActiveStep()
+          }}
         >
           Tovább
         </Button>

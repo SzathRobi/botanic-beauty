@@ -1,7 +1,7 @@
 'use client'
 
 import { TService } from '@prisma/client'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent } from 'react'
 import { PiScissors } from 'react-icons/pi'
 
 import { EXTRA_SERVICE_MIRACLE_BOOSTER } from '@/constants/services.constants'
@@ -9,6 +9,7 @@ import { formatDuration } from '@/lib/utils'
 
 type ExtraServiceCardProps = {
   extraService: TService
+  isExtraServiceSelected: boolean
   selectExtraService: (service: TService) => void
   removeExtraService: (service: TService) => void
 }
@@ -17,14 +18,11 @@ const ICON_SIZE = 32
 
 const ExtraServiceCard = ({
   extraService,
+  isExtraServiceSelected,
   selectExtraService,
   removeExtraService,
 }: ExtraServiceCardProps) => {
-  const [isExtraServiceSelected, setIsExtraServiceSelected] = useState(false)
-
   const handleCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setIsExtraServiceSelected(event.target.checked)
-
     if (event.target.checked) {
       selectExtraService(extraService)
     } else {

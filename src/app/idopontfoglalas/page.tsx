@@ -6,7 +6,7 @@ import { Metadata } from 'next'
 import Image from 'next/image'
 import { redirect } from 'next/navigation'
 
-import { getBookings } from '@/actions/booking'
+import { getBookingAvailability } from '@/actions/booking'
 import { getSalon } from '@/actions/salon'
 import { getSchedule } from '@/actions/schedule'
 import Footer from '@/components/Footer'
@@ -68,7 +68,7 @@ const BookingPage = async ({ searchParams }: BookingPageProps) => {
   }
 
   const [bookings, schedule, salon] = await Promise.all([
-    getBookings(),
+    getBookingAvailability(),
     getSchedule(),
     getSalon(),
   ])

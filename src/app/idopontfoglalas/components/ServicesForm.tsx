@@ -16,6 +16,7 @@ type ServiceFormProps = {
   setSelectedTimeSlot: (time: string | null) => void
   selectService: (service: TService) => void
   selectedService: TService | null
+  selectedExtraServices: TService[]
   incrementActiveStep: () => void
   selectExtraService: (service: TService) => void
   removeExtraService: (service: TService) => void
@@ -28,6 +29,7 @@ const ServicesForm = ({
   setSelectedTimeSlot,
   selectService,
   selectedService,
+  selectedExtraServices,
   incrementActiveStep,
   selectExtraService,
   removeExtraService,
@@ -55,6 +57,7 @@ const ServicesForm = ({
               index={index}
               selectService={selectService}
               selectedService={selectedService}
+              selectedExtraServices={selectedExtraServices}
               selectExtraService={selectExtraService}
               removeExtraService={removeExtraService}
             />

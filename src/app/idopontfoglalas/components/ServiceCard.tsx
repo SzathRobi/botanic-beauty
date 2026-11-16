@@ -5,10 +5,8 @@ import { ChangeEvent, useEffect, useRef } from 'react'
 import { IoColorPaletteOutline } from 'react-icons/io5'
 import { PiHairDryer, PiScissors } from 'react-icons/pi'
 
-import {
-  EXTRA_SERVICE_HAIRCUT,
-  EXTRA_SERVICE_MIRACLE_BOOSTER,
-} from '@/constants/services.constants'
+import { EXTRA_SERVICE_HAIRCUT } from '@/constants/services.constants'
+import { dateFromCalendarKey, getBookingDateKey } from '@/lib/guest-booking'
 import { formatDuration } from '@/lib/utils'
 
 import ExtraServiceCard from './ExtraServiceCard'
@@ -22,6 +20,7 @@ type ServiceCardProps = {
   index: number
   selectService: (service: TService) => void
   selectedService: TService | null
+  selectedExtraServices: TService[]
   selectExtraService: (service: TService) => void
   removeExtraService: (service: TService) => void
 }
@@ -37,6 +36,7 @@ const ServiceCard = ({
   index,
   selectService,
   selectedService,
+  selectedExtraServices,
   selectExtraService,
   removeExtraService,
 }: ServiceCardProps) => {
@@ -48,7 +48,7 @@ const ServiceCard = ({
 
       if (selectedDate || selectedTimeSlot) {
         setSelectedTimeSlot(null)
-        setSelectedDate(new Date(Date.now()))
+        setSelectedDate(dateFromCalendarKey(getBookingDateKey(new Date())!))
       }
     }
   }
@@ -102,17 +102,12 @@ const ServiceCard = ({
         />
       </label>
 
-      {/* {isSelected && service.id !== '7' && (
-        <ExtraServiceCard
-          extraService={EXTRA_SERVICE_MIRACLE_BOOSTER}
-          selectExtraService={selectExtraService}
-          removeExtraService={removeExtraService}
-        />
-      )} */}
-
       {isSelected && service.category === 'Festések' && (
         <ExtraServiceCard
           extraService={EXTRA_SERVICE_HAIRCUT}
+          isExtraServiceSelected={selectedExtraServices.some(
+            (extra) => extra.id === EXTRA_SERVICE_HAIRCUT.id
+          )}
           selectExtraService={selectExtraService}
           removeExtraService={removeExtraService}
         />
