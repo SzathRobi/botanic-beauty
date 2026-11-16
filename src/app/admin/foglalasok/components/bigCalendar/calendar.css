@@ -1,26 +1,79 @@
-/* .rbc-time-view .rbc-allday-cell {
-  display: none;
-} */
+/* Availability colors live on cells, so appointment cards remain readable. */
+.booking-calendar {
+  --booking-calendar-closed-bg: rgb(239 68 68 / 28%);
+  --booking-calendar-partial-bg: repeating-linear-gradient(
+    135deg,
+    rgb(239 68 68 / 24%) 0 5px,
+    transparent 5px 10px
+  );
+}
 
-/* .rbc-event {
-  padding: 0px !important;
-  border: none !important;
-  background-color: transparent !important;
-} */
+/* Day/week views grow with the full day; only the page scrolls vertically. */
+.booking-calendar > .booking-calendar-time-grid {
+  height: auto;
+}
 
-.rbc-event-label {
+.booking-calendar > .booking-calendar-month {
+  height: 80vh;
+  min-height: 600px;
+}
+
+.booking-calendar-time-grid .rbc-time-view,
+.booking-calendar-time-grid .rbc-time-content {
+  flex: none;
+}
+
+.booking-calendar-time-grid .rbc-time-content {
+  overflow: visible;
+}
+
+.booking-calendar .rbc-event-label {
   display: none !important;
 }
 
-.rbc-today {
-  background-color: #22c55e30 !important;
-  opacity: 1 !important;
+.booking-calendar .rbc-today:not(.booking-calendar-closed-day) {
+  background-color: #22c55e30;
 }
 
-.rbc-current-time-indicator {
+.booking-calendar .booking-calendar-closed-day:not(.rbc-day-slot) {
+  background-color: var(--booking-calendar-closed-bg);
+}
+
+/* Also neutralize the library's default pale-blue "today" under red time cells. */
+.booking-calendar .rbc-day-slot.booking-calendar-closed-day {
+  background-color: transparent;
+}
+
+.booking-calendar .booking-calendar-partial-day:not(.rbc-day-slot) {
+  background-image: var(--booking-calendar-partial-bg);
+}
+
+/* slotPropGetter also runs for the gutter; paint only actual day columns. */
+.booking-calendar .rbc-day-slot .rbc-time-slot {
+  background: var(--booking-calendar-slot-bg, transparent);
+}
+
+.booking-calendar .rbc-current-time-indicator {
   height: 2px;
 }
 
-.rbc-timeslot-group {
-  min-height: 80px !important;
+.booking-calendar .rbc-timeslot-group {
+  min-height: 80px;
+}
+
+.booking-calendar-closed-swatch,
+.booking-calendar-partial-swatch {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 1px solid rgb(248 113 113 / 60%);
+  border-radius: 0.2rem;
+}
+
+.booking-calendar-closed-swatch {
+  background: var(--booking-calendar-closed-bg);
+}
+
+.booking-calendar-partial-swatch {
+  background: var(--booking-calendar-partial-bg);
 }

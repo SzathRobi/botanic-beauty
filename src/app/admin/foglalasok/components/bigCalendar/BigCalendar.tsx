@@ -7,7 +7,14 @@ import './calendar.css'
 
 import { OpeningHour, SpecialOpeningHour, TOffDay } from '@prisma/client'
 import moment from 'moment'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import {
   Calendar,
   EventProps,
@@ -20,15 +27,13 @@ import withDragAndDrop, {
   EventInteractionArgs,
 } from 'react-big-calendar/lib/addons/dragAndDrop'
 
-import {
-  getCalendarDateKey,
-  getDaySchedule,
-  timeToMinutes,
-} from '@/lib/guest-booking'
-
 import { CalendarEvent } from '../../../types/calendarEvent.type'
+import { startCalendarAutoScroll } from '../../utils/calendarAutoScroll'
+import {
+  CALENDAR_STEP_MINUTES,
+  createCalendarAppearanceGetters,
+} from '../../utils/calendarAvailability'
 import { getProgressString } from '../../utils/getProgressionString.util'
-import { isOffDayOfNemTimi, isOffDayOfTimi } from '../../utils/offDay'
 import { SelectedHairdresser } from '../bigCalendarContainer/BigCalendarContainer'
 import BigCalendarDay from '../bigCalendarDay/BigalendarDay'
 import BigCalendarToolbar from '../bigCalendarToolbar/BigCalendarToolbar'
@@ -63,157 +68,77 @@ const BigCalendar = ({
   selectedHairdresser,
   setCalendarEvents,
 }: BigCalendarProps) => {
-  const [view, setView] = useState<View>(Views.WEEK)
-  const [date, setDate] = useState(new Date())
+  const [view, setView] = useState<View>(Views.WORK_WEEK)
+  const [date, setDate] = useState(() => focusDate ?? new Date())
 
   useEffect(() => {
     if (focusDate) setDate(focusDate)
   }, [focusDate])
 
   const today = new Date()
-  const hours = [...openingHours, ...specialOpeningHours].filter(
-    (day) => day.isOpen
-  )
-  const firstMinute = hours.reduce(
-    (minimum, day) =>
-      Math.min(minimum, timeToMinutes(day.openingHour) ?? minimum),
-    8 * 60
-  )
-  const lastMinute = hours.reduce(
-    (maximum, day) =>
-      Math.max(maximum, timeToMinutes(day.closingHour) ?? maximum),
-    19 * 60
-  )
-  const earliestEvent = calendarEvents.reduce(
-    (minimum, event) =>
-      Math.min(
-        minimum,
-        event.start
-          ? event.start.getHours() * 60 + event.start.getMinutes()
-          : minimum
-      ),
-    firstMinute
-  )
-  const latestEvent = calendarEvents.reduce(
-    (maximum, event) =>
-      Math.max(
-        maximum,
-        event.end ? event.end.getHours() * 60 + event.end.getMinutes() : maximum
-      ),
-    lastMinute
-  )
-  const minCalendarStartTime = new Date(
+  const minCalendarTime = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
     0,
-    earliestEvent
+    0,
+    0,
+    0
   )
-  const maxCalendarStartTime = new Date(
+  const maxCalendarTime = new Date(
     today.getFullYear(),
     today.getMonth(),
     today.getDate(),
-    0,
-    Math.min(1439, latestEvent)
+    23,
+    59,
+    59,
+    999
   )
-
-  const eventStyleGetter = (calendarEvent: CalendarEvent) => {
-    if (
-      calendarEvent.start &&
-      !getDaySchedule(
-        getCalendarDateKey(calendarEvent.start),
+  const rootRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (!rootRef.current) return
+    return startCalendarAutoScroll(rootRef.current, () => new Date())
+  }, [])
+  const appearance = useMemo(
+    () =>
+      createCalendarAppearanceGetters({
         openingHours,
-        specialOpeningHours
-      )?.isOpen
-    ) {
-      return {
-        style: {
-          backgroundColor: 'lightgray',
-          opacity: 0.5,
-          cursor: 'pointer',
-        },
-      }
-    }
-
-    if (
-      calendarEvent.hairdresser === 'Timi' &&
-      isOffDayOfTimi(calendarEvent.start!, offDays)
-    ) {
-      return {
-        style: {
-          cursor: 'not-allowed',
-        },
-      }
-    }
-
-    if (
-      calendarEvent.hairdresser === 'nem_Timi' &&
-      isOffDayOfNemTimi(calendarEvent.start!, offDays)
-    ) {
-      return {
-        style: {
-          cursor: 'not-allowed',
-        },
-      }
-    }
-
-    return {}
-  }
-
-  const dayStyleGetter = (date: Date) => {
-    if (
-      !getDaySchedule(
-        getCalendarDateKey(date),
-        openingHours,
-        specialOpeningHours
-      )?.isOpen
-    ) {
-      return {
-        style: {
-          backgroundColor: 'lightgray',
-          opacity: 0.5,
-        },
-      }
-    }
-
-    if (
-      isOffDayOfNemTimi(date, offDays) &&
-      isOffDayOfTimi(date, offDays) &&
-      selectedHairdresser === 'all'
-    ) {
-      return {
-        style: {
-          backgroundColor: '#ffa60090',
-        },
-      }
-    }
-
-    if (isOffDayOfTimi(date, offDays) && selectedHairdresser !== 'nem_Timi') {
-      return {
-        style: {
-          backgroundColor: '#ff000050',
-        },
-      }
-    }
-
-    if (isOffDayOfNemTimi(date, offDays) && selectedHairdresser !== 'Timi') {
-      return {
-        style: {
-          backgroundColor: '#0000ff90',
-        },
-      }
-    }
-
-    return {}
-  }
+        specialOpeningHours,
+        offDays,
+        selectedHairdresser,
+      }),
+    [openingHours, specialOpeningHours, offDays, selectedHairdresser]
+  )
 
   return (
-    <div>
+    <div className="booking-calendar" ref={rootRef}>
+      <div
+        className="mb-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-gray-300"
+        aria-label="Naptár jelmagyarázat"
+      >
+        <span className="flex items-center gap-2">
+          <span className="booking-calendar-closed-swatch" aria-hidden="true" />
+          Zárva / nincs elérhető fodrász
+        </span>
+        {selectedHairdresser === 'all' && (
+          <span className="flex items-center gap-2">
+            <span
+              className="booking-calendar-partial-swatch"
+              aria-hidden="true"
+            />
+            Egy fodrász szabadságon
+          </span>
+        )}
+      </div>
       <DndCalendar
         localizer={localizer}
+        culture="hu"
         events={calendarEvents}
-        min={minCalendarStartTime}
-        max={maxCalendarStartTime}
+        min={minCalendarTime}
+        max={maxCalendarTime}
+        step={CALENDAR_STEP_MINUTES}
+        timeslots={4}
+        enableAutoScroll={false}
         selectable={Boolean(onCreate)}
         onSelectSlot={({ start }) => onCreate?.(new Date(start))}
         resizable={false}
@@ -234,13 +159,13 @@ const BigCalendar = ({
             <BigCalendarToolbar {...toolbarProps} />
           ),
         }}
-        views={[Views.MONTH, Views.WEEK, Views.DAY]}
+        views={[Views.MONTH, Views.WORK_WEEK, Views.WEEK, Views.DAY]}
         defaultView={view}
         view={view}
         date={date}
-        className="min-h-[80vh] w-[200vw] bg-black/60 md:w-full"
-        eventPropGetter={eventStyleGetter}
-        dayPropGetter={dayStyleGetter}
+        className={`w-[200vw] bg-black/60 md:w-full ${view === Views.MONTH ? 'booking-calendar-month' : 'booking-calendar-time-grid'}`}
+        dayPropGetter={appearance.dayPropGetter}
+        slotPropGetter={appearance.slotPropGetter}
         draggableAccessor={(event) => !event.isLoaderEvent}
         onEventDrop={onEventDrop}
         onNavigate={(date) => {

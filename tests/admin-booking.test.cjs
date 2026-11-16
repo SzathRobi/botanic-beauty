@@ -1365,3 +1365,442 @@ test(
     }
   }
 )
+
+const calendarAvailability = loader()(
+  'src/app/admin/foglalasok/utils/calendarAvailability.ts'
+)
+const availabilityOptions = (overrides = {}) => ({
+  openingHours,
+  specialOpeningHours: [],
+  offDays: [],
+  selectedHairdresser: 'all',
+  ...overrides,
+})
+const calendarDayClass = (date, options) =>
+  calendarAvailability.getCalendarDayAppearance(date, options).className
+const calendarSlot = (day, hour, minute, options) =>
+  calendarAvailability.getCalendarSlotAppearance(
+    new Date(2026, 10, day, hour, minute),
+    options
+  )
+
+test('calendar marks weekly closures red and keeps working days open', () => {
+  const options = availabilityOptions()
+  assert.equal(calendarDayClass(new Date(2026, 10, 16), options), '')
+  assert.equal(
+    calendarDayClass(new Date(2026, 10, 21), options),
+    'booking-calendar-closed-day'
+  )
+  assert.equal(
+    calendarDayClass(new Date(2026, 10, 22), options),
+    'booking-calendar-closed-day'
+  )
+})
+
+test('special closed days override the weekly opening and mark every time slot', () => {
+  const options = availabilityOptions({
+    specialOpeningHours: [
+      {
+        date: new Date('2026-11-15T23:00:00Z'),
+        isOpen: false,
+        openingHour: '10:00',
+        closingHour: '19:00',
+      },
+    ],
+  })
+  assert.equal(
+    calendarDayClass(new Date(2026, 10, 16), options),
+    'booking-calendar-closed-day'
+  )
+  for (const [hour, minute] of [
+    [0, 0],
+    [10, 0],
+    [15, 30],
+    [23, 45],
+  ]) {
+    assert.equal(
+      calendarSlot(16, hour, minute, options).className,
+      'booking-calendar-closed-time'
+    )
+  }
+})
+
+test('special weekend opening overrides weekend closure and supplies its own hours', () => {
+  const options = availabilityOptions({
+    specialOpeningHours: [
+      {
+        date: new Date('2026-11-20T23:00:00Z'),
+        isOpen: true,
+        openingHour: '09:15',
+        closingHour: '18:45',
+      },
+    ],
+  })
+  assert.equal(calendarDayClass(new Date(2026, 10, 21), options), '')
+  assert.equal(
+    calendarSlot(21, 9, 0, options).className,
+    'booking-calendar-closed-time'
+  )
+  assert.equal(calendarSlot(21, 9, 15, options).className, '')
+  assert.equal(calendarSlot(21, 18, 30, options).className, '')
+  assert.equal(
+    calendarSlot(21, 18, 45, options).className,
+    'booking-calendar-closed-time'
+  )
+})
+
+test('red slot boundaries include only time outside opening hours', () => {
+  const options = availabilityOptions()
+  assert.equal(
+    calendarSlot(16, 9, 45, options).className,
+    'booking-calendar-closed-time'
+  )
+  assert.equal(calendarSlot(16, 10, 0, options).className, '')
+  assert.equal(calendarSlot(16, 18, 45, options).className, '')
+  assert.equal(
+    calendarSlot(16, 19, 0, options).className,
+    'booking-calendar-closed-time'
+  )
+  assert.equal(
+    calendarSlot(16, 23, 45, options).className,
+    'booking-calendar-closed-time'
+  )
+})
+
+test('opening and closing between grid lines paint only the closed portion', () => {
+  const options = availabilityOptions({
+    specialOpeningHours: [
+      {
+        date: new Date('2026-11-15T23:00:00Z'),
+        isOpen: true,
+        openingHour: '09:10',
+        closingHour: '18:50',
+      },
+    ],
+  })
+  const opening = calendarSlot(16, 9, 0, options)
+  const closing = calendarSlot(16, 18, 45, options)
+  assert.equal(opening.className, 'booking-calendar-partial-time')
+  assert.match(opening.style['--booking-calendar-slot-bg'], /66\.666/)
+  assert.equal(closing.className, 'booking-calendar-partial-time')
+  assert.match(closing.style['--booking-calendar-slot-bg'], /33\.333/)
+  assert.equal(calendarSlot(16, 9, 15, options).className, '')
+})
+
+test('off-day coloring follows the selected hairdresser and distinguishes partial absence', () => {
+  const days = [{ person: 'Timi', date: new Date('2026-11-15T23:00:00Z') }]
+  const timi = availabilityOptions({
+    offDays: days,
+    selectedHairdresser: 'Timi',
+  })
+  const other = availabilityOptions({
+    offDays: days,
+    selectedHairdresser: 'nem_Timi',
+  })
+  const everyone = availabilityOptions({ offDays: [...days, ...days] })
+  assert.equal(
+    calendarDayClass(new Date(2026, 10, 16), timi),
+    'booking-calendar-closed-day'
+  )
+  assert.equal(
+    calendarSlot(16, 12, 0, timi).className,
+    'booking-calendar-closed-time'
+  )
+  assert.equal(calendarDayClass(new Date(2026, 10, 16), other), '')
+  assert.equal(
+    calendarDayClass(new Date(2026, 10, 16), everyone),
+    'booking-calendar-partial-day'
+  )
+  assert.equal(
+    calendarSlot(16, 12, 0, everyone).className,
+    'booking-calendar-partial-staff-time'
+  )
+  assert.equal(
+    calendarSlot(16, 20, 0, everyone).className,
+    'booking-calendar-closed-time'
+  )
+  const both = availabilityOptions({
+    offDays: [...days, { person: 'nem_Timi', date: days[0].date }],
+  })
+  assert.equal(
+    calendarDayClass(new Date(2026, 10, 16), both),
+    'booking-calendar-closed-day'
+  )
+})
+
+test('special openings do not hide staff absence and invalid hours are marked closed', () => {
+  const options = availabilityOptions({
+    selectedHairdresser: 'Timi',
+    specialOpeningHours: [
+      {
+        date: new Date('2026-11-20T23:00:00Z'),
+        isOpen: true,
+        openingHour: '10:00',
+        closingHour: '19:00',
+      },
+    ],
+    offDays: [{ person: 'Timi', date: new Date('2026-11-20T23:00:00Z') }],
+  })
+  assert.equal(
+    calendarDayClass(new Date(2026, 10, 21), options),
+    'booking-calendar-closed-day'
+  )
+  assert.equal(
+    calendarDayClass(
+      new Date(2026, 10, 16),
+      availabilityOptions({ openingHours: [] })
+    ),
+    'booking-calendar-closed-day'
+  )
+  const invalid = availabilityOptions({
+    openingHours: [
+      {
+        day: 'monday',
+        isOpen: true,
+        openingHour: '19:00',
+        closingHour: '10:00',
+      },
+    ],
+  })
+  assert.equal(
+    calendarSlot(16, 12, 0, invalid).className,
+    'booking-calendar-closed-time'
+  )
+})
+
+test('calendar renders all 24 hours with a full-height quarter-hour grid and keeps admin creation enabled', () => {
+  const renderer = hookRenderer()
+  let chosen
+  const load = loader({
+    react: renderer.hooks,
+    'moment/locale/hu': {},
+    './calendar.css': {},
+    'react-big-calendar': {
+      Calendar: 'Calendar',
+      momentLocalizer: () => ({}),
+      Views: { WEEK: 'week', MONTH: 'month', DAY: 'day' },
+    },
+    'react-big-calendar/lib/addons/dragAndDrop': {
+      __esModule: true,
+      default: () => 'DndCalendar',
+    },
+    '../bigCalendarDay/BigalendarDay': {
+      __esModule: true,
+      default: 'CalendarEvent',
+    },
+    '../bigCalendarToolbar/BigCalendarToolbar': {
+      __esModule: true,
+      default: 'CalendarToolbar',
+    },
+  })
+  const Component = load(
+    'src/app/admin/foglalasok/components/bigCalendar/BigCalendar.tsx'
+  ).default
+  const focusDate = new Date(2026, 10, 16, 21, 15)
+  const props = {
+    bookingsByEmail: {},
+    calendarEvents: [],
+    onEventDrop() {},
+    setCalendarEvents() {},
+    onCreate: (date) => {
+      chosen = date
+    },
+    ...availabilityOptions(),
+    focusDate,
+  }
+  const tree = renderer.render(Component, props)
+  const calendar = findElement(tree, (node) => node.type === 'DndCalendar')
+  assert.equal(calendar.props.min.getHours(), 0)
+  assert.equal(calendar.props.min.getMinutes(), 0)
+  assert.equal(calendar.props.max.getHours(), 23)
+  assert.equal(calendar.props.max.getMinutes(), 59)
+  assert.equal(calendar.props.max.getSeconds(), 59)
+  assert.equal(calendar.props.step, 15)
+  assert.equal(calendar.props.timeslots, 4)
+  assert.equal(calendar.props.enableAutoScroll, false)
+  assert.match(calendar.props.className, /booking-calendar-time-grid/)
+  assert.doesNotMatch(calendar.props.className, /h-\[/)
+  assert.equal(
+    calendar.props.dayPropGetter(new Date(2026, 10, 21)).className,
+    'booking-calendar-closed-day'
+  )
+  assert.equal(
+    calendar.props.slotPropGetter(new Date(2026, 10, 16, 21)).className,
+    'booking-calendar-closed-time'
+  )
+  calendar.props.onSelectSlot({ start: new Date(2026, 10, 21, 21) })
+  assert.equal(chosen.getHours(), 21)
+  assert.equal(chosen.getDate(), 21)
+  const { getSlotMetrics } = require('react-big-calendar/lib/utils/TimeSlots')
+  const localizer = require('react-big-calendar').momentLocalizer(
+    require('moment')
+  )
+  const metrics = getSlotMetrics({
+    min: calendar.props.min,
+    max: calendar.props.max,
+    step: 15,
+    timeslots: 4,
+    localizer,
+  })
+  assert.equal(metrics.groups.length, 24)
+  assert.equal(metrics.groups[0][0].getHours(), 0)
+  assert.equal(metrics.groups[23][3].getHours(), 23)
+  assert.equal(metrics.groups[23][3].getMinutes(), 45)
+})
+
+function calendarPageScrollHarness() {
+  const frames = new Map()
+  const listeners = new Map()
+  const writes = []
+  let nextFrame = 1
+  let observer
+  const layout = { height: 0, top: 400, headerHeight: 66 }
+  const page = {
+    scrollY: 120,
+    scrollTo: (options) => {
+      writes.push(options)
+      page.scrollY = options.top
+    },
+    addEventListener: (name, callback) => listeners.set(name, callback),
+    removeEventListener: (name) => listeners.delete(name),
+    requestAnimationFrame: (callback) => {
+      const id = nextFrame++
+      frames.set(id, callback)
+      return id
+    },
+    cancelAnimationFrame: (id) => frames.delete(id),
+  }
+  const hours = Array.from({ length: 24 }, (_, hour) => ({
+    getBoundingClientRect: () => ({
+      top: layout.top + hour * layout.height - page.scrollY,
+      height: layout.height,
+    }),
+  }))
+  const gutter = { querySelectorAll: () => hours }
+  const document = {
+    defaultView: page,
+    readyState: 'complete',
+    querySelector: () => ({
+      getBoundingClientRect: () => ({ height: layout.headerHeight }),
+    }),
+  }
+  const root = {
+    ownerDocument: document,
+    querySelector: (selector) =>
+      selector === '.rbc-time-gutter' ? gutter : null,
+  }
+  const load = loader(
+    {},
+    {
+      ResizeObserver: class {
+        constructor(callback) {
+          this.callback = callback
+          this.disconnected = false
+          observer = this
+        }
+        observe() {}
+        disconnect() {
+          this.disconnected = true
+        }
+      },
+    }
+  )
+  const { startCalendarAutoScroll } = load(
+    'src/app/admin/foglalasok/utils/calendarAutoScroll.ts'
+  )
+  return {
+    root,
+    page,
+    document,
+    layout,
+    listeners,
+    writes,
+    start: (time = new Date(2026, 10, 16, 12, 30)) =>
+      startCalendarAutoScroll(root, () => time),
+    observer: () => observer,
+    flush: () => {
+      const current = [...frames.values()]
+      frames.clear()
+      current.forEach((callback) => callback())
+    },
+  }
+}
+
+test('initial scroll moves the page to the current minute below the fixed header', () => {
+  const h = calendarPageScrollHarness()
+  h.layout.height = 80
+  h.start()
+  h.flush()
+  assert.equal(h.writes.length, 0)
+  h.flush()
+  assert.equal(h.writes.length, 1)
+  assert.equal(h.writes[0].top, 400 + 12.5 * 80 - 66 - 24)
+  assert.equal(h.writes[0].behavior, 'auto')
+  assert.equal(h.listeners.size, 0)
+  assert.equal(h.observer().disconnected, true)
+  h.page.scrollY = 123
+  h.observer().callback()
+  h.flush()
+  assert.equal(h.writes.length, 1)
+  assert.equal(h.page.scrollY, 123)
+})
+
+test('page scroll waits for the initial load and stable full-height grid layout', () => {
+  const h = calendarPageScrollHarness()
+  h.document.readyState = 'loading'
+  h.start()
+  h.flush()
+  assert.equal(h.writes.length, 0)
+  h.document.readyState = 'complete'
+  h.listeners.get('load')()
+  h.flush()
+  assert.equal(h.writes.length, 0)
+  h.layout.height = 40
+  h.observer().callback()
+  h.flush()
+  h.layout.height = 80
+  h.layout.top = 500
+  h.flush()
+  assert.equal(h.writes.length, 0)
+  h.flush()
+  assert.equal(h.writes.length, 1)
+  assert.equal(h.writes[0].top, 500 + 12.5 * 80 - 66 - 24)
+})
+
+test('initial page scroll cancels on user interaction anywhere on the page or cleanup', () => {
+  for (const mode of [
+    'wheel',
+    'touchstart',
+    'pointerdown',
+    'keydown',
+    'cleanup',
+  ]) {
+    const h = calendarPageScrollHarness()
+    h.layout.height = 80
+    const stop = h.start()
+    if (mode === 'cleanup') stop()
+    else h.listeners.get(mode)()
+    h.flush()
+    h.observer().callback()
+    h.flush()
+    assert.equal(h.writes.length, 0)
+    assert.equal(h.listeners.size, 0)
+    assert.equal(h.observer().disconnected, true)
+  }
+})
+
+test('page scroll handles midnight, missing header and invalid time', () => {
+  const h = calendarPageScrollHarness()
+  h.layout.height = 80
+  h.layout.top = 10
+  h.document.querySelector = () => null
+  h.start(new Date(2026, 10, 16, 0))
+  h.flush()
+  h.flush()
+  assert.equal(h.writes[0].top, 0)
+  const invalid = calendarPageScrollHarness()
+  invalid.start(new Date('invalid'))
+  invalid.flush()
+  assert.equal(invalid.writes.length, 0)
+  assert.equal(invalid.listeners.size, 0)
+})

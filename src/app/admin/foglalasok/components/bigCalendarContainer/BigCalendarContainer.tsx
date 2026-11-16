@@ -123,7 +123,7 @@ const BigCalendarContainer = ({
   }
 
   return (
-    <div className="max-w-[100vw] overflow-scroll md:overflow-hidden">
+    <div className="max-w-[100vw] overflow-x-auto md:overflow-visible">
       <div className="mb-8 flex flex-wrap items-center gap-4">
         <Button type="button" onClick={() => openCreate()}>
           Új foglalás
@@ -192,9 +192,7 @@ const BigCalendarContainer = ({
                   selectedHairdresser !== booking.hairdresser
                 )
                   setSelectedHairdresser(booking.hairdresser)
-                setFocusDate(
-                  dateFromCalendarKey(getBookingDateKey(booking.selectedDate)!)
-                )
+                setFocusDate(mapBookingToEvent(booking).start)
               }}
             />
           </DialogContent>
