@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
-import { SALON_ID } from '@/constants/salon.constants'
 import { EXTRA_SERVICES, SERVICES } from '@/constants/services.constants'
 import prisma from '@/lib/db'
 
@@ -11,7 +10,6 @@ import {
 } from './admin-booking-notifications'
 import {
   getBookingDateKey,
-  getDaySchedule,
   getGuestServiceDuration,
   timeToMinutes,
 } from './guest-booking'
@@ -108,8 +106,7 @@ export const updateAdminBooking = async (id: string, body: unknown) => {
             input.selectedTimeSlot !== existing.selectedTimeSlot ||
             hairdresser !== existing.hairdresser
           if (scheduleChanged) {
-            const [salon, schedule, bookings] = await Promise.all([
-              prisma.salon.findUnique({ where: { id: SALON_ID } }),
+            const [schedule, bookings] = await Promise.all([
               prisma.schedule.findFirst(),
               prisma.booking.findMany({
                 select: {
@@ -120,30 +117,18 @@ export const updateAdminBooking = async (id: string, body: unknown) => {
                 },
               }),
             ])
-            const hours =
-              salon &&
-              getDaySchedule(
-                dateKey,
-                salon.openingHours,
-                salon.specialOpeningHours
-              )
-            const opening = hours && timeToMinutes(hours.openingHour)
-            const closing = hours && timeToMinutes(hours.closingHour)
+            // Admins can override regular/special opening hours. Staff off days
+            // and past-date restrictions are independent of salon opening hours.
             if (
-              !hours?.isOpen ||
-              !schedule ||
-              opening == null ||
-              closing == null ||
-              start < opening ||
-              end > closing ||
               dateKey < getBookingDateKey(new Date())! ||
-              schedule.offDays.some(
+              schedule?.offDays.some(
                 (day) =>
                   day.person === hairdresser &&
                   getBookingDateKey(day.date) === dateKey
               )
             ) {
               return {
+                ok: false,
                 error: 'Time slot is not available',
                 status: 400,
               } as const

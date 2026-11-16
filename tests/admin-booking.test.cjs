@@ -331,9 +331,9 @@ test('admin can move to today without the guest two-hour rule, including closing
   )
 })
 
-test('opening hours, holidays and staff off days are enforced on moves', async () => {
-  for (const slot of ['09:45 - 10:15', '18:45 - 19:15', '23:45 - 00:15']) {
-    const { route, state } = harness()
+test('admins may override opening hours and closed days while staff off days remain enforced', async () => {
+  for (const slot of ['09:45 - 10:15', '20:00 - 20:30']) {
+    const { route } = harness()
     assert.equal(
       (
         await route.PATCH(
@@ -341,9 +341,8 @@ test('opening hours, holidays and staff off days are enforced on moves', async (
           context()
         )
       ).status,
-      400
+      200
     )
-    assert.equal(state.sequence.length, 0)
   }
   const { route, state } = harness()
   state.offDays = [{ date: new Date('2026-11-16T23:00:00Z'), person: 'Timi' }]
@@ -373,12 +372,57 @@ test('opening hours, holidays and staff off days are enforced on moves', async (
       await route.PATCH(
         request({
           selectedDate: '2026-11-17',
-          selectedTimeSlot: '10:00 - 10:30',
+          selectedTimeSlot: '20:00 - 20:30',
+        }),
+        context()
+      )
+    ).status,
+    200
+  )
+  assert.equal(
+    (
+      await route.PATCH(
+        request({
+          selectedDate: '2026-11-21',
+          selectedTimeSlot: '20:00 - 20:30',
+        }),
+        context()
+      )
+    ).status,
+    200
+  )
+  assert.equal(
+    (
+      await route.PATCH(
+        request({
+          selectedDate: '2026-11-21',
+          selectedTimeSlot: '23:45 - 00:15',
         }),
         context()
       )
     ).status,
     400
+  )
+})
+
+test('opening-hour overrides never permit collisions', async () => {
+  const { route } = harness({
+    bookings: [
+      fixture(),
+      fixture({ id: 'late', selectedTimeSlot: '20:00 - 20:30' }),
+    ],
+  })
+  assert.equal(
+    (
+      await route.PATCH(
+        request({
+          selectedDate: '2026-11-16',
+          selectedTimeSlot: '20:00 - 20:30',
+        }),
+        context()
+      )
+    ).status,
+    409
   )
 })
 
@@ -734,6 +778,12 @@ test('admin form recalculates all extras and releases loading state after failed
   }
   const render = () => renderer.render(Component, props)
   let tree = render()
+  assert.equal(
+    findElement(tree, (node) => node.type === 'DayPicker').props.disabled(
+      new Date(2026, 10, 21)
+    ),
+    false
+  )
   const startField = findElement(
     tree,
     (node) => node.type === 'FormField' && node.props.name === 'startTime'

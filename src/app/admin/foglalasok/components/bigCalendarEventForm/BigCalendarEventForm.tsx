@@ -40,7 +40,6 @@ import {
   dateFromCalendarKey,
   getBookingDateKey,
   getCalendarDateKey,
-  getDaySchedule,
 } from '@/lib/guest-booking'
 
 import { eventFormSchema } from '../../schemas/eventFormSchema'
@@ -61,8 +60,6 @@ const BigCalendarEventForm = ({
   setCalendarEvents,
   setIsDialogOpen,
   offDays,
-  openingHours,
-  specialOpeningHours,
 }: BigCalendarEventFormProps) => {
   const booking = mapEventToBooking(calendarEvent.event)
   const [isLoading, setIsLoading] = useState(false)
@@ -174,11 +171,6 @@ const BigCalendarEventForm = ({
                 locale={hu}
                 disabled={(date) =>
                   getCalendarDateKey(date) < getBookingDateKey(new Date())! ||
-                  !getDaySchedule(
-                    getCalendarDateKey(date),
-                    openingHours,
-                    specialOpeningHours
-                  )?.isOpen ||
                   offDays.some(
                     (day) =>
                       day.person === booking.hairdresser &&

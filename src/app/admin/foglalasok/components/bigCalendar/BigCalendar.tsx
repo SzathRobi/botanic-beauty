@@ -122,7 +122,7 @@ const BigCalendar = ({
         style: {
           backgroundColor: 'lightgray',
           opacity: 0.5,
-          cursor: 'not-allowed',
+          cursor: 'pointer',
         },
       }
     }
